@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Card, Input, Select, Switch, Divider, Collapse, Icon } from 'animal-island-ui'
+import { Button, Card, Input, Select, Switch, Divider, Collapse } from 'animal-island-ui'
 import { api, type SubmitResult } from '../api'
 
 const PROTOCOLS = [
@@ -9,8 +9,8 @@ const PROTOCOLS = [
 ]
 
 const ROLES = [
-  { key: 'member', label: '🐾 Member' },
-  { key: 'leader', label: '👑 Leader' },
+  { key: 'member', label: 'Member' },
+  { key: 'leader', label: 'Leader' },
 ]
 
 export function PracticalPanel() {
@@ -56,11 +56,8 @@ export function PracticalPanel() {
   return (
     <Card type="default">
       <div className="row" style={{ justifyContent: 'space-between' }}>
-        <h2 className="section-title row tight" style={{ alignItems: 'center' }}>
-          <Icon name="icon-chat" size={28} bounce={busy} />
-          🐢 Practical — one party 🦦
-        </h2>
-        <span className="pill warn">🐾 this browser = one data owner</span>
+        <h2 className="section-title">Practical — one party</h2>
+        <span className="pill warn">this browser = one data owner</span>
       </div>
       <Divider type="wave-yellow" />
       <div className="row">
@@ -109,7 +106,7 @@ export function PracticalPanel() {
       </label>
 
       <Collapse
-        question="🔐 mTLS settings (optional)"
+        question="mTLS settings (optional)"
         answer={
           <div className="col">
             <div className="row">
@@ -153,7 +150,7 @@ export function PracticalPanel() {
       <Divider />
       <div className="row">
         <Button type="primary" size="large" loading={busy} onClick={submit}>
-          🦅 Submit
+          Submit
         </Button>
       </div>
 
@@ -167,9 +164,9 @@ export function PracticalPanel() {
         <>
           <Divider type="line-teal" />
           <Card color="app-green">
-            <strong>🐢 Status:</strong> {result.status || '(empty)'}
+            <strong>Status:</strong> {result.status || '(empty)'}
             <br />
-            <strong>🎯 Intersection ({result.intersection.length}):</strong>{' '}
+            <strong>Intersection ({result.intersection.length}):</strong>{' '}
             <code>{result.intersection.join(', ') || '(empty)'}</code>
           </Card>
         </>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Tabs, Time, Footer, Icon } from 'animal-island-ui'
+import { Tabs, Time, Footer } from 'animal-island-ui'
 import { api, type ClusterStatus } from './api'
 import { ClusterCard } from './components/ClusterCard'
 import { DemoPanel } from './components/DemoPanel'
@@ -25,23 +25,26 @@ export default function App() {
   return (
     <>
       <div className="app-shell">
-        <header className="app-header">
-          <div className="row tight" style={{ alignItems: 'center' }}>
-            <Icon name="icon-map" size={56} bounce />
+        <header className="aii-hero">
+          <div className="aii-hero-row">
             <div>
-              <h1 className="app-title">
-                🦊 psinsieme console 🐰
-              </h1>
-              <p className="app-subtitle">
-                🐻 Multi-party PSI — KS05 / BEH21 / YYH26 over gRPC + mTLS 🦉
+              <h1 className="aii-hero-title">psinsieme console</h1>
+              <p className="aii-hero-sub">
+                Multi-party PSI — KS05 / BEH21 / YYH26 over gRPC + mTLS
               </p>
+              <div className="aii-hero-time" style={{ display: 'inline-block', marginTop: 10 }}>
+                <Time />
+              </div>
             </div>
-          </div>
-          <div className="row tight">
-            <Icon name="icon-critterpedia" size={36} bounce />
-            <Time />
+            <img
+              className="aii-hero-mascot"
+              src="/aii/animal_icon.png"
+              alt="animal island mascot"
+              decoding="async"
+            />
           </div>
         </header>
+        <div className="aii-guide-line" />
 
         <ClusterCard status={status} onChange={refresh} />
 
@@ -49,14 +52,12 @@ export default function App() {
           defaultActiveKey="demo"
           leafAnimation
           items={[
-            { key: 'demo',      label: '🐝 Demo Hive',      children: <DemoPanel onAfterRun={refresh} /> },
-            { key: 'practical', label: '🐢 Practical Pond', children: <PracticalPanel /> },
+            { key: 'demo',      label: 'Demo',      children: <DemoPanel onAfterRun={refresh} /> },
+            { key: 'practical', label: 'Practical', children: <PracticalPanel /> },
           ]}
         />
 
         <footer className="app-footer-meta">
-          🦝 🦔 🦦 🐸 🦋 🐳 🐧 🦊 🐰 🐻 🐼 🐨 🦉 🐢 🦝
-          <br />
           UI: <a href="https://github.com/guokaigdg/animal-island-ui" target="_blank" rel="noreferrer">
             animal-island-ui
           </a>

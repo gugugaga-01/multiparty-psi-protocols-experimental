@@ -9,26 +9,8 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(ellipse at top, #c8e8f5 0%, #f4e6c1 55%, #f3d8a5 100%);
-}
-
-/* A friendly little critter strolls across the bottom of the page */
-body::before {
-  content: '🦊  🐰  🐝  🦋  🐢  🦦  🦉  🐧  🦝  🐻  🐼  🦘';
-  position: fixed;
-  bottom: 90px;
-  left: 0;
-  font-size: 22px;
-  letter-spacing: 8px;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0.55;
-  animation: critter-stroll 60s linear infinite;
-}
-
-@keyframes critter-stroll {
-  0%   { transform: translateX(100vw); }
-  100% { transform: translateX(-100%); }
+    url('/aii/content_bg_pc.jpg') center / auto repeat,
+    #ead7ad;
 }
 
 @keyframes wiggle {
@@ -42,6 +24,63 @@ body::before {
 .party-grid > *:hover {
   transform: translateY(-3px) rotate(-1deg);
   animation: wiggle 600ms ease-in-out;
+}
+
+/* ---------- Hero banner (mirrors the demo's home page) ---------- */
+.aii-hero {
+  position: relative;
+  border-radius: 28px;
+  padding: 22px 24px;
+  color: #fff;
+  background:
+    url('/aii/home_bg.webp') 0 0 / auto repeat,
+    #7dc395;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+.aii-hero-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.aii-hero-title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
+}
+.aii-hero-sub {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #f4ffe5;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+}
+.aii-hero-mascot {
+  width: 200px;
+  height: 125px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.12));
+  animation: hero-float 4s ease-in-out infinite;
+}
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.aii-hero-time {
+  background: rgba(255, 255, 255, 0.18);
+  padding: 6px 12px;
+  border-radius: 999px;
+  backdrop-filter: blur(2px);
+}
+
+/* Decorative guide line (the demo uses this faded squiggle as a section separator) */
+.aii-guide-line {
+  height: 18px;
+  background: url('/aii/guide-bg-line.webp') center/contain repeat-x;
+  opacity: 0.55;
 }
 
 #root {

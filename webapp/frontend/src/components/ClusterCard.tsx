@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Card, Input, Select, Switch, Divider, Icon } from 'animal-island-ui'
+import { Button, Card, Input, Select, Switch, Divider } from 'animal-island-ui'
 import { api, type ClusterStatus } from '../api'
 
 const PROTOCOLS = [
@@ -53,19 +53,16 @@ export function ClusterCard({
   return (
     <Card type="title" color="app-teal">
       <div className="row" style={{ justifyContent: 'space-between' }}>
-        <h2 className="section-title row tight" style={{ alignItems: 'center' }}>
-          <Icon name="icon-helicopter" size={28} bounce={anyRunning} />
-          🐻 Cluster control
-        </h2>
+        <h2 className="section-title">Cluster control</h2>
         <div className="row tight">
           <span className={'pill ' + (status?.built ? 'ok' : 'bad')}>
-            {status?.built ? '🛠️ binaries OK' : '🚧 NOT BUILT'}
+            {status?.built ? 'binaries OK' : 'NOT BUILT'}
           </span>
           <span className={'pill ' + (status?.dealer.running ? 'ok' : 'warn')}>
-            🦝 dealer {status?.dealer.running ? 'up' : 'down'}
+            dealer {status?.dealer.running ? 'up' : 'down'}
           </span>
           <span className={'pill ' + (anyRunning ? 'ok' : 'warn')}>
-            🐝 {status?.parties.filter((p) => p.running).length ?? 0}/
+            {status?.parties.filter((p) => p.running).length ?? 0}/
             {status?.num_parties ?? 0} parties
           </span>
         </div>
@@ -94,10 +91,10 @@ export function ClusterCard({
       </div>
       <div className="row" style={{ marginTop: 10 }}>
         <Button type="primary" loading={busy} disabled={anyRunning} onClick={start}>
-          🚀 Start cluster
+          Start cluster
         </Button>
         <Button type="default" danger loading={busy} disabled={!anyRunning} onClick={stop}>
-          🛑 Stop cluster
+          Stop cluster
         </Button>
         <span className="kv">
           {status?.build_dir ? `build dir: ${status.build_dir}` : ''}
