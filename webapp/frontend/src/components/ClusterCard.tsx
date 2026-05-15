@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Button, Card, Input, Select, Switch, Divider } from 'animal-island-ui'
 import { api, type ClusterStatus } from '../api'
+import { useBusy } from '../busy'
 
 const PROTOCOLS = [
   { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI (trusted dealer)' },
@@ -20,6 +21,7 @@ export function ClusterCard({
   const [tls, setTls] = useState(false)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const globalBusy = useBusy()
 
   useEffect(() => {
     if (status?.protocol) setProtocol(status.protocol)
@@ -33,6 +35,7 @@ export function ClusterCard({
 
   const start = async () => {
     setBusy(true); setErr(null)
+    globalBusy.begin(`Starting cluster (${protocol}, N=${n})…`)
     try {
       await api.clusterStart({
         num_parties: parseInt(n, 10),
@@ -41,13 +44,14 @@ export function ClusterCard({
       })
       onChange()
     } catch (e) { setErr(String((e as Error).message)) }
-    finally { setBusy(false) }
+    finally { setBusy(false); globalBusy.end() }
   }
   const stop = async () => {
     setBusy(true); setErr(null)
+    globalBusy.begin('Stopping cluster…')
     try { await api.clusterStop(); onChange() }
     catch (e) { setErr(String((e as Error).message)) }
-    finally { setBusy(false) }
+    finally { setBusy(false); globalBusy.end() }
   }
 
   return (

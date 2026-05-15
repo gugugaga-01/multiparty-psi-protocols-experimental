@@ -1,11 +1,26 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Tabs, Time, Footer } from 'animal-island-ui'
+import { Tabs, Time, Footer, Loading } from 'animal-island-ui'
 import { api, type ClusterStatus } from './api'
 import { ClusterCard } from './components/ClusterCard'
 import { DemoPanel } from './components/DemoPanel'
 import { PracticalPanel } from './components/PracticalPanel'
+import { BusyProvider, useBusy } from './busy'
 
-export default function App() {
+function BusyOverlay() {
+  const { active, message } = useBusy()
+  return (
+    <div
+      className="aii-busy-overlay"
+      style={{ pointerEvents: active ? 'auto' : 'none', opacity: active ? 1 : 0 }}
+      aria-hidden={!active}
+    >
+      <Loading active={active} style={{ width: '100%', height: '100%' }} />
+      {active && message && <div className="aii-busy-msg">{message}</div>}
+    </div>
+  )
+}
+
+function Shell() {
   const [status, setStatus] = useState<ClusterStatus | null>(null)
 
   const refresh = useCallback(async () => {
@@ -66,6 +81,15 @@ export default function App() {
         </footer>
       </div>
       <Footer type="sea" />
+      <BusyOverlay />
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <BusyProvider>
+      <Shell />
+    </BusyProvider>
   )
 }

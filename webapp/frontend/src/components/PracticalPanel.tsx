@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button, Card, Input, Select, Switch, Divider, Collapse } from 'animal-island-ui'
 import { api, type SubmitResult } from '../api'
+import { useBusy } from '../busy'
 
 const PROTOCOLS = [
   { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
@@ -28,9 +29,11 @@ export function PracticalPanel() {
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [result, setResult] = useState<SubmitResult | null>(null)
+  const globalBusy = useBusy()
 
   const submit = async () => {
     setBusy(true); setErr(null); setResult(null)
+    globalBusy.begin(`Submitting to ${target} (${role}, ${protocol})…`)
     try {
       const els = elements.split(/[\n,]/).map((s) => s.trim()).filter(Boolean)
       const body: Parameters<typeof api.submit>[0] = {
@@ -50,7 +53,7 @@ export function PracticalPanel() {
       setResult(r)
     } catch (e) {
       setErr(String((e as Error).message))
-    } finally { setBusy(false) }
+    } finally { setBusy(false); globalBusy.end() }
   }
 
   return (
