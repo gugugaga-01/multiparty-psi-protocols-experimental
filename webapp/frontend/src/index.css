@@ -12,6 +12,38 @@ body {
     radial-gradient(ellipse at top, #c8e8f5 0%, #f4e6c1 55%, #f3d8a5 100%);
 }
 
+/* A friendly little critter strolls across the bottom of the page */
+body::before {
+  content: '🦊  🐰  🐝  🦋  🐢  🦦  🦉  🐧  🦝  🐻  🐼  🦘';
+  position: fixed;
+  bottom: 90px;
+  left: 0;
+  font-size: 22px;
+  letter-spacing: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.55;
+  animation: critter-stroll 60s linear infinite;
+}
+
+@keyframes critter-stroll {
+  0%   { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+
+.party-grid > * {
+  transition: transform 200ms ease;
+}
+.party-grid > *:hover {
+  transform: translateY(-3px) rotate(-1deg);
+  animation: wiggle 600ms ease-in-out;
+}
+
 #root {
   min-height: 100vh;
   display: flex;

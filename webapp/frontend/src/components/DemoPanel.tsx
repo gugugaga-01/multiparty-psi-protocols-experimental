@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Card, Input, Select, Switch, Divider, Typewriter } from 'animal-island-ui'
+import { Button, Card, Input, Select, Switch, Divider, Typewriter, Icon } from 'animal-island-ui'
 import { api, type DemoResult } from '../api'
 
 const PROTOCOLS = [
@@ -12,6 +12,12 @@ const PARTY_COLORS = [
   'app-pink', 'app-blue', 'app-yellow', 'app-orange',
   'app-teal', 'app-green', 'lime-green', 'warm-peach-pink',
   'purple', 'yellow-green', 'app-red', 'brown',
+] as const
+
+const PARTY_ANIMALS = [
+  '🦊', '🐰', '🐻', '🐼', '🐨', '🐧', '🦉', '🐢',
+  '🦝', '🦔', '🦦', '🐸', '🦋', '🐳', '🐙', '🦄',
+  '🐝', '🐞', '🦒', '🦘', '🦥', '🦡', '🐿️', '🦫',
 ] as const
 
 export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
@@ -65,7 +71,15 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
   return (
     <Card type="default">
       <div className="row" style={{ justifyContent: 'space-between' }}>
-        <h2 className="section-title">🎬  Demo — one-click run</h2>
+        <h2 className="section-title row tight" style={{ alignItems: 'center' }}>
+          <Icon name="icon-shopping" size={28} bounce={busy} />
+          🐝 Demo — one-click run 🦋
+        </h2>
+        <div className="row tight" style={{ fontSize: 24 }}>
+          {PARTY_ANIMALS.slice(0, Math.max(2, parseInt(n, 10) || 0)).map((a, i) => (
+            <span key={i} title={`Party ${i}`}>{a}</span>
+          ))}
+        </div>
       </div>
       <Divider type="wave-yellow" />
       <div className="row">
@@ -134,7 +148,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
       <Divider />
       <div className="row">
         <Button type="primary" size="large" loading={busy} onClick={run}>
-          ▶ Run demo
+          🚀 Run demo
         </Button>
         {result && (
           <span className={'pill ' + (result.success ? 'ok' : 'bad')}>
@@ -159,7 +173,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
               <span className="pill ok">leader: {result.leader_address}</span>
             </div>
             <Card color="app-yellow">
-              <strong>Expected intersection</strong> ({result.expected.length}):{' '}
+              <strong>🎯 Expected intersection</strong> ({result.expected.length}):{' '}
               <Typewriter speed={20} trigger={result.expected.join(',')}>
                 <code>{result.expected.join(', ') || '(empty)'}</code>
               </Typewriter>
@@ -173,9 +187,14 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
                 >
                   <div className="party-card-body">
                     <div className="row tight" style={{ justifyContent: 'space-between' }}>
-                      <strong>{p.name}</strong>
+                      <strong style={{ fontSize: 16 }}>
+                        <span style={{ fontSize: 22, marginRight: 6 }}>
+                          {PARTY_ANIMALS[i % PARTY_ANIMALS.length]}
+                        </span>
+                        {p.name}
+                      </strong>
                       <span className={'pill ' + (p.error ? 'bad' : 'ok')}>
-                        {p.role}
+                        {p.role === 'leader' ? '👑 leader' : '🐾 member'}
                       </span>
                     </div>
                     <div className="kv">addr: {p.address}</div>
