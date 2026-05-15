@@ -28,11 +28,29 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
   const [result, setResult] = useState<DemoResult | null>(null)
   const globalBusy = useBusy()
 
-  const loadDefaults = async () => {
+  const loadDefaults = async (overrideSizes?: number[]) => {
     const N = Math.max(2, parseInt(n, 10) || 2)
     try {
-      const d = await api.demoDefaults(N)
+      const d = await api.demoDefaults(N, overrideSizes)
       setInputs(d.inputs)
+    } catch (e) { setErr(String((e as Error).message)) }
+  }
+
+  // Resize a single party's input list (deterministic, server-driven so the
+  // overlap recipe stays consistent — only that party's row gets replaced so
+  // edits the user made to other rows are preserved).
+  const resizeParty = async (i: number, newSize: number) => {
+    const N = parseInt(n, 10) || inputs.length
+    if (newSize < 1) return
+    const sizes = inputs.map((row) => row.length)
+    sizes[i] = newSize
+    try {
+      const d = await api.demoDefaults(N, sizes)
+      setInputs((prev) => {
+        const next = prev.slice()
+        if (d.inputs[i]) next[i] = d.inputs[i]
+        return next
+      })
     } catch (e) { setErr(String((e as Error).message)) }
   }
 
@@ -52,6 +70,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
         auto_cluster: autoCluster,
       }
       if (customize && inputs.length > 0) body.inputs = inputs
+      else if (customize) body.sizes = inputs.map((r) => r.length)
       const r = await api.demo(body)
       setResult(r)
     } catch (e) {
@@ -112,10 +131,28 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
         <>
           <Divider type="line-yellow" />
           <div className="col">
-            <p className="section-title" style={{ fontSize: 14 }}>Per-party input sets</p>
+            <p className="section-title" style={{ fontSize: 14 }}>
+              Per-party input sets — edit the text directly, or use the size
+              field to regenerate that party with a different element count.
+            </p>
             {inputs.map((row, i) => (
-              <label key={i} className="field">
-                <span>Party {i} — {row.length} elements</span>
+              <div key={i} className="col" style={{ gap: 6 }}>
+                <div className="row tight" style={{ justifyContent: 'space-between' }}>
+                  <strong style={{ fontSize: 13 }}>Party {i}</strong>
+                  <label className="row tight" style={{ alignItems: 'center', fontSize: 13 }}>
+                    <span>size:</span>
+                    <span style={{ width: 90 }}>
+                      <Input
+                        value={String(row.length)}
+                        disabled={busy}
+                        onChange={(e) => {
+                          const v = parseInt(e.target.value.replace(/\D/g, ''), 10)
+                          if (Number.isFinite(v) && v >= 1) void resizeParty(i, v)
+                        }}
+                      />
+                    </span>
+                  </label>
+                </div>
                 <textarea
                   className="aii-textarea"
                   value={row.join('\n')}
@@ -129,9 +166,9 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
                     setInputs(copy)
                   }}
                 />
-              </label>
+              </div>
             ))}
-            <Button type="dashed" size="small" disabled={busy} onClick={loadDefaults}>
+            <Button type="dashed" size="small" disabled={busy} onClick={() => loadDefaults()}>
               Reset to demo defaults
             </Button>
           </div>

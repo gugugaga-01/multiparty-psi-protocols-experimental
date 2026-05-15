@@ -75,14 +75,18 @@ export const api = {
     body: JSON.stringify(body),
   }),
   clusterStop: () => jfetch<ClusterStatus>('/api/cluster/stop', { method: 'POST' }),
-  demoDefaults: (n: number) =>
-    jfetch<DemoDefaults>(`/api/demo/defaults?n=${encodeURIComponent(n)}`),
+  demoDefaults: (n: number, sizes?: number[]) => {
+    const q = new URLSearchParams({ n: String(n) })
+    if (sizes && sizes.length > 0) q.set('sizes', sizes.join(','))
+    return jfetch<DemoDefaults>(`/api/demo/defaults?${q.toString()}`)
+  },
   demo: (body: {
     num_parties: number
     threshold?: number
     protocol: string
     auto_cluster?: boolean
     inputs?: string[][]
+    sizes?: number[]
   }) => jfetch<DemoResult>('/api/demo', {
     method: 'POST',
     body: JSON.stringify(body),
