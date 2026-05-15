@@ -90,6 +90,12 @@ body {
   overflow: hidden;
   background: transparent;
 }
+/* The library's Loading component paints a #000 background on its own
+   container. Override it so the animation sits on our parchment instead. */
+.aii-busy-inline > div,
+.aii-busy-inline [class*="animal-container-"] {
+  background: transparent !important;
+}
 .aii-busy-msg {
   margin-top: 8px;
   text-align: center;
