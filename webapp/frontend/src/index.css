@@ -260,3 +260,16 @@ footer.app-footer-meta {
   color: #6b5a40;
   padding: 8px 0 4px;
 }
+
+.aii-disclaimer-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #6b3a0d;
+}
+.aii-disclaimer-body {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #5a4524;
+}

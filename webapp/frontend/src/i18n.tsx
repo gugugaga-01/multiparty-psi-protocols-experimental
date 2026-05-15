@@ -10,6 +10,9 @@ const en: Dict = {
   'app.subtitle': 'Multi-party PSI — KS05 / BEH21 / YYH26 over gRPC + mTLS',
   'app.footer.ui': 'UI',
   'app.footer.backend': 'backend',
+  'app.disclaimer.title': 'For research & learning only',
+  'app.disclaimer.body':
+    'This console is an experimental playground built around the psinsieme multi-party private set intersection prototypes. It is intended for academic study and protocol exploration — not for production deployments or handling real sensitive data. The trusted-dealer key generation, default credentials, and demo inputs are deliberately simple; do not rely on them for security guarantees. By using this interface you accept that it is provided as-is, without warranty, and that any data you submit is your own responsibility.',
 
   'tabs.demo': 'Demo',
   'tabs.practical': 'Practical',
@@ -83,6 +86,9 @@ const zh: Dict = {
   'app.subtitle': '多方隐私集合求交 — KS05 / BEH21 / YYH26，基于 gRPC + mTLS',
   'app.footer.ui': '界面',
   'app.footer.backend': '后端',
+  'app.disclaimer.title': '仅供学习与研究',
+  'app.disclaimer.body':
+    '本控制台是基于 psinsieme 多方隐私集合求交原型搭建的实验性界面，仅用于学术学习与协议探索，不适用于生产部署或处理真实敏感数据。当前的可信 Dealer 密钥分发、默认证书、演示输入均为简化实现，不提供任何安全性保证。使用本界面即表示您理解其按现状提供、不附带任何担保，您所提交的任何数据由您自行负责。',
 
   'tabs.demo': '演示',
   'tabs.practical': '实战',
