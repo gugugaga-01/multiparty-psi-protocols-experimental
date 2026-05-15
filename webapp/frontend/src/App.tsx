@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Tabs, Time, Footer, Select } from 'animal-island-ui'
+import { Tabs, Time, Footer, Switch } from 'animal-island-ui'
 import { api, type ClusterStatus } from './api'
 import { ClusterCard } from './components/ClusterCard'
 import { DemoPanel } from './components/DemoPanel'
@@ -11,13 +11,11 @@ function LocaleSwitch() {
   return (
     <div className="aii-locale-switch">
       <span className="aii-locale-label">{t('locale.label')}</span>
-      <Select
-        value={locale}
-        onChange={(v) => setLocale(v as Locale)}
-        options={[
-          { key: 'en', label: t('locale.en') },
-          { key: 'zh', label: t('locale.zh') },
-        ]}
+      <Switch
+        checked={locale === 'zh'}
+        onChange={(v) => setLocale((v ? 'zh' : 'en') as Locale)}
+        checkedChildren="中"
+        unCheckedChildren="EN"
       />
     </div>
   )
