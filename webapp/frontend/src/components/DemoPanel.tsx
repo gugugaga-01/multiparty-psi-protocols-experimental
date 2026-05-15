@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { Button, Card, Input, Select, Switch, Divider, Typewriter } from 'animal-island-ui'
+import { Button, Card, Input, Select, Switch, Divider, Typewriter, Loading } from 'animal-island-ui'
 import { api, type DemoResult } from '../api'
-import { useBusy } from '../busy'
 
 const PROTOCOLS = [
   { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
@@ -26,7 +25,6 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [result, setResult] = useState<DemoResult | null>(null)
-  const globalBusy = useBusy()
 
   const loadDefaults = async (overrideSizes?: number[]) => {
     const N = Math.max(2, parseInt(n, 10) || 2)
@@ -61,7 +59,6 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
 
   const run = async () => {
     setBusy(true); setErr(null); setResult(null)
-    globalBusy.begin(`Running demo (${protocol}, N=${n}, t=${t})…`)
     try {
       const body: Parameters<typeof api.demo>[0] = {
         num_parties: parseInt(n, 10),
@@ -81,7 +78,6 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
       setErr(msg)
     } finally {
       setBusy(false)
-      globalBusy.end()
       onAfterRun()
     }
   }
@@ -186,6 +182,15 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
           </span>
         )}
       </div>
+
+      {busy && (
+        <div className="aii-busy-inline">
+          <Loading active style={{ height: 320 }} />
+          <div className="aii-busy-msg">
+            Running demo ({protocol}, N={n}, t={t})…
+          </div>
+        </div>
+      )}
 
       {err && (
         <div className="banner bad" style={{ marginTop: 12, whiteSpace: 'pre-wrap' }}>

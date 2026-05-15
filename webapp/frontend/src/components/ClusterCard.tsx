@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Button, Card, Input, Select, Switch, Divider } from 'animal-island-ui'
+import { Button, Card, Input, Select, Switch, Divider, Loading } from 'animal-island-ui'
 import { api, type ClusterStatus } from '../api'
-import { useBusy } from '../busy'
 
 const PROTOCOLS = [
   { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI (trusted dealer)' },
@@ -20,8 +19,8 @@ export function ClusterCard({
   const [n, setN] = useState('3')
   const [tls, setTls] = useState(false)
   const [busy, setBusy] = useState(false)
+  const [busyMsg, setBusyMsg] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
-  const globalBusy = useBusy()
 
   useEffect(() => {
     if (status?.protocol) setProtocol(status.protocol)
@@ -34,8 +33,7 @@ export function ClusterCard({
       status.parties.some((p) => p.running))
 
   const start = async () => {
-    setBusy(true); setErr(null)
-    globalBusy.begin(`Starting cluster (${protocol}, N=${n})…`)
+    setBusy(true); setErr(null); setBusyMsg(`Starting cluster (${protocol}, N=${n})…`)
     try {
       await api.clusterStart({
         num_parties: parseInt(n, 10),
@@ -44,14 +42,13 @@ export function ClusterCard({
       })
       onChange()
     } catch (e) { setErr(String((e as Error).message)) }
-    finally { setBusy(false); globalBusy.end() }
+    finally { setBusy(false); setBusyMsg(null) }
   }
   const stop = async () => {
-    setBusy(true); setErr(null)
-    globalBusy.begin('Stopping cluster…')
+    setBusy(true); setErr(null); setBusyMsg('Stopping cluster…')
     try { await api.clusterStop(); onChange() }
     catch (e) { setErr(String((e as Error).message)) }
-    finally { setBusy(false); globalBusy.end() }
+    finally { setBusy(false); setBusyMsg(null) }
   }
 
   return (
@@ -106,6 +103,12 @@ export function ClusterCard({
           {status?.build_dir ? `build dir: ${status.build_dir}` : ''}
         </span>
       </div>
+      {busy && (
+        <div className="aii-busy-inline">
+          <Loading active style={{ height: 220 }} />
+          {busyMsg && <div className="aii-busy-msg">{busyMsg}</div>}
+        </div>
+      )}
       {err && <div className="banner bad" style={{ marginTop: 10 }}>{err}</div>}
     </Card>
   )

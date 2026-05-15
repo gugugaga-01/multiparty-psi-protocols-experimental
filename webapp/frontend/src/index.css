@@ -83,31 +83,19 @@ body {
   opacity: 0.55;
 }
 
-/* ---------- Busy overlay (animal-island-ui Loading island) ---------- */
-.aii-busy-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 250, 235, 0.78);
-  backdrop-filter: blur(2px);
-  transition: opacity 200ms ease;
+/* ---------- Inline Loading island (per-panel, no overlay) ---------- */
+.aii-busy-inline {
+  margin-top: 14px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: transparent;
 }
 .aii-busy-msg {
-  position: absolute;
-  bottom: 64px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 18px;
-  border-radius: 999px;
-  background: #fff8e6;
-  border: 2px solid #e3cf9c;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
   color: #5a4524;
-  font-weight: 800;
-  font-size: 14px;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.06);
 }
 
 #root {
