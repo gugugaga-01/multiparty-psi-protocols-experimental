@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button, Card, Input, Select, Switch, Divider, Typewriter, Loading } from 'animal-island-ui'
 import { api, type DemoResult } from '../api'
+import { useI18n } from '../i18n'
 
 const PROTOCOLS = [
   { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
@@ -16,6 +17,7 @@ const PARTY_COLORS = [
 
 
 export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
+  const { t: tr } = useI18n()
   const [protocol, setProtocol] = useState('ks05_t_mpsi')
   const [n, setN] = useState('3')
   const [t, setT] = useState('3')
@@ -73,7 +75,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
     } catch (e) {
       let msg = String((e as Error).message)
       if (/Failed to fetch|NetworkError|connection refused/i.test(msg)) {
-        msg += '\nIs the cluster running? Enable "Auto-manage cluster" or start it from the panel above.'
+        msg += '\n' + tr('demo.connRefused.hint')
       }
       setErr(msg)
     } finally {
@@ -85,12 +87,12 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
   return (
     <Card type="default">
       <div className="row" style={{ justifyContent: 'space-between' }}>
-        <h2 className="section-title">Demo — one-click run</h2>
+        <h2 className="section-title">{tr('demo.title')}</h2>
       </div>
       <Divider type="wave-yellow" />
       <div className="row">
         <label className="field grow">
-          <span>Protocol</span>
+          <span>{tr('demo.protocol')}</span>
           <Select
             options={PROTOCOLS}
             value={protocol}
@@ -99,27 +101,27 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
           />
         </label>
         <label className="field" style={{ width: 110 }}>
-          <span>Parties (N)</span>
+          <span>{tr('demo.n')}</span>
           <Input value={n} disabled={busy} onChange={(e) => {
             const x = e.target.value.replace(/\D/g, '')
             setN(x); if (parseInt(t, 10) > (parseInt(x, 10) || 0)) setT(x)
           }} />
         </label>
         <label className="field" style={{ width: 130 }}>
-          <span>Threshold (t)</span>
+          <span>{tr('demo.t')}</span>
           <Input value={t} disabled={busy} onChange={(e) => setT(e.target.value.replace(/\D/g, ''))} />
         </label>
       </div>
       <div className="row" style={{ marginTop: 8 }}>
         <label className="field" style={{ width: 220 }}>
-          <span>Auto-manage cluster</span>
+          <span>{tr('demo.autoCluster')}</span>
           <Switch checked={autoCluster} onChange={setAutoCluster} disabled={busy} />
-          <small>Start &amp; stop psi_party processes automatically</small>
+          <small>{tr('demo.autoCluster.hint')}</small>
         </label>
         <label className="field" style={{ width: 220 }}>
-          <span>Customize inputs per party</span>
+          <span>{tr('demo.customize')}</span>
           <Switch checked={customize} onChange={toggleCustomize} disabled={busy} />
-          <small>Off uses curated demo input (known overlap)</small>
+          <small>{tr('demo.customize.hint')}</small>
         </label>
       </div>
 
@@ -128,15 +130,14 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
           <Divider type="line-yellow" />
           <div className="col">
             <p className="section-title" style={{ fontSize: 14 }}>
-              Per-party input sets — edit the text directly, or use the size
-              field to regenerate that party with a different element count.
+              {tr('demo.perParty')}
             </p>
             {inputs.map((row, i) => (
               <div key={i} className="col" style={{ gap: 6 }}>
                 <div className="row tight" style={{ justifyContent: 'space-between' }}>
-                  <strong style={{ fontSize: 13 }}>Party {i}</strong>
+                  <strong style={{ fontSize: 13 }}>{tr('demo.party')} {i}</strong>
                   <label className="row tight" style={{ alignItems: 'center', fontSize: 13 }}>
-                    <span>size:</span>
+                    <span>{tr('demo.size')}</span>
                     <span style={{ width: 90 }}>
                       <Input
                         value={String(row.length)}
@@ -165,7 +166,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
               </div>
             ))}
             <Button type="dashed" size="small" disabled={busy} onClick={() => loadDefaults()}>
-              Reset to demo defaults
+              {tr('demo.reset')}
             </Button>
           </div>
         </>
@@ -174,11 +175,11 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
       <Divider />
       <div className="row">
         <Button type="primary" size="large" loading={busy} onClick={run}>
-          Run demo
+          {tr('demo.run')}
         </Button>
         {result && (
           <span className={'pill ' + (result.success ? 'ok' : 'bad')}>
-            {result.success ? 'success' : 'failed'}
+            {result.success ? tr('demo.success') : tr('demo.failed')}
           </span>
         )}
       </div>
@@ -187,7 +188,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
         <div className="aii-busy-inline">
           <Loading active style={{ height: 320 }} />
           <div className="aii-busy-msg">
-            Running demo ({protocol}, N={n}, t={t})…
+            {tr('demo.busy', { protocol, n, t })}
           </div>
         </div>
       )}
@@ -203,14 +204,14 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
           <Divider type="line-brown" />
           <div className="col">
             <div className="row">
-              <span className="pill">protocol: {result.protocol}</span>
+              <span className="pill">{tr('demo.protocol').toLowerCase()}: {result.protocol}</span>
               <span className="pill">N={result.num_parties} t={result.threshold}</span>
-              <span className="pill ok">leader: {result.leader_address}</span>
+              <span className="pill ok">{tr('demo.leader')}: {result.leader_address}</span>
             </div>
             <Card color="app-yellow">
-              <strong>Expected intersection</strong> ({result.expected.length}):{' '}
+              <strong>{tr('demo.expected')}</strong> ({result.expected.length}):{' '}
               <Typewriter speed={20} trigger={result.expected.join(',')}>
-                <code>{result.expected.join(', ') || '(empty)'}</code>
+                <code>{result.expected.join(', ') || tr('demo.party.empty')}</code>
               </Typewriter>
             </Card>
             <div className="party-grid">
@@ -222,9 +223,9 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
                 >
                   <div className="party-card-body">
                     <div className="row tight" style={{ justifyContent: 'space-between' }}>
-                      <strong>{p.name}</strong>
+                      <strong>{tr('demo.party')} {i}</strong>
                       <span className={'pill ' + (p.error ? 'bad' : 'ok')}>
-                        {p.role}
+                        {p.role === 'leader' ? tr('demo.leader') : tr('demo.member')}
                       </span>
                     </div>
                     <div className="kv">addr: {p.address}</div>
@@ -233,12 +234,12 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
                     ) : (
                       <>
                         <div style={{ marginTop: 6 }}>
-                          input ({p.input.length}):
+                          {tr('demo.party.input')} ({p.input.length}):
                           <code>{p.input.join(', ')}</code>
                         </div>
                         <div style={{ marginTop: 6 }}>
-                          intersection ({p.intersection.length}):
-                          <code>{p.intersection.join(', ') || '(empty)'}</code>
+                          {tr('demo.party.intersection')} ({p.intersection.length}):
+                          <code>{p.intersection.join(', ') || tr('demo.party.empty')}</code>
                         </div>
                       </>
                     )}

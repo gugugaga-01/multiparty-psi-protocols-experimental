@@ -76,6 +76,25 @@ body {
   backdrop-filter: blur(2px);
 }
 
+.aii-locale-switch {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.22);
+  padding: 4px 10px;
+  border-radius: 999px;
+  backdrop-filter: blur(2px);
+}
+.aii-locale-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+}
+
 /* Decorative guide line (the demo uses this faded squiggle as a section separator) */
 .aii-guide-line {
   height: 18px;

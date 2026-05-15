@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button, Card, Input, Select, Switch, Divider, Collapse, Loading } from 'animal-island-ui'
 import { api, type SubmitResult } from '../api'
+import { useI18n } from '../i18n'
 
 const PROTOCOLS = [
   { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
@@ -8,12 +9,12 @@ const PROTOCOLS = [
   { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
 ]
 
-const ROLES = [
-  { key: 'member', label: 'Member' },
-  { key: 'leader', label: 'Leader' },
-]
-
 export function PracticalPanel() {
+  const { t: tr } = useI18n()
+  const ROLES = [
+    { key: 'member', label: tr('pr.role.member') },
+    { key: 'leader', label: tr('pr.role.leader') },
+  ]
   const [target, setTarget] = useState('127.0.0.1:53100')
   const [leader, setLeader] = useState('127.0.0.1:53002')
   const [role, setRole] = useState<'leader' | 'member'>('member')
@@ -56,23 +57,23 @@ export function PracticalPanel() {
   return (
     <Card type="default">
       <div className="row" style={{ justifyContent: 'space-between' }}>
-        <h2 className="section-title">Practical — one party</h2>
-        <span className="pill warn">this browser = one data owner</span>
+        <h2 className="section-title">{tr('pr.title')}</h2>
+        <span className="pill warn">{tr('pr.oneOwner')}</span>
       </div>
       <Divider type="wave-yellow" />
       <div className="row">
         <label className="field grow">
-          <span>Your party endpoint (client API)</span>
+          <span>{tr('pr.target')}</span>
           <Input value={target} disabled={busy} onChange={(e) => setTarget(e.target.value)} placeholder="host:port" />
         </label>
         <label className="field grow">
-          <span>Leader inter-party address</span>
+          <span>{tr('pr.leader')}</span>
           <Input value={leader} disabled={busy} onChange={(e) => setLeader(e.target.value)} placeholder="host:port" />
         </label>
       </div>
       <div className="row">
         <label className="field" style={{ width: 160 }}>
-          <span>Role</span>
+          <span>{tr('pr.role')}</span>
           <Select
             options={ROLES}
             value={role}
@@ -81,7 +82,7 @@ export function PracticalPanel() {
           />
         </label>
         <label className="field grow">
-          <span>Protocol</span>
+          <span>{tr('pr.protocol')}</span>
           <Select
             options={PROTOCOLS}
             value={protocol}
@@ -99,7 +100,7 @@ export function PracticalPanel() {
         </label>
       </div>
       <label className="field">
-        <span>Your private elements (one per line, or comma-separated)</span>
+        <span>{tr('pr.elements')}</span>
         <textarea
           className="aii-textarea"
           value={elements}
@@ -109,20 +110,20 @@ export function PracticalPanel() {
       </label>
 
       <Collapse
-        question="mTLS settings (optional)"
+        question={tr('pr.mtls.title')}
         disabled={busy}
         answer={
           <div className="col">
             <div className="row">
               <label className="field" style={{ width: 160 }}>
-                <span>Use mTLS</span>
+                <span>{tr('pr.mtls.use')}</span>
                 <Switch checked={tls} onChange={setTls} disabled={busy} />
               </label>
             </div>
             {tls && (
               <>
                 <label className="field">
-                  <span>CA certificate (PEM, optional)</span>
+                  <span>{tr('pr.mtls.ca')}</span>
                   <textarea
                     className="aii-textarea"
                     value={caCert}
@@ -131,7 +132,7 @@ export function PracticalPanel() {
                   />
                 </label>
                 <label className="field">
-                  <span>Client certificate (PEM, optional)</span>
+                  <span>{tr('pr.mtls.cert')}</span>
                   <textarea
                     className="aii-textarea"
                     value={clientCert}
@@ -140,7 +141,7 @@ export function PracticalPanel() {
                   />
                 </label>
                 <label className="field">
-                  <span>Client key (PEM, optional)</span>
+                  <span>{tr('pr.mtls.key')}</span>
                   <textarea
                     className="aii-textarea"
                     value={clientKey}
@@ -157,7 +158,7 @@ export function PracticalPanel() {
       <Divider />
       <div className="row">
         <Button type="primary" size="large" loading={busy} onClick={submit}>
-          Submit
+          {tr('pr.submit')}
         </Button>
       </div>
 
@@ -165,7 +166,7 @@ export function PracticalPanel() {
         <div className="aii-busy-inline">
           <Loading active style={{ height: 280 }} />
           <div className="aii-busy-msg">
-            Submitting to {target} ({role}, {protocol})…
+            {tr('pr.busy', { target, role: role === 'leader' ? tr('pr.role.leader') : tr('pr.role.member'), protocol })}
           </div>
         </div>
       )}
@@ -180,10 +181,10 @@ export function PracticalPanel() {
         <>
           <Divider type="line-teal" />
           <Card color="app-green">
-            <strong>Status:</strong> {result.status || '(empty)'}
+            <strong>{tr('pr.status')}:</strong> {result.status || tr('demo.party.empty')}
             <br />
-            <strong>Intersection ({result.intersection.length}):</strong>{' '}
-            <code>{result.intersection.join(', ') || '(empty)'}</code>
+            <strong>{tr('pr.intersection')} ({result.intersection.length}):</strong>{' '}
+            <code>{result.intersection.join(', ') || tr('demo.party.empty')}</code>
           </Card>
         </>
       )}

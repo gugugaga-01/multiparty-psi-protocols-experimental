@@ -1,11 +1,30 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Tabs, Time, Footer } from 'animal-island-ui'
+import { Tabs, Time, Footer, Select } from 'animal-island-ui'
 import { api, type ClusterStatus } from './api'
 import { ClusterCard } from './components/ClusterCard'
 import { DemoPanel } from './components/DemoPanel'
 import { PracticalPanel } from './components/PracticalPanel'
+import { I18nProvider, useI18n, type Locale } from './i18n'
+
+function LocaleSwitch() {
+  const { locale, setLocale, t } = useI18n()
+  return (
+    <div className="aii-locale-switch">
+      <span className="aii-locale-label">{t('locale.label')}</span>
+      <Select
+        value={locale}
+        onChange={(v) => setLocale(v as Locale)}
+        options={[
+          { key: 'en', label: t('locale.en') },
+          { key: 'zh', label: t('locale.zh') },
+        ]}
+      />
+    </div>
+  )
+}
 
 function Shell() {
+  const { t } = useI18n()
   const [status, setStatus] = useState<ClusterStatus | null>(null)
 
   const refresh = useCallback(async () => {
@@ -18,8 +37,8 @@ function Shell() {
 
   useEffect(() => {
     refresh()
-    const t = setInterval(refresh, 3000)
-    return () => clearInterval(t)
+    const id = setInterval(refresh, 3000)
+    return () => clearInterval(id)
   }, [refresh])
 
   return (
@@ -29,9 +48,7 @@ function Shell() {
           <div className="aii-hero-row">
             <div>
               <h1 className="aii-hero-title">psinsieme console</h1>
-              <p className="aii-hero-sub">
-                Multi-party PSI — KS05 / BEH21 / YYH26 over gRPC + mTLS
-              </p>
+              <p className="aii-hero-sub">{t('app.subtitle')}</p>
               <div className="aii-hero-time" style={{ display: 'inline-block', marginTop: 10 }}>
                 <Time />
               </div>
@@ -43,6 +60,7 @@ function Shell() {
               decoding="async"
             />
           </div>
+          <LocaleSwitch />
         </header>
         <div className="aii-guide-line" />
 
@@ -52,17 +70,18 @@ function Shell() {
           defaultActiveKey="demo"
           leafAnimation
           items={[
-            { key: 'demo',      label: 'Demo',      children: <DemoPanel onAfterRun={refresh} /> },
-            { key: 'practical', label: 'Practical', children: <PracticalPanel /> },
+            { key: 'demo',      label: t('tabs.demo'),      children: <DemoPanel onAfterRun={refresh} /> },
+            { key: 'practical', label: t('tabs.practical'), children: <PracticalPanel /> },
           ]}
         />
 
         <footer className="app-footer-meta">
-          UI: <a href="https://github.com/guokaigdg/animal-island-ui" target="_blank" rel="noreferrer">
+          {t('app.footer.ui')}:{' '}
+          <a href="https://github.com/guokaigdg/animal-island-ui" target="_blank" rel="noreferrer">
             animal-island-ui
           </a>
           {' · '}
-          backend: webapp/server.py
+          {t('app.footer.backend')}: webapp/server.py
         </footer>
       </div>
       <Footer type="sea" />
@@ -71,5 +90,9 @@ function Shell() {
 }
 
 export default function App() {
-  return <Shell />
+  return (
+    <I18nProvider>
+      <Shell />
+    </I18nProvider>
+  )
 }
