@@ -239,7 +239,9 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
                         </div>
                         <div style={{ marginTop: 6 }}>
                           {tr('demo.party.intersection')} ({p.intersection.length}):
-                          <code>{p.intersection.join(', ') || tr('demo.party.empty')}</code>
+                          <Typewriter speed={25} trigger={p.intersection.join(',')}>
+                            <code>{p.intersection.join(', ') || tr('demo.party.empty')}</code>
+                          </Typewriter>
                         </div>
                       </>
                     )}

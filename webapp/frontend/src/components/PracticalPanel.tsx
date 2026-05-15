@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Card, Input, Select, Switch, Divider, Collapse, Loading } from 'animal-island-ui'
+import { Button, Card, Input, Select, Switch, Divider, Collapse, Loading, Typewriter } from 'animal-island-ui'
 import { api, type SubmitResult } from '../api'
 import { useI18n } from '../i18n'
 
@@ -184,7 +184,9 @@ export function PracticalPanel() {
             <strong>{tr('pr.status')}:</strong> {result.status || tr('demo.party.empty')}
             <br />
             <strong>{tr('pr.intersection')} ({result.intersection.length}):</strong>{' '}
-            <code>{result.intersection.join(', ') || tr('demo.party.empty')}</code>
+            <Typewriter speed={25} trigger={result.intersection.join(',')}>
+              <code>{result.intersection.join(', ') || tr('demo.party.empty')}</code>
+            </Typewriter>
           </Card>
         </>
       )}
