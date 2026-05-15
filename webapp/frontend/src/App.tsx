@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Tabs, Time, Footer, Switch, Card, Divider } from 'animal-island-ui'
+import { Tabs, Time, Footer, Switch } from 'animal-island-ui'
 import { api, type ClusterStatus } from './api'
 import { ClusterCard } from './components/ClusterCard'
 import { DemoPanel } from './components/DemoPanel'
@@ -73,14 +73,6 @@ function Shell() {
           ]}
         />
 
-        <Card color="warm-peach-pink" type="dashed">
-          <div className="aii-disclaimer">
-            <h3 className="aii-disclaimer-title">⚠ {t('app.disclaimer.title')}</h3>
-            <Divider type="line-yellow" />
-            <p className="aii-disclaimer-body">{t('app.disclaimer.body')}</p>
-          </div>
-        </Card>
-
         <footer className="app-footer-meta">
           {t('app.footer.ui')}:{' '}
           <a href="https://github.com/guokaigdg/animal-island-ui" target="_blank" rel="noreferrer">
@@ -88,6 +80,8 @@ function Shell() {
           </a>
           {' · '}
           {t('app.footer.backend')}: webapp/server.py
+          <br />
+          {t('app.disclaimer.short')}
         </footer>
       </div>
       <Footer type="sea" />
