@@ -63,11 +63,11 @@ export function PracticalPanel() {
       <div className="row">
         <label className="field grow">
           <span>Your party endpoint (client API)</span>
-          <Input value={target} onChange={(e) => setTarget(e.target.value)} placeholder="host:port" />
+          <Input value={target} disabled={busy} onChange={(e) => setTarget(e.target.value)} placeholder="host:port" />
         </label>
         <label className="field grow">
           <span>Leader inter-party address</span>
-          <Input value={leader} onChange={(e) => setLeader(e.target.value)} placeholder="host:port" />
+          <Input value={leader} disabled={busy} onChange={(e) => setLeader(e.target.value)} placeholder="host:port" />
         </label>
       </div>
       <div className="row">
@@ -77,6 +77,7 @@ export function PracticalPanel() {
             options={ROLES}
             value={role}
             onChange={(v) => setRole(v as 'leader' | 'member')}
+            disabled={busy}
           />
         </label>
         <label className="field grow">
@@ -85,15 +86,16 @@ export function PracticalPanel() {
             options={PROTOCOLS}
             value={protocol}
             onChange={(v) => setProtocol(v as string)}
+            disabled={busy}
           />
         </label>
         <label className="field" style={{ width: 100 }}>
           <span>N</span>
-          <Input value={n} onChange={(e) => setN(e.target.value.replace(/\D/g, ''))} />
+          <Input value={n} disabled={busy} onChange={(e) => setN(e.target.value.replace(/\D/g, ''))} />
         </label>
         <label className="field" style={{ width: 100 }}>
           <span>t</span>
-          <Input value={t} onChange={(e) => setT(e.target.value.replace(/\D/g, ''))} />
+          <Input value={t} disabled={busy} onChange={(e) => setT(e.target.value.replace(/\D/g, ''))} />
         </label>
       </div>
       <label className="field">
@@ -101,18 +103,20 @@ export function PracticalPanel() {
         <textarea
           className="aii-textarea"
           value={elements}
+          disabled={busy}
           onChange={(e) => setElements(e.target.value)}
         />
       </label>
 
       <Collapse
         question="mTLS settings (optional)"
+        disabled={busy}
         answer={
           <div className="col">
             <div className="row">
               <label className="field" style={{ width: 160 }}>
                 <span>Use mTLS</span>
-                <Switch checked={tls} onChange={setTls} />
+                <Switch checked={tls} onChange={setTls} disabled={busy} />
               </label>
             </div>
             {tls && (
@@ -122,6 +126,7 @@ export function PracticalPanel() {
                   <textarea
                     className="aii-textarea"
                     value={caCert}
+                    disabled={busy}
                     onChange={(e) => setCaCert(e.target.value)}
                   />
                 </label>
@@ -130,6 +135,7 @@ export function PracticalPanel() {
                   <textarea
                     className="aii-textarea"
                     value={clientCert}
+                    disabled={busy}
                     onChange={(e) => setClientCert(e.target.value)}
                   />
                 </label>
@@ -138,6 +144,7 @@ export function PracticalPanel() {
                   <textarea
                     className="aii-textarea"
                     value={clientKey}
+                    disabled={busy}
                     onChange={(e) => setClientKey(e.target.value)}
                   />
                 </label>

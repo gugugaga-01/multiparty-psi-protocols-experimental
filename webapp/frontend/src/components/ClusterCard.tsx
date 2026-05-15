@@ -75,6 +75,7 @@ export function ClusterCard({
             options={PROTOCOLS}
             value={protocol}
             onChange={(v) => setProtocol(v as string)}
+            disabled={busy || anyRunning}
           />
         </label>
         <label className="field" style={{ width: 120 }}>
@@ -82,11 +83,12 @@ export function ClusterCard({
           <Input
             value={n}
             onChange={(e) => setN(e.target.value.replace(/\D/g, '') || '')}
+            disabled={busy || anyRunning}
           />
         </label>
         <label className="field" style={{ width: 140 }}>
           <span>mTLS</span>
-          <Switch checked={tls} onChange={setTls} />
+          <Switch checked={tls} onChange={setTls} disabled={busy || anyRunning} />
         </label>
       </div>
       <div className="row" style={{ marginTop: 10 }}>

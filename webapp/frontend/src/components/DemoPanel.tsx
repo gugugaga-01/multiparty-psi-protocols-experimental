@@ -76,29 +76,30 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
             options={PROTOCOLS}
             value={protocol}
             onChange={(v) => setProtocol(v as string)}
+            disabled={busy}
           />
         </label>
         <label className="field" style={{ width: 110 }}>
           <span>Parties (N)</span>
-          <Input value={n} onChange={(e) => {
+          <Input value={n} disabled={busy} onChange={(e) => {
             const x = e.target.value.replace(/\D/g, '')
             setN(x); if (parseInt(t, 10) > (parseInt(x, 10) || 0)) setT(x)
           }} />
         </label>
         <label className="field" style={{ width: 130 }}>
           <span>Threshold (t)</span>
-          <Input value={t} onChange={(e) => setT(e.target.value.replace(/\D/g, ''))} />
+          <Input value={t} disabled={busy} onChange={(e) => setT(e.target.value.replace(/\D/g, ''))} />
         </label>
       </div>
       <div className="row" style={{ marginTop: 8 }}>
         <label className="field" style={{ width: 220 }}>
           <span>Auto-manage cluster</span>
-          <Switch checked={autoCluster} onChange={setAutoCluster} />
+          <Switch checked={autoCluster} onChange={setAutoCluster} disabled={busy} />
           <small>Start &amp; stop psi_party processes automatically</small>
         </label>
         <label className="field" style={{ width: 220 }}>
           <span>Customize inputs per party</span>
-          <Switch checked={customize} onChange={toggleCustomize} />
+          <Switch checked={customize} onChange={toggleCustomize} disabled={busy} />
           <small>Off uses curated demo input (known overlap)</small>
         </label>
       </div>
@@ -114,6 +115,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
                 <textarea
                   className="aii-textarea"
                   value={row.join('\n')}
+                  disabled={busy}
                   onChange={(e) => {
                     const copy = inputs.slice()
                     copy[i] = e.target.value
@@ -125,7 +127,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
                 />
               </label>
             ))}
-            <Button type="dashed" size="small" onClick={loadDefaults}>
+            <Button type="dashed" size="small" disabled={busy} onClick={loadDefaults}>
               Reset to demo defaults
             </Button>
           </div>
