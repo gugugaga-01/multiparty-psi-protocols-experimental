@@ -27,7 +27,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent
 PROJECT_ROOT = ROOT.parent
 PY_CLIENT = PROJECT_ROOT / "service" / "clients" / "python"
-STATIC_DIR = ROOT / "static"
+STATIC_DIR = ROOT / "frontend" / "dist"
 LOG_DIR = ROOT / "logs"
 
 sys.path.insert(0, str(PY_CLIENT))
@@ -465,7 +465,21 @@ class Handler(BaseHTTPRequestHandler):
         full_path = self.path
         path = full_path.split("?", 1)[0]
         if path == "/" or path == "/index.html":
-            self._send_file(STATIC_DIR / "index.html")
+            index = STATIC_DIR / "index.html"
+            if not index.is_file():
+                self._status = 503
+                msg = (
+                    f"<h1>UI not built</h1>"
+                    f"<p>Expected <code>{index}</code>. "
+                    f"Run <code>cd webapp/frontend &amp;&amp; npm install &amp;&amp; npm run build</code>.</p>"
+                ).encode("utf-8")
+                self.send_response(503)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(msg)))
+                self.end_headers()
+                self.wfile.write(msg)
+                return
+            self._send_file(index)
             return
         if path == "/api/health":
             self._send_json(200, {"status": "ok"})
@@ -493,14 +507,27 @@ class Handler(BaseHTTPRequestHandler):
                 "expected": sorted(expected_intersection(inputs, t_default)),
             })
             return
-        if path.startswith("/static/"):
-            rel = path[len("/static/"):].lstrip("/")
+        # Static asset served straight from frontend/dist (Vite's build output).
+        # Vite emits everything under /assets/* plus a few root files
+        # (favicon, manifest). We resolve and reject path traversal.
+        rel = path.lstrip("/")
+        if rel:
             target = (STATIC_DIR / rel).resolve()
-            if STATIC_DIR.resolve() not in target.parents and target != STATIC_DIR.resolve():
+            try:
+                target.relative_to(STATIC_DIR.resolve())
+            except ValueError:
                 self.send_error(403, "Forbidden")
                 return
-            self._send_file(target)
-            return
+            if target.is_file():
+                self._send_file(target)
+                return
+        # SPA fallback — unknown non-API path serves index.html so client-side
+        # routing works.
+        if not path.startswith("/api/"):
+            index = STATIC_DIR / "index.html"
+            if index.is_file():
+                self._send_file(index)
+                return
         self.send_error(404, "Not found")
 
     def do_POST(self) -> None:
