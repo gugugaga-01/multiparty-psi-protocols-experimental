@@ -15,6 +15,7 @@ The repository has two layers:
 
 - **`experiments/`** — Standalone academic reference implementations that communicate over plaintext TCP. Useful for benchmarking and understanding each protocol in isolation.
 - **`service/`** — A gRPC-based production framework with mTLS, threshold key distribution, per-request protocol selection, and a Python client SDK. See [service/README.md](service/README.md) for the full usage guide.
+- **`webapp/`** — A browser console over the service: run protocols, auto-start a local cluster, and view intersections without the shell. See [webapp/README.md](webapp/README.md).
 
 ## Architecture
 
@@ -108,6 +109,18 @@ bash service/demos/yyh26/demo.sh     # 3-party YYH26 without dealer
 
 See [service/README.md](service/README.md) for usage, mTLS setup, and API reference.
 
+### Web console
+
+A browser UI over the service — run protocols and view intersections without the shell. After building the service above:
+
+```bash
+cd webapp/frontend && npm install && npm run build && cd ..
+pip install -r requirements.txt   # grpcio + protobuf (server itself is stdlib-only)
+bash run.sh                       # serves UI + API on http://127.0.0.1:38888
+```
+
+Requires Node.js 18+ and Python 3.10+. See [webapp/README.md](webapp/README.md) for modes and configuration.
+
 ### Experiments
 
 ```bash
@@ -131,16 +144,20 @@ psinsieme/
 │   ├── yyh26/           # YYH26 NDSS'26 TT-MPSI
 │   ├── xzh26/           # XZH26 EC-ElGamal Bloom OPPRF MPSI
 │   └── tools/           # Shared benchmark scripts
-└── service/             # gRPC service framework (mTLS, dealer, Python client)
-    ├── proto/           # Protobuf definitions
-    ├── core/            # Shared transport layer and protocol registry
-    ├── protocols/       # Protocol implementations (ks05, yyh26)
-    ├── party/           # Client-facing gRPC service (psi_party binary)
-    ├── dealer/          # Key dealer service (psi_dealer binary)
-    ├── clients/python/  # Python client SDK
-    ├── demos/           # End-to-end demo scripts
-    ├── certs/           # mTLS certificate generation
-    └── tests/           # Integration and unit tests
+├── service/             # gRPC service framework (mTLS, dealer, Python client)
+│   ├── proto/           # Protobuf definitions
+│   ├── core/            # Shared transport layer and protocol registry
+│   ├── protocols/       # Protocol implementations (ks05, yyh26)
+│   ├── party/           # Client-facing gRPC service (psi_party binary)
+│   ├── dealer/          # Key dealer service (psi_dealer binary)
+│   ├── clients/python/  # Python client SDK
+│   ├── demos/           # End-to-end demo scripts
+│   ├── certs/           # mTLS certificate generation
+│   └── tests/           # Integration and unit tests
+└── webapp/              # Browser console over the service
+    ├── server.py        # Stdlib HTTP server (UI + JSON API)
+    ├── cluster.py       # Local dealer/party process manager
+    └── frontend/        # Vite + React UI (build to frontend/dist/)
 ```
 
 ## Disclaimer

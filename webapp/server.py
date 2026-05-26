@@ -27,7 +27,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent
 PROJECT_ROOT = ROOT.parent
 PY_CLIENT = PROJECT_ROOT / "service" / "clients" / "python"
-STATIC_DIR = ROOT / "static"
+STATIC_DIR = ROOT / "frontend" / "dist"
 LOG_DIR = ROOT / "logs"
 
 sys.path.insert(0, str(PY_CLIENT))
@@ -131,24 +131,46 @@ UNIQUE_POOL = [
 ]
 
 
-def build_demo_inputs(n: int) -> list[list[str]]:
+MIN_PARTY_SIZE = len(ALL_COMMON)  # smaller would drop the all-parties intersection
+
+
+def build_demo_inputs(n: int, sizes: list[int] | None = None) -> list[list[str]]:
+    # Default sizes mirror service/demos/ks05/demo.sh: party 0 = 12, mid = 16,
+    # last = 20. Caller can override per-party with `sizes`; we keep the overlap
+    # recipe (ALL_COMMON in every party, MOST_COMMON in parties 1..n-1,
+    # PAIR_COMMON in parties 0 and n-1) and adjust the unique tail to match.
+    if sizes is None:
+        sizes = [12 if i == 0 else 20 if i == n - 1 else 16 for i in range(n)]
+    if len(sizes) != n:
+        raise ValueError(f"sizes must have {n} entries (got {len(sizes)})")
+    for i, s in enumerate(sizes):
+        if s < MIN_PARTY_SIZE:
+            raise ValueError(
+                f"sizes[{i}]={s} is below the minimum of {MIN_PARTY_SIZE} "
+                "(every party must contain the shared ALL_COMMON elements)"
+            )
+
     inputs: list[list[str]] = []
     idx = 0
     for i in range(n):
-        s = list(ALL_COMMON)
+        common = list(ALL_COMMON)
         if i > 0:
-            s += MOST_COMMON
+            common += MOST_COMMON
         if i == 0 or i == n - 1:
-            s += PAIR_COMMON
-        if i == 0:
-            num_unique = 6
-        elif i == n - 1:
-            num_unique = 10
-        else:
-            num_unique = 8
-        s += UNIQUE_POOL[idx:idx + num_unique]
-        idx += num_unique
-        inputs.append(s)
+            common += PAIR_COMMON
+        target = sizes[i]
+        # Truncate common tail if user asked for a very small set, but always
+        # keep ALL_COMMON so the intersection at threshold=n is non-empty.
+        if target < len(common):
+            common = common[:max(target, MIN_PARTY_SIZE)]
+        extra = max(0, target - len(common))
+        tail = UNIQUE_POOL[idx:idx + extra]
+        idx += len(tail)
+        # If the demo pool is exhausted, synthesise placeholders so the user
+        # can still pick arbitrarily large sets.
+        while len(tail) < extra:
+            tail.append(f"P{i}-X{len(tail)}")
+        inputs.append(common + tail)
     return inputs
 
 
@@ -181,6 +203,15 @@ def handle_demo(req: dict[str, Any]) -> dict[str, Any]:
     timeout = float(req.get("timeout", 300))
 
     raw_inputs = req.get("inputs")
+    raw_sizes = req.get("sizes")
+    sizes: list[int] | None = None
+    if raw_sizes is not None:
+        if not isinstance(raw_sizes, list) or len(raw_sizes) != n:
+            raise ValueError(f"sizes must be a list of {n} integers")
+        try:
+            sizes = [int(x) for x in raw_sizes]
+        except (TypeError, ValueError):
+            raise ValueError("sizes entries must be integers") from None
     if raw_inputs is not None:
         if not isinstance(raw_inputs, list) or len(raw_inputs) != n:
             raise ValueError(f"inputs must be a list of {n} lists (one per party)")
@@ -194,7 +225,9 @@ def handle_demo(req: dict[str, Any]) -> dict[str, Any]:
             inputs.append(cleaned)
         log.info("demo: using custom inputs (sizes=%s)", [len(s) for s in inputs])
     else:
-        inputs = build_demo_inputs(n)
+        inputs = build_demo_inputs(n, sizes=sizes)
+        if sizes is not None:
+            log.info("demo: using generated inputs with custom sizes=%s", sizes)
     expected = expected_intersection(inputs, t)
 
     inter_addrs = [f"127.0.0.1:{inter_port_base + i}" for i in range(n)]
@@ -465,7 +498,21 @@ class Handler(BaseHTTPRequestHandler):
         full_path = self.path
         path = full_path.split("?", 1)[0]
         if path == "/" or path == "/index.html":
-            self._send_file(STATIC_DIR / "index.html")
+            index = STATIC_DIR / "index.html"
+            if not index.is_file():
+                self._status = 503
+                msg = (
+                    f"<h1>UI not built</h1>"
+                    f"<p>Expected <code>{index}</code>. "
+                    f"Run <code>cd webapp/frontend &amp;&amp; npm install &amp;&amp; npm run build</code>.</p>"
+                ).encode("utf-8")
+                self.send_response(503)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(msg)))
+                self.end_headers()
+                self.wfile.write(msg)
+                return
+            self._send_file(index)
             return
         if path == "/api/health":
             self._send_json(200, {"status": "ok"})
@@ -484,7 +531,22 @@ class Handler(BaseHTTPRequestHandler):
             if n < 2 or n > 32:
                 self._send_json(400, {"detail": "n must be in [2, 32]"})
                 return
-            inputs = build_demo_inputs(n)
+            sizes_raw = (qs.get("sizes") or [""])[0]
+            sizes: list[int] | None = None
+            if sizes_raw:
+                try:
+                    sizes = [int(x) for x in sizes_raw.split(",") if x.strip()]
+                except ValueError:
+                    self._send_json(400, {"detail": "sizes must be a comma-separated list of integers"})
+                    return
+                if len(sizes) != n:
+                    self._send_json(400, {"detail": f"sizes must have {n} entries"})
+                    return
+            try:
+                inputs = build_demo_inputs(n, sizes=sizes)
+            except ValueError as e:
+                self._send_json(400, {"detail": str(e)})
+                return
             t_default = n
             self._send_json(200, {
                 "num_parties": n,
@@ -493,14 +555,27 @@ class Handler(BaseHTTPRequestHandler):
                 "expected": sorted(expected_intersection(inputs, t_default)),
             })
             return
-        if path.startswith("/static/"):
-            rel = path[len("/static/"):].lstrip("/")
+        # Static asset served straight from frontend/dist (Vite's build output).
+        # Vite emits everything under /assets/* plus a few root files
+        # (favicon, manifest). We resolve and reject path traversal.
+        rel = path.lstrip("/")
+        if rel:
             target = (STATIC_DIR / rel).resolve()
-            if STATIC_DIR.resolve() not in target.parents and target != STATIC_DIR.resolve():
+            try:
+                target.relative_to(STATIC_DIR.resolve())
+            except ValueError:
                 self.send_error(403, "Forbidden")
                 return
-            self._send_file(target)
-            return
+            if target.is_file():
+                self._send_file(target)
+                return
+        # SPA fallback — unknown non-API path serves index.html so client-side
+        # routing works.
+        if not path.startswith("/api/"):
+            index = STATIC_DIR / "index.html"
+            if index.is_file():
+                self._send_file(index)
+                return
         self.send_error(404, "Not found")
 
     def do_POST(self) -> None:
