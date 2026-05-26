@@ -31,6 +31,10 @@ export function PracticalPanel() {
   const [err, setErr] = useState<string | null>(null)
   const [result, setResult] = useState<SubmitResult | null>(null)
 
+  // XZH26 is plain MPSI (intersection of all parties): threshold is always N.
+  const isFullMpsi = protocol === 'xzh26_ec_mpsi'
+  const effT = isFullMpsi ? n : t
+
   const submit = async () => {
     setBusy(true); setErr(null); setResult(null)
     try {
@@ -40,7 +44,7 @@ export function PracticalPanel() {
         elements: els,
         protocol,
         num_parties: parseInt(n, 10),
-        threshold: parseInt(t, 10),
+        threshold: parseInt(effT, 10),
         tls,
       }
       if (tls) {
@@ -97,7 +101,11 @@ export function PracticalPanel() {
         </label>
         <label className="field" style={{ width: 100 }}>
           <span>t</span>
-          <Input value={t} disabled={busy} onChange={(e) => setT(e.target.value.replace(/\D/g, ''))} />
+          <Input
+            value={effT}
+            disabled={busy || isFullMpsi}
+            onChange={(e) => setT(e.target.value.replace(/\D/g, ''))}
+          />
         </label>
       </div>
       <label className="field">

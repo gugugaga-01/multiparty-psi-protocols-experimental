@@ -29,6 +29,11 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
   const [err, setErr] = useState<string | null>(null)
   const [result, setResult] = useState<DemoResult | null>(null)
 
+  // XZH26 is plain MPSI (intersection of all parties), so the threshold is
+  // always N — lock the field and feed N through instead of t.
+  const isFullMpsi = protocol === 'xzh26_ec_mpsi'
+  const effT = isFullMpsi ? n : t
+
   const loadDefaults = async (overrideSizes?: number[]) => {
     const N = Math.max(2, parseInt(n, 10) || 2)
     try {
@@ -65,7 +70,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
     try {
       const body: Parameters<typeof api.demo>[0] = {
         num_parties: parseInt(n, 10),
-        threshold: parseInt(t, 10),
+        threshold: parseInt(effT, 10),
         protocol,
         auto_cluster: autoCluster,
       }
@@ -110,7 +115,12 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
         </label>
         <label className="field" style={{ width: 130 }}>
           <span>{tr('demo.t')}</span>
-          <Input value={t} disabled={busy} onChange={(e) => setT(e.target.value.replace(/\D/g, ''))} />
+          <Input
+            value={effT}
+            disabled={busy || isFullMpsi}
+            onChange={(e) => setT(e.target.value.replace(/\D/g, ''))}
+          />
+          {isFullMpsi && <small>{tr('demo.t.lockedMpsi')}</small>}
         </label>
       </div>
       <div className="row" style={{ marginTop: 8 }}>
@@ -189,7 +199,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
         <div className="aii-busy-inline">
           <Loading active style={{ height: 320 }} />
           <div className="aii-busy-msg">
-            {tr('demo.busy', { protocol, n, t })}
+            {tr('demo.busy', { protocol, n, t: effT })}
           </div>
         </div>
       )}
