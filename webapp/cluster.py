@@ -41,6 +41,15 @@ CLIENT_PORT_BASE = 53100
 # XZH26 runs its DKG inside the protocol; YYH26 is dealerless by design.
 DEALERLESS_PROTOCOLS = {"yyh26_tt_mpsi", "xzh26_ec_mpsi"}
 
+# All protocol IDs the UI knows about. Which of these are actually runnable
+# depends on the build flags the psi_party binary was compiled with — see
+# available_protocols().
+KNOWN_PROTOCOLS = ["ks05_t_mpsi", "beh21_ot_mpsi", "yyh26_tt_mpsi", "xzh26_ec_mpsi"]
+
+# Cache of compiled-in protocols, keyed by (binary path, mtime, size) so we
+# only rescan the binary when it changes (status is polled every few seconds).
+_PROTO_CACHE: dict[tuple[str, float, int], list[str]] = {}
+
 # Protocols that must be selected at psi_party startup (vs per-request).
 STARTUP_BOUND_PROTOCOLS = {"yyh26_tt_mpsi"}
 
@@ -59,6 +68,30 @@ _CONFIG: dict[str, Any] = {}
 
 def _binary_paths(build_dir: Path) -> tuple[Path, Path]:
     return build_dir / "service" / "psi_party", build_dir / "service" / "psi_dealer"
+
+
+def available_protocols(build_dir: Path) -> list[str]:
+    """Which KNOWN_PROTOCOLS are compiled into the psi_party binary.
+
+    Each protocol plugin embeds its own ID string (e.g. "xzh26_ec_mpsi") only
+    when its build flag is set, so we detect availability by scanning the
+    binary for those tokens. Result is cached per (path, mtime, size).
+    """
+    party_bin, _ = _binary_paths(build_dir)
+    if not party_bin.is_file():
+        return []
+    try:
+        st = party_bin.stat()
+        key = (str(party_bin), st.st_mtime, st.st_size)
+        cached = _PROTO_CACHE.get(key)
+        if cached is not None:
+            return cached
+        data = party_bin.read_bytes()
+    except OSError:
+        return []
+    found = [p for p in KNOWN_PROTOCOLS if p.encode() in data]
+    _PROTO_CACHE[key] = found
+    return found
 
 
 def _is_listening(port: int, host: str = "127.0.0.1", timeout: float = 0.2) -> bool:
@@ -128,6 +161,7 @@ def status() -> dict[str, Any]:
             },
             "parties": parties,
             "num_parties": n,
+            "protocols_available": available_protocols(build_dir),
         }
 
 
@@ -373,6 +407,7 @@ def status_unlocked() -> dict[str, Any]:
         "parties": parties,
         "num_parties": n,
         "protocol": _CONFIG.get("protocol"),
+        "protocols_available": available_protocols(build_dir),
     }
 
 

@@ -68,8 +68,8 @@ function Shell() {
           defaultActiveKey="demo"
           leafAnimation
           items={[
-            { key: 'demo',      label: t('tabs.demo'),      children: <DemoPanel onAfterRun={refresh} /> },
-            { key: 'practical', label: t('tabs.practical'), children: <PracticalPanel /> },
+            { key: 'demo',      label: t('tabs.demo'),      children: <DemoPanel onAfterRun={refresh} available={status?.protocols_available ?? null} /> },
+            { key: 'practical', label: t('tabs.practical'), children: <PracticalPanel available={status?.protocols_available ?? null} /> },
           ]}
         />
 

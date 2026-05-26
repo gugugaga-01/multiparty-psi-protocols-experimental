@@ -17,8 +17,16 @@ const PARTY_COLORS = [
 ] as const
 
 
-export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
+export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; available?: string[] | null }) {
   const { t: tr } = useI18n()
+  // Only offer protocols actually compiled into psi_party. When availability is
+  // unknown (status not yet loaded), show all so the UI degrades gracefully.
+  const protocolOptions = available && available.length
+    ? PROTOCOLS.filter((p) => available.includes(p.key))
+    : PROTOCOLS
+  const missingProtocols = available && available.length
+    ? PROTOCOLS.filter((p) => !available.includes(p.key))
+    : []
   const [protocol, setProtocol] = useState('ks05_t_mpsi')
   const [n, setN] = useState('3')
   const [t, setT] = useState('3')
@@ -100,11 +108,14 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
         <label className="field grow">
           <span>{tr('demo.protocol')}</span>
           <Select
-            options={PROTOCOLS}
+            options={protocolOptions}
             value={protocol}
             onChange={(v) => setProtocol(v as string)}
             disabled={busy}
           />
+          {missingProtocols.length > 0 && (
+            <small>{tr('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
+          )}
         </label>
         <label className="field" style={{ width: 110 }}>
           <span>{tr('demo.n')}</span>

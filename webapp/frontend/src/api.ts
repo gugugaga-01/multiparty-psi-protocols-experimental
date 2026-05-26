@@ -3,6 +3,7 @@ export type ClusterStatus = {
   build_dir: string | null
   num_parties: number
   protocol: string | null
+  protocols_available?: string[]
   dealer: { pid: number | null; running: boolean; listening: boolean; port: number }
   parties: Array<{
     i: number

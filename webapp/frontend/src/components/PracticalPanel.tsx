@@ -10,8 +10,14 @@ const PROTOCOLS = [
   { key: 'xzh26_ec_mpsi', label: 'XZH26 MPSI' },
 ]
 
-export function PracticalPanel() {
+export function PracticalPanel({ available }: { available?: string[] | null }) {
   const { t: tr } = useI18n()
+  const protocolOptions = available && available.length
+    ? PROTOCOLS.filter((p) => available.includes(p.key))
+    : PROTOCOLS
+  const missingProtocols = available && available.length
+    ? PROTOCOLS.filter((p) => !available.includes(p.key))
+    : []
   const ROLES = [
     { key: 'member', label: tr('pr.role.member') },
     { key: 'leader', label: tr('pr.role.leader') },
@@ -89,11 +95,14 @@ export function PracticalPanel() {
         <label className="field grow">
           <span>{tr('pr.protocol')}</span>
           <Select
-            options={PROTOCOLS}
+            options={protocolOptions}
             value={protocol}
             onChange={(v) => setProtocol(v as string)}
             disabled={busy}
           />
+          {missingProtocols.length > 0 && (
+            <small>{tr('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
+          )}
         </label>
         <label className="field" style={{ width: 100 }}>
           <span>N</span>
