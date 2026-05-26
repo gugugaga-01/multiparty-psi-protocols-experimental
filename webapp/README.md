@@ -67,15 +67,19 @@ logs (dealer + each party) land in `webapp/logs/`.
 - Only one auto-managed cluster runs at a time per server instance. The Demo
   mode reuses an already-running cluster when the protocol and party count
   match, otherwise it restarts it.
-- `yyh26_tt_mpsi` is dealerless and must be compiled into `psi_party`
-  (`-DMPSI_BUILD_YYH26=ON`) and have its experiment binary built — see
-  [service/README.md](../service/README.md). The console detects a missing
-  YYH26 build and reports it rather than failing cryptically at request time.
-- `xzh26_ec_mpsi` is dealerless and must be compiled in (`-DMPSI_BUILD_XZH26=ON`,
-  requires libsodium plus the vendored cryptoTools/miracl). It is plain MPSI, so
-  the threshold is locked to N in the UI, and its OPPRF requires **every party
-  to hold the same number of elements** — the Demo mode generates equal-size
-  sets automatically, and unequal custom inputs are rejected with a clear error.
+- **The protocol pickers only list protocols actually compiled into the
+  `psi_party` binary.** The console scans the binary for each protocol's ID and
+  hides the rest, with a small "not built" note naming them. A direct API call
+  for a missing protocol returns a clear "not compiled into psi_party" error.
+- **Equal set sizes**: `xzh26_ec_mpsi` and `beh21_ot_mpsi` require every party to
+  hold the same number of elements (their hashing/OT machinery aborts otherwise).
+  The Demo mode generates equal-size sets for these protocols automatically, and
+  unequal custom inputs are rejected with a clear error.
+- `xzh26_ec_mpsi` is plain MPSI, so the threshold is locked to N in the UI.
+  `beh21_ot_mpsi` and `ks05_t_mpsi` are threshold protocols (t ≤ N is allowed).
+- Dealer use: KS05 and BEH21 use the trusted dealer; XZH26 and YYH26 are
+  dealerless (DKG runs in-protocol).
 - XZH26 and YYH26 **cannot both be compiled into one `psi_party`** — they vendor
-  conflicting copies of osuCrypto/cryptoTools. Enable at most one; the build
-  fails fast with a message if both flags are set.
+  conflicting copies of osuCrypto/cryptoTools. XZH26 is on by default; build
+  YYH26 instead with `-DMPSI_BUILD_YYH26=ON -DMPSI_BUILD_XZH26=OFF`. The build
+  fails fast if both flags are set.

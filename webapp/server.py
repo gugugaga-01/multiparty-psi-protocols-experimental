@@ -133,11 +133,10 @@ UNIQUE_POOL = [
 
 MIN_PARTY_SIZE = len(ALL_COMMON)  # smaller would drop the all-parties intersection
 
-# Protocols whose OPPRF/cuckoo-hashing requires every party to hold the same
-# number of elements. The leader sizes incoming buffers from its own bin
-# parameters, which are derived from the set size, so unequal sizes throw a
-# "size not expected" error mid-protocol. XZH26 is such a protocol.
-EQUAL_SIZE_PROTOCOLS = {"xzh26_ec_mpsi"}
+# Protocols whose hashing/OT machinery requires every party to hold the same
+# number of elements; unequal sizes abort the leader mid-protocol (e.g. XZH26's
+# OPPRF throws "size not expected"). Both XZH26 and BEH21 are such protocols.
+EQUAL_SIZE_PROTOCOLS = {"xzh26_ec_mpsi", "beh21_ot_mpsi"}
 # Default per-party size used when an equal-size protocol falls back to
 # generated inputs (matches the mid value of the KS05 default ladder).
 EQUAL_SIZE_DEFAULT = 16
