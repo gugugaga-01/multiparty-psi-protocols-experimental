@@ -1,0 +1,4 @@
+# Runtime: stdlib only.
+# These are required for the underlying mpsi_client (already needed by service/clients/python).
+grpcio>=1.60
+protobuf>=4.25

@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>psinsieme · MPSI Console</title>
+<style>
+  :root {
+    --bg-0: #07090d;
+    --bg-1: #0c1119;
+    --bg-2: #131a26;
+    --line: rgba(255,255,255,0.08);
+    --line-strong: rgba(255,255,255,0.16);
+    --fg: #e7ecf3;
+    --fg-dim: #8c97a8;
+    --accent: #7aa2ff;
+    --accent-2: #6ee7c7;
+    --warn: #ffb86b;
+    --bad: #ff7a8a;
+    --good: #6ee7c7;
+    --chip: rgba(122,162,255,0.12);
+    --chip-good: rgba(110,231,199,0.18);
+    --chip-bad: rgba(255,122,138,0.18);
+    --chip-leader: rgba(255,184,107,0.18);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(122,162,255,0.18), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, rgba(110,231,199,0.14), transparent 60%),
+      linear-gradient(180deg, var(--bg-0), var(--bg-1));
+    min-height: 100vh;
+  }
+  code, pre, .mono { font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace; }
+
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 32px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; margin-bottom: 28px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .logo {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: conic-gradient(from 200deg, #7aa2ff, #6ee7c7, #ffb86b, #7aa2ff);
+    box-shadow: 0 8px 30px rgba(122,162,255,0.35);
+    position: relative;
+  }
+  .logo::after {
+    content: ""; position: absolute; inset: 4px; border-radius: 9px;
+    background: var(--bg-1);
+  }
+  .logo::before {
+    content: ""; position: absolute; inset: 12px; border-radius: 999px;
+    background: radial-gradient(circle, #7aa2ff, #6ee7c7);
+    z-index: 1;
+  }
+  h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+  .subtitle { color: var(--fg-dim); font-size: 13px; margin-top: 2px; }
+
+  .tabs {
+    display: inline-flex; padding: 4px; gap: 4px;
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .tab {
+    padding: 8px 14px; border-radius: 8px; cursor: pointer;
+    color: var(--fg-dim); font-weight: 500; font-size: 13px;
+    border: none; background: transparent;
+  }
+  .tab.active {
+    color: var(--fg);
+    background: linear-gradient(180deg, rgba(122,162,255,0.18), rgba(122,162,255,0.06));
+    box-shadow: inset 0 0 0 1px rgba(122,162,255,0.35);
+  }
+
+  .card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px;
+    backdrop-filter: blur(6px);
+  }
+  .grid { display: grid; gap: 16px; }
+  .grid.cols-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .grid.cols-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  @media (max-width: 720px) { .grid.cols-2, .grid.cols-3 { grid-template-columns: 1fr; } }
+
+  label { display: block; font-size: 12px; color: var(--fg-dim); margin-bottom: 6px; letter-spacing: 0.02em; text-transform: uppercase; }
+  input, select, textarea {
+    width: 100%; padding: 10px 12px; border-radius: 10px;
+    background: var(--bg-2); color: var(--fg); border: 1px solid var(--line);
+    font: inherit;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: rgba(122,162,255,0.55);
+    box-shadow: 0 0 0 4px rgba(122,162,255,0.12);
+  }
+  textarea { min-height: 140px; resize: vertical; font-family: ui-monospace, monospace; font-size: 13px; }
+
+  .btn {
+    appearance: none; cursor: pointer; border: 0; padding: 11px 18px;
+    border-radius: 10px; font-weight: 600; font-size: 13px;
+    color: #0a0d13;
+    background: linear-gradient(135deg, #7aa2ff, #6ee7c7);
+    box-shadow: 0 6px 20px rgba(122,162,255,0.3);
+    transition: transform .08s ease, box-shadow .15s, opacity .15s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(122,162,255,0.38); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn.ghost {
+    background: transparent; color: var(--fg);
+    box-shadow: inset 0 0 0 1px var(--line-strong);
+  }
+
+  .row-actions { display: flex; gap: 10px; align-items: center; margin-top: 18px; }
+  .hint { color: var(--fg-dim); font-size: 12px; }
+
+  .section-title {
+    font-size: 11px; text-transform: uppercase; color: var(--fg-dim); letter-spacing: 0.08em;
+    margin: 28px 0 10px;
+  }
+
+  .chip { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px; font-size: 12px; background: var(--chip); color: var(--accent); margin: 2px 4px 2px 0; }
+  .chip.good { background: var(--chip-good); color: var(--good); }
+  .chip.bad { background: var(--chip-bad); color: var(--bad); }
+  .chip.leader { background: var(--chip-leader); color: var(--warn); }
+
+  .party {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px;
+    background: rgba(255,255,255,0.015);
+  }
+  .party h3 { margin: 0 0 4px; font-size: 14px; display:flex; align-items:center; gap: 8px; }
+  .party .meta { color: var(--fg-dim); font-size: 12px; margin-bottom: 10px; }
+  .set { max-height: 110px; overflow: auto; padding-right: 4px; }
+  .set::-webkit-scrollbar { width: 8px; }
+  .set::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 8px; }
+
+  .result-banner {
+    border-radius: 14px; padding: 14px 18px; margin-top: 20px;
+    border: 1px solid var(--line);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .result-banner.ok { border-color: rgba(110,231,199,0.4); background: rgba(110,231,199,0.06); }
+  .result-banner.err { border-color: rgba(255,122,138,0.4); background: rgba(255,122,138,0.06); }
+  .dot { width: 10px; height: 10px; border-radius: 999px; }
+  .dot.ok { background: var(--good); box-shadow: 0 0 12px var(--good); }
+  .dot.err { background: var(--bad); box-shadow: 0 0 12px var(--bad); }
+
+  .pre {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: ui-monospace, monospace; font-size: 12.5px;
+    color: var(--fg-dim);
+    white-space: pre-wrap;
+    overflow: auto;
+  }
+
+  .spinner {
+    width: 14px; height: 14px; border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-top-color: var(--accent);
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hidden { display: none !important; }
+
+  details summary { cursor: pointer; color: var(--fg-dim); }
+  details[open] summary { color: var(--fg); }
+
+  .footer { color: var(--fg-dim); font-size: 12px; margin-top: 32px; text-align: center; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>psinsieme · MPSI Console</h1>
+        <div class="subtitle">Multi-party private set intersection over gRPC</div>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-mode="demo">Demo</button>
+      <button class="tab" data-mode="practical">Practical</button>
+    </div>
+  </header>
+
+  <!-- CLUSTER CONTROL -->
+  <section class="card" style="margin-bottom:18px">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap">
+      <div>
+        <div style="font-size:11px; text-transform:uppercase; color:var(--fg-dim); letter-spacing:0.08em">Cluster</div>
+        <div style="display:flex; align-items:center; gap:10px; margin-top:6px">
+          <span id="c-dealer-pill" class="chip">dealer ●</span>
+          <span id="c-parties-pills"></span>
+        </div>
+        <div class="hint" id="c-build-hint" style="margin-top:6px"></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+        <div>
+          <label>Protocol</label>
+          <select id="c-protocol" style="width:200px">
+            <option value="ks05_t_mpsi">KS05 (with dealer)</option>
+            <option value="beh21_ot_mpsi">BEH21 (with dealer)</option>
+            <option value="yyh26_tt_mpsi">YYH26 (no dealer)</option>
+          </select>
+        </div>
+        <div>
+          <label>Parties</label>
+          <input id="c-n" type="number" min="2" max="16" value="3" style="width:80px">
+        </div>
+        <label style="margin:0; text-transform:none; letter-spacing:0; color:var(--fg); font-size:13px">
+          <input type="checkbox" id="c-tls"> mTLS
+        </label>
+        <button class="btn" id="c-start">Start</button>
+        <button class="btn ghost" id="c-stop">Stop</button>
+      </div>
+    </div>
+    <div id="c-status" class="hidden" style="margin-top:14px"></div>
+  </section>
+
+  <!-- DEMO MODE -->
+  <section id="mode-demo" class="card">
+    <div class="grid cols-3">
+      <div>
+        <label>Protocol</label>
+        <select id="d-protocol">
+          <option value="ks05_t_mpsi">KS05 Threshold-MPSI</option>
+          <option value="beh21_ot_mpsi">BEH21 OT-MPSI</option>
+          <option value="yyh26_tt_mpsi">YYH26 TT-MPSI</option>
+        </select>
+      </div>
+      <div>
+        <label>Number of parties</label>
+        <input id="d-n" type="number" min="2" max="16" value="3">
+      </div>
+      <div>
+        <label>Threshold</label>
+        <input id="d-t" type="number" min="2" value="3">
+      </div>
+      <div>
+        <label>Client port base</label>
+        <input id="d-client-port" type="number" value="53100">
+      </div>
+      <div>
+        <label>Inter-party port base</label>
+        <input id="d-inter-port" type="number" value="53000">
+      </div>
+      <div>
+        <label>Timeout (s)</label>
+        <input id="d-timeout" type="number" value="300">
+      </div>
+    </div>
+    <div style="margin-top:14px; display:flex; align-items:center; gap:18px; flex-wrap:wrap">
+      <label style="margin:0; text-transform:none; letter-spacing:0; color:var(--fg); font-size:13px">
+        <input type="checkbox" id="d-auto" checked> Auto-manage cluster
+      </label>
+      <label style="margin:0; text-transform:none; letter-spacing:0; color:var(--fg); font-size:13px">
+        <input type="checkbox" id="d-customize"> Customize inputs per party
+      </label>
+    </div>
+    <div class="hint" style="margin-top:6px">
+      With auto-manage on, clicking Run handles everything: spawns dealer + parties, runs the protocol, tears down. Turn it off to reuse an already-running cluster.
+    </div>
+
+    <div id="d-inputs-grid" class="hidden" style="margin-top:14px"></div>
+
+    <div class="row-actions">
+      <button class="btn" id="d-run">Run demo</button>
+      <button class="btn ghost" id="d-reset" style="display:none">Reset to defaults</button>
+      <span class="hint">Assumes <code>psi_party</code> processes are already running on the configured ports (e.g. via <code>service/demos/ks05/demo.sh</code>).</span>
+    </div>
+
+    <div id="d-status" class="hidden"></div>
+    <div id="d-result" class="hidden"></div>
+  </section>
+
+  <!-- PRACTICAL MODE -->
+  <section id="mode-practical" class="card hidden">
+    <div class="grid cols-2">
+      <div>
+        <label>Your party endpoint (gRPC client port)</label>
+        <input id="p-target" placeholder="127.0.0.1:53100">
+      </div>
+      <div>
+        <label>Leader inter-party address</label>
+        <input id="p-leader" placeholder="127.0.0.1:53002">
+      </div>
+      <div>
+        <label>Your role</label>
+        <select id="p-role">
+          <option value="member">Member</option>
+          <option value="leader">Leader</option>
+        </select>
+      </div>
+      <div>
+        <label>Protocol</label>
+        <select id="p-protocol">
+          <option value="ks05_t_mpsi">KS05 Threshold-MPSI</option>
+          <option value="beh21_ot_mpsi">BEH21 OT-MPSI</option>
+          <option value="yyh26_tt_mpsi">YYH26 TT-MPSI</option>
+        </select>
+      </div>
+      <div>
+        <label>Number of parties</label>
+        <input id="p-n" type="number" min="2" value="3">
+      </div>
+      <div>
+        <label>Threshold</label>
+        <input id="p-t" type="number" min="2" value="3">
+      </div>
+    </div>
+
+    <div style="margin-top:14px">
+      <label>Your input set (one element per line)</label>
+      <textarea id="p-elements" placeholder="Alpha&#10;Bravo&#10;Charlie"></textarea>
+    </div>
+
+    <details style="margin-top:12px">
+      <summary>mTLS (optional)</summary>
+      <div class="grid cols-2" style="margin-top:10px">
+        <div>
+          <label><input type="checkbox" id="p-tls"> Use mTLS</label>
+        </div>
+        <div></div>
+        <div>
+          <label>CA cert path</label>
+          <input id="p-ca" placeholder="/path/to/ca.pem">
+        </div>
+        <div>
+          <label>Client cert path</label>
+          <input id="p-cert" placeholder="/path/to/party.pem">
+        </div>
+        <div>
+          <label>Client key path</label>
+          <input id="p-key" placeholder="/path/to/party-key.pem">
+        </div>
+        <div>
+          <label>Timeout (s)</label>
+          <input id="p-timeout" type="number" value="300">
+        </div>
+      </div>
+    </details>
+
+    <div class="row-actions">
+      <button class="btn" id="p-run">Submit</button>
+      <span class="hint">You represent <em>one</em> party. Other parties must submit independently.</span>
+    </div>
+
+    <div id="p-status" class="hidden"></div>
+    <div id="p-result" class="hidden"></div>
+  </section>
+
+  <div class="footer">
+    psinsieme · listening on <code>:38888</code>
+  </div>
+</div>
+
+<script>
+  // --- cluster control ----------------------------------------------------
+  let clusterPollTimer = null;
+
+  async function refreshCluster() {
+    try {
+      const r = await fetch("/api/cluster/status");
+      if (!r.ok) return;
+      const s = await r.json();
+      renderCluster(s);
+    } catch {}
+  }
+
+  function renderCluster(s) {
+    const dealerPill = document.getElementById("c-dealer-pill");
+    const dealerless = s.protocol && /yyh26/i.test(s.protocol);
+    if (dealerless && s.num_parties > 0) {
+      dealerPill.className = "chip";
+      dealerPill.textContent = `dealer — n/a (${s.protocol})`;
+    } else if (s.dealer.running && s.dealer.listening) {
+      dealerPill.className = "chip good";
+      dealerPill.textContent = `dealer ● :${s.dealer.port} (pid ${s.dealer.pid})`;
+    } else if (s.dealer.running) {
+      dealerPill.className = "chip leader";
+      dealerPill.textContent = `dealer ● starting…`;
+    } else {
+      dealerPill.className = "chip bad";
+      dealerPill.textContent = `dealer ○ stopped`;
+    }
+
+    const partyPills = s.parties.map(p => {
+      const cls = p.running && p.client_listening ? "good" : (p.running ? "leader" : "bad");
+      const sym = p.running && p.client_listening ? "●" : (p.running ? "◐" : "○");
+      const label = p.running
+        ? `p${p.i} ${sym} :${p.client_port} (pid ${p.pid})`
+        : `p${p.i} ${sym}`;
+      return `<span class="chip ${cls}">${label}</span>`;
+    }).join("");
+    document.getElementById("c-parties-pills").innerHTML = partyPills;
+
+    const hintEl = document.getElementById("c-build-hint");
+    if (!s.built) {
+      hintEl.innerHTML = `Binaries not found at <code>${s.party_bin}</code>. Build first: ` +
+        `<code>mkdir -p build &amp;&amp; cd build &amp;&amp; cmake .. &amp;&amp; make -j$(nproc)</code>`;
+      hintEl.style.color = "var(--bad)";
+    } else if (!s.dealer.running) {
+      hintEl.textContent = "Cluster stopped. Click Start to spawn dealer + parties.";
+      hintEl.style.color = "";
+    } else {
+      hintEl.textContent = `Cluster up · build_dir = ${s.build_dir}`;
+      hintEl.style.color = "";
+    }
+  }
+
+  document.getElementById("c-start").addEventListener("click", async () => {
+    const btn = document.getElementById("c-start");
+    const statusEl = document.getElementById("c-status");
+    btn.disabled = true;
+    setStatus(statusEl, "Spawning dealer + parties (this may take ~5s for key distribution)…");
+    try {
+      const r = await fetch("/api/cluster/start", {
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify({
+          num_parties: parseInt(document.getElementById("c-n").value, 10),
+          tls: document.getElementById("c-tls").checked,
+          protocol: document.getElementById("c-protocol").value,
+        }),
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.detail || ("HTTP " + r.status));
+      renderCluster(data);
+      setStatus(statusEl, `Cluster up: ${data.num_parties} parties + dealer.`, "ok");
+    } catch (e) {
+      setStatus(statusEl, "Start failed: " + e.message, "err");
+    } finally {
+      btn.disabled = false;
+      refreshCluster();
+    }
+  });
+
+  document.getElementById("c-stop").addEventListener("click", async () => {
+    const btn = document.getElementById("c-stop");
+    const statusEl = document.getElementById("c-status");
+    btn.disabled = true;
+    setStatus(statusEl, "Stopping cluster…");
+    try {
+      const r = await fetch("/api/cluster/stop", {
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: "{}",
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.detail || ("HTTP " + r.status));
+      setStatus(statusEl, `Stopped (killed ${data.killed} processes).`, "ok");
+    } catch (e) {
+      setStatus(statusEl, "Stop failed: " + e.message, "err");
+    } finally {
+      btn.disabled = false;
+      refreshCluster();
+    }
+  });
+
+  // initial load + periodic refresh while page is open
+  refreshCluster();
+  clusterPollTimer = setInterval(refreshCluster, 3000);
+
+  // --- mode tabs ----------------------------------------------------------
+  const tabs = document.querySelectorAll(".tab");
+  tabs.forEach(t => t.addEventListener("click", () => {
+    tabs.forEach(x => x.classList.toggle("active", x === t));
+    const mode = t.dataset.mode;
+    document.getElementById("mode-demo").classList.toggle("hidden", mode !== "demo");
+    document.getElementById("mode-practical").classList.toggle("hidden", mode !== "practical");
+  }));
+
+  // --- helpers ------------------------------------------------------------
+  const $ = (id) => document.getElementById(id);
+  const escapeHtml = (s) => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+
+  function chipsHtml(items, cls = "") {
+    if (!items || !items.length) return '<span class="hint">∅</span>';
+    return items.map(e => `<span class="chip ${cls}">${escapeHtml(e)}</span>`).join("");
+  }
+
+  function setStatus(el, text, kind = "info") {
+    el.classList.remove("hidden");
+    el.className = "result-banner " + (kind === "ok" ? "ok" : kind === "err" ? "err" : "");
+    el.innerHTML = (kind === "ok"
+      ? '<span class="dot ok"></span>'
+      : kind === "err"
+      ? '<span class="dot err"></span>'
+      : '<span class="spinner"></span>') + ' <span>' + escapeHtml(text) + '</span>';
+  }
+
+  // --- demo mode ----------------------------------------------------------
+  $("d-n").addEventListener("input", () => {
+    $("d-t").value = $("d-n").value;
+    if ($("d-customize").checked) loadDefaultsIntoGrid();
+  });
+
+  $("d-customize").addEventListener("change", () => {
+    const on = $("d-customize").checked;
+    $("d-inputs-grid").classList.toggle("hidden", !on);
+    $("d-reset").style.display = on ? "" : "none";
+    if (on) loadDefaultsIntoGrid();
+  });
+
+  $("d-reset").addEventListener("click", (e) => {
+    e.preventDefault();
+    loadDefaultsIntoGrid();
+  });
+
+  async function loadDefaultsIntoGrid() {
+    const n = parseInt($("d-n").value, 10);
+    const grid = $("d-inputs-grid");
+    grid.innerHTML = '<div class="hint">Loading defaults…</div>';
+    try {
+      const r = await fetch("/api/demo/defaults?n=" + encodeURIComponent(n));
+      if (!r.ok) throw new Error(await r.text());
+      const data = await r.json();
+      renderInputsGrid(data.inputs);
+    } catch (e) {
+      grid.innerHTML = '<div class="pre" style="color:var(--bad)">Failed to load defaults: ' + escapeHtml(e.message) + '</div>';
+    }
+  }
+
+  function renderInputsGrid(inputs) {
+    const grid = $("d-inputs-grid");
+    const cells = inputs.map((set, i) => {
+      const isLeader = i === inputs.length - 1;
+      return `
+        <div class="party">
+          <h3>Party ${i}
+            ${isLeader ? '<span class="chip leader">leader</span>' : '<span class="chip">member</span>'}
+          </h3>
+          <div class="meta">${set.length} elements (one per line)</div>
+          <textarea data-party="${i}" style="min-height:120px">${escapeHtml(set.join("\n"))}</textarea>
+        </div>`;
+    }).join("");
+    grid.className = "grid cols-3";
+    grid.innerHTML = cells;
+  }
+
+  function collectCustomInputs() {
+    const tas = $("d-inputs-grid").querySelectorAll("textarea[data-party]");
+    if (!tas.length) return null;
+    const out = [];
+    tas.forEach(ta => {
+      const lines = ta.value.split("\n").map(s => s.trim()).filter(Boolean);
+      out.push(lines);
+    });
+    return out;
+  }
+
+  $("d-run").addEventListener("click", async () => {
+    const btn = $("d-run");
+    const statusEl = $("d-status");
+    const resultEl = $("d-result");
+    resultEl.classList.add("hidden");
+    btn.disabled = true;
+    setStatus(statusEl, "Submitting inputs to all parties…");
+
+    const body = {
+      num_parties: parseInt($("d-n").value, 10),
+      threshold: parseInt($("d-t").value, 10),
+      protocol: $("d-protocol").value,
+      client_port_base: parseInt($("d-client-port").value, 10),
+      inter_port_base: parseInt($("d-inter-port").value, 10),
+      timeout: parseFloat($("d-timeout").value),
+      auto_cluster: $("d-auto").checked,
+    };
+    if ($("d-customize").checked) {
+      const custom = collectCustomInputs();
+      if (custom && custom.length) {
+        const empty = custom.findIndex(s => !s.length);
+        if (empty >= 0) {
+          setStatus(statusEl, `Party ${empty} has no elements. Add at least one or untoggle "Customize inputs".`, "err");
+          btn.disabled = false;
+          return;
+        }
+        body.inputs = custom;
+      }
+    }
+
+    try {
+      const r = await fetch("/api/demo", {
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify(body),
+      });
+      if (!r.ok) {
+        let detail;
+        try { detail = (await r.json()).detail; } catch { detail = await r.text(); }
+        throw new Error(detail || ("HTTP " + r.status));
+      }
+      const data = await r.json();
+      renderDemoResult(data);
+      const connErrors = data.parties.filter(p => p.error && /Connection refused|UNAVAILABLE|failed to connect/i.test(p.error));
+      if (connErrors.length) {
+        setStatus(statusEl,
+          `Could not reach ${connErrors.length}/${data.num_parties} party endpoints. Start the parties first, e.g. \`bash service/demos/ks05/demo.sh --parties ${data.num_parties}\`.`,
+          "err");
+      } else {
+        setStatus(statusEl, data.success
+          ? `Threshold-${data.threshold} intersection completed for ${data.num_parties} parties.`
+          : "Demo finished, but the leader's result did not match the expected intersection.",
+          data.success ? "ok" : "err");
+      }
+    } catch (e) {
+      setStatus(statusEl, "Failed: " + e.message, "err");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  function renderDemoResult(d) {
+    const expected = new Set(d.expected);
+    const partyCards = d.parties.map(p => {
+      const isLeader = p.role === "leader";
+      const inputChips = p.input.map(e =>
+        `<span class="chip ${expected.has(e) ? 'good' : ''}">${escapeHtml(e)}</span>`
+      ).join("");
+      const errBlock = p.error
+        ? `<div class="pre" style="color: var(--bad); margin-top:8px">${escapeHtml(p.error)}</div>`
+        : "";
+      const resultBlock = isLeader
+        ? `<div class="section-title" style="margin-top:10px">Computed intersection</div>
+           <div>${chipsHtml(p.intersection, "good")}</div>`
+        : `<div class="hint" style="margin-top:8px">Member party — no output (by design).</div>`;
+      return `
+        <div class="party">
+          <h3>${escapeHtml(p.name)}
+            ${isLeader ? '<span class="chip leader">leader</span>' : '<span class="chip">member</span>'}
+          </h3>
+          <div class="meta mono">${escapeHtml(p.address)}</div>
+          <div class="section-title" style="margin-top:0">Input set (${p.input.length})</div>
+          <div class="set">${inputChips}</div>
+          ${resultBlock}
+          ${errBlock}
+        </div>`;
+    }).join("");
+
+    $("d-result").classList.remove("hidden");
+    $("d-result").innerHTML = `
+      <div class="section-title">Expected intersection</div>
+      <div>${chipsHtml(d.expected, "good")}</div>
+
+      <div class="section-title">Parties</div>
+      <div class="grid cols-3">${partyCards}</div>
+
+      <div class="section-title">Run config</div>
+      <div class="pre">protocol = ${escapeHtml(d.protocol)}
+parties  = ${d.num_parties}
+threshold = ${d.threshold}
+leader   = ${escapeHtml(d.leader_address)}</div>
+    `;
+  }
+
+  // --- practical mode -----------------------------------------------------
+  $("p-run").addEventListener("click", async () => {
+    const btn = $("p-run");
+    const statusEl = $("p-status");
+    const resultEl = $("p-result");
+    resultEl.classList.add("hidden");
+
+    const elements = $("p-elements").value
+      .split("\n").map(s => s.trim()).filter(Boolean);
+    if (!elements.length) {
+      setStatus(statusEl, "Provide at least one element.", "err");
+      return;
+    }
+
+    const body = {
+      target: $("p-target").value.trim(),
+      leader_address: $("p-leader").value.trim(),
+      role: $("p-role").value,
+      protocol: $("p-protocol").value,
+      num_parties: parseInt($("p-n").value, 10),
+      threshold: parseInt($("p-t").value, 10),
+      timeout: parseFloat($("p-timeout").value || "300"),
+      elements,
+      tls: $("p-tls").checked,
+      ca_cert: $("p-ca").value || null,
+      client_cert: $("p-cert").value || null,
+      client_key: $("p-key").value || null,
+    };
+
+    if (!body.target || !body.leader_address) {
+      setStatus(statusEl, "Target and leader address are required.", "err");
+      return;
+    }
+
+    btn.disabled = true;
+    setStatus(statusEl, "Waiting for the protocol to complete (this blocks until all parties submit)…");
+
+    try {
+      const r = await fetch("/api/submit", {
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify(body),
+      });
+      const data = await r.json();
+      if (!r.ok) {
+        throw new Error(data.detail || ("HTTP " + r.status));
+      }
+      const isLeader = body.role === "leader";
+      $("p-result").classList.remove("hidden");
+      $("p-result").innerHTML = isLeader
+        ? `<div class="section-title">Intersection (${data.intersection.length})</div>
+           <div>${chipsHtml(data.intersection, "good")}</div>
+           <div class="section-title">Status</div>
+           <div class="pre">${escapeHtml(data.status || "ok")}</div>`
+        : `<div class="section-title">Status</div>
+           <div class="pre">${escapeHtml(data.status || "ok")}</div>
+           <div class="hint" style="margin-top:8px">Members do not learn the intersection — only the leader does.</div>`;
+      setStatus(statusEl, "Protocol completed.", "ok");
+    } catch (e) {
+      setStatus(statusEl, "Failed: " + e.message, "err");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
