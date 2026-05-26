@@ -5,7 +5,7 @@ import { useI18n } from '../i18n'
 
 const PROTOCOLS = [
   { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
-  { key: 'beh21_t_mpsi',  label: 'BEH21 T-MPSI' },
+  { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
   { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
 ]
 

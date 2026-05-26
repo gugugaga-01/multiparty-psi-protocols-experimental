@@ -23,7 +23,7 @@ export function ClusterCard({
   // technical names that read the same in any language.
   const protocols = [
     { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
-    { key: 'beh21_t_mpsi',  label: 'BEH21 T-MPSI' },
+    { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
     { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
   ]
 
