@@ -193,6 +193,10 @@ target_link_libraries(psi_party PRIVATE ks05_protocol ks05_crypto mpsi_core mpsi
 if(MPSI_BUILD_YYH26)
     target_sources(psi_party PRIVATE $<TARGET_OBJECTS:yyh26_plugin>)
     target_link_libraries(psi_party PRIVATE yyh26_protocol)
+    # The vendored libOTe/miracl archives contain objects built without -fPIC
+    # (non-PIC relocations), which cannot be linked into a default PIE binary.
+    # Link psi_party as non-PIE so these archives are accepted.
+    target_link_options(psi_party PRIVATE -no-pie)
 endif()
 
 # BEH21 OT-MPSI protocol (optional, uses Paillier from ks05_crypto + Bloom filters)
@@ -276,8 +280,23 @@ if(MPSI_BUILD_XZH26)
     target_include_directories(xzh26_plugin PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     target_link_libraries(xzh26_plugin PRIVATE xzh26_protocol mpsi_core mpsi_proto)
 
+    # NOTE: XZH26 and YYH26 are mutually exclusive in a single psi_party.
+    # Both vendor their own fork of osuCrypto / cryptoTools (CuckooHasher1,
+    # SimpleHasher1, OPPRF, ...) under the same `osuCrypto` namespace, so linking
+    # both yields "multiple definition" errors. Enable at most one of
+    # MPSI_BUILD_XZH26 / MPSI_BUILD_YYH26.
+    if(MPSI_BUILD_YYH26)
+        message(FATAL_ERROR
+            "MPSI_BUILD_XZH26 and MPSI_BUILD_YYH26 cannot be enabled together "
+            "(duplicate osuCrypto symbols). Enable only one.")
+    endif()
+
     target_sources(psi_party PRIVATE $<TARGET_OBJECTS:xzh26_plugin>)
     target_link_libraries(psi_party PRIVATE xzh26_protocol xzh26_crypto ${SODIUM_LIB})
+
+    # miracl and the vendored cryptoTools objects are not position-independent,
+    # so psi_party cannot be a default PIE binary when XZH26 is linked in.
+    target_link_options(psi_party PRIVATE -no-pie)
 endif()
 
 # psi_dealer binary (trusted key dealer service)

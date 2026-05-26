@@ -71,3 +71,11 @@ logs (dealer + each party) land in `webapp/logs/`.
   (`-DMPSI_BUILD_YYH26=ON`) and have its experiment binary built — see
   [service/README.md](../service/README.md). The console detects a missing
   YYH26 build and reports it rather than failing cryptically at request time.
+- `xzh26_ec_mpsi` is dealerless and must be compiled in (`-DMPSI_BUILD_XZH26=ON`,
+  requires libsodium plus the vendored cryptoTools/miracl). It is plain MPSI, so
+  the threshold is locked to N in the UI, and its OPPRF requires **every party
+  to hold the same number of elements** — the Demo mode generates equal-size
+  sets automatically, and unequal custom inputs are rejected with a clear error.
+- XZH26 and YYH26 **cannot both be compiled into one `psi_party`** — they vendor
+  conflicting copies of osuCrypto/cryptoTools. Enable at most one; the build
+  fails fast with a message if both flags are set.
