@@ -28,12 +28,13 @@ public:
         }
 
         TlsConfig dealer_tls;
-        if (config.inter_party_tls.enable_mtls)
+        if (config.inter_party_tls.mode != TlsMode::INSECURE)
             dealer_tls = config.inter_party_tls;
 
         std::cerr << "[Party " << config.party_id
                   << "] BEH21: Connecting to dealer at " << config.dealer_addr
-                  << (dealer_tls.enable_mtls ? " (mTLS)" : " (insecure)")
+                  << (dealer_tls.mode == TlsMode::MTLS ? " (mTLS)"
+                      : dealer_tls.mode == TlsMode::TLS ? " (TLS)" : " (insecure)")
                   << "..." << std::endl;
 
         if (!fetchKeyShareFromDealer(config.dealer_addr, config.party_id,

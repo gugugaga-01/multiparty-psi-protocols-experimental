@@ -200,7 +200,7 @@ if(MPSI_BUILD_YYH26)
 endif()
 
 # BEH21 OT-MPSI protocol (optional, uses Paillier from ks05_crypto + Bloom filters)
-option(MPSI_BUILD_BEH21 "Build BEH21 OT-MPSI protocol support" OFF)
+option(MPSI_BUILD_BEH21 "Build BEH21 OT-MPSI protocol support" ON)
 
 if(MPSI_BUILD_BEH21)
     add_library(beh21_crypto
@@ -226,7 +226,7 @@ if(MPSI_BUILD_BEH21)
 endif()
 
 # XZH26 EC-ElGamal Bloom OPPRF MPSI protocol (optional)
-option(MPSI_BUILD_XZH26 "Build XZH26 EC-MPSI protocol support" OFF)
+option(MPSI_BUILD_XZH26 "Build XZH26 EC-MPSI protocol support" ON)
 
 if(MPSI_BUILD_XZH26)
     find_library(SODIUM_LIB sodium)
@@ -234,11 +234,23 @@ if(MPSI_BUILD_XZH26)
         message(FATAL_ERROR "libsodium not found. Install: sudo apt install libsodium-dev")
     endif()
 
-    # cryptoTools headers and sources from yyh26 upstream
+    # cryptoTools headers and sources from yyh26 upstream (a git submodule).
     set(CRYPTOTOOLS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../experiments/yyh26/upstream/cryptoTools")
     set(MIRACL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../experiments/yyh26/upstream/thirdparty/linux/miracl")
 
+    if(NOT EXISTS "${CRYPTOTOOLS_DIR}")
+        message(FATAL_ERROR
+            "XZH26 needs the yyh26 upstream submodule (cryptoTools + miracl). "
+            "Fetch it with: git submodule update --init experiments/yyh26/upstream "
+            "(or pass -DMPSI_BUILD_XZH26=OFF to skip XZH26).")
+    endif()
+
     find_library(MIRACL_LIB NAMES miracl HINTS "${MIRACL_DIR}/miracl/source/")
+    if(NOT MIRACL_LIB)
+        message(FATAL_ERROR
+            "libmiracl.a not found under ${MIRACL_DIR}/miracl/source/. It ships "
+            "prebuilt in the submodule — ensure the submodule is fully checked out.")
+    endif()
     find_package(Boost REQUIRED COMPONENTS system thread)
 
     # Build cryptoTools from yyh26 upstream
@@ -288,7 +300,9 @@ if(MPSI_BUILD_XZH26)
     if(MPSI_BUILD_YYH26)
         message(FATAL_ERROR
             "MPSI_BUILD_XZH26 and MPSI_BUILD_YYH26 cannot be enabled together "
-            "(duplicate osuCrypto symbols). Enable only one.")
+            "(duplicate osuCrypto symbols). XZH26 is on by default — to build "
+            "YYH26 instead, configure with "
+            "-DMPSI_BUILD_YYH26=ON -DMPSI_BUILD_XZH26=OFF.")
     endif()
 
     target_sources(psi_party PRIVATE $<TARGET_OBJECTS:xzh26_plugin>)
