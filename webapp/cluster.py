@@ -38,7 +38,8 @@ INTER_PORT_BASE = 53000
 CLIENT_PORT_BASE = 53100
 
 # Protocols that don't use the trusted dealer (no Paillier key distribution).
-DEALERLESS_PROTOCOLS = {"yyh26_tt_mpsi"}
+# XZH26 runs its DKG inside the protocol; YYH26 is dealerless by design.
+DEALERLESS_PROTOCOLS = {"yyh26_tt_mpsi", "xzh26_ec_mpsi"}
 
 # Protocols that must be selected at psi_party startup (vs per-request).
 STARTUP_BOUND_PROTOCOLS = {"yyh26_tt_mpsi"}

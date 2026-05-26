@@ -25,6 +25,7 @@ export function ClusterCard({
     { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
     { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
     { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
+    { key: 'xzh26_ec_mpsi', label: 'XZH26 MPSI' },
   ]
 
   useEffect(() => {
