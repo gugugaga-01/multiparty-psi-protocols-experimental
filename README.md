@@ -51,16 +51,28 @@ graph TB
 
 ### Core (service)
 
+The default service build compiles **KS05 + BEH21 + XZH26** (YYH26 is opt-in; see below).
+
 - C++20 compiler (GCC 10+ or Clang 15+)
 - CMake 3.16+
 - [NTL](https://libntl.org/) (Number Theory Library)
 - [GMP](https://gmplib.org/) (GNU Multiple Precision)
 - [gRPC](https://grpc.io/) and [Protobuf](https://protobuf.dev/)
+- [libsodium](https://libsodium.org/) and [Boost](https://www.boost.org/) (system, thread) — needed by XZH26
+- The `experiments/yyh26/upstream` git submodule — XZH26 reuses its cryptoTools sources and prebuilt miracl
 
 ```bash
 # Ubuntu/Debian
-sudo apt install build-essential cmake libntl-dev libgmp-dev libgrpc++-dev protobuf-compiler-grpc libprotobuf-dev
+sudo apt install build-essential cmake libntl-dev libgmp-dev \
+    libgrpc++-dev protobuf-compiler-grpc libprotobuf-dev \
+    libsodium-dev libboost-system-dev libboost-thread-dev
+
+# XZH26 needs the upstream submodule (cryptoTools + miracl):
+git submodule update --init experiments/yyh26/upstream
 ```
+
+To skip XZH26 (and avoid libsodium / the submodule), configure with `-DMPSI_BUILD_XZH26=OFF`.
+BEH21 has no extra dependencies; disable it with `-DMPSI_BUILD_BEH21=OFF` if desired.
 
 ### Experiments (KS05/BEH21)
 
@@ -97,15 +109,17 @@ cmake ..
 make -j$(nproc)
 ```
 
-This produces `psi_party` and `psi_dealer` under `build/service/`.
+This produces `psi_party` and `psi_dealer` under `build/service/`, with KS05, BEH21, and XZH26 compiled in.
 
 Run the demo:
 
 ```bash
 bash service/demos/ks05/demo.sh      # 3-party KS05 with dealer
-bash service/demos/beh21/demo.sh     # 3-party BEH21 with dealer (requires -DMPSI_BUILD_BEH21=ON)
-bash service/demos/yyh26/demo.sh     # 3-party YYH26 without dealer
+bash service/demos/beh21/demo.sh     # 3-party BEH21 with dealer (built by default)
+bash service/demos/yyh26/demo.sh     # 3-party YYH26 (opt-in: -DMPSI_BUILD_YYH26=ON -DMPSI_BUILD_XZH26=OFF)
 ```
+
+> **XZH26 and YYH26 are mutually exclusive** in a single `psi_party` — they vendor conflicting copies of cryptoTools/osuCrypto. XZH26 is on by default; to build YYH26 instead, configure with `-DMPSI_BUILD_YYH26=ON -DMPSI_BUILD_XZH26=OFF`. The build fails fast if both are enabled.
 
 See [service/README.md](service/README.md) for usage, mTLS setup, and API reference.
 

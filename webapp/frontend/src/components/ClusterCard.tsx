@@ -21,11 +21,21 @@ export function ClusterCard({
   // Protocol labels carry both the key and a brief role hint (translated).
   // We localise the hint suffix only, since the protocol IDs themselves are
   // technical names that read the same in any language.
-  const protocols = [
+  const allProtocols = [
     { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
-    { key: 'beh21_t_mpsi',  label: 'BEH21 T-MPSI' },
+    { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
     { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
+    { key: 'xzh26_ec_mpsi', label: 'XZH26 MPSI' },
   ]
+  // Only offer protocols compiled into psi_party; fall back to all when
+  // availability is not yet known.
+  const avail = status?.protocols_available
+  const protocols = avail && avail.length
+    ? allProtocols.filter((p) => avail.includes(p.key))
+    : allProtocols
+  const missingProtocols = avail && avail.length
+    ? allProtocols.filter((p) => !avail.includes(p.key))
+    : []
 
   useEffect(() => {
     if (status?.protocol) setProtocol(status.protocol)
@@ -84,6 +94,9 @@ export function ClusterCard({
             onChange={(v) => setProtocol(v as string)}
             disabled={busy || anyRunning}
           />
+          {missingProtocols.length > 0 && (
+            <small>{t('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
+          )}
         </label>
         <label className="field" style={{ width: 120 }}>
           <span>{t('cluster.parties')}</span>

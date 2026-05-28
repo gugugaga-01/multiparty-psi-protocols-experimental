@@ -5,8 +5,9 @@ import { useI18n } from '../i18n'
 
 const PROTOCOLS = [
   { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
-  { key: 'beh21_t_mpsi',  label: 'BEH21 T-MPSI' },
+  { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
   { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
+  { key: 'xzh26_ec_mpsi', label: 'XZH26 MPSI' },
 ]
 
 const PARTY_COLORS = [
@@ -16,8 +17,16 @@ const PARTY_COLORS = [
 ] as const
 
 
-export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
+export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; available?: string[] | null }) {
   const { t: tr } = useI18n()
+  // Only offer protocols actually compiled into psi_party. When availability is
+  // unknown (status not yet loaded), show all so the UI degrades gracefully.
+  const protocolOptions = available && available.length
+    ? PROTOCOLS.filter((p) => available.includes(p.key))
+    : PROTOCOLS
+  const missingProtocols = available && available.length
+    ? PROTOCOLS.filter((p) => !available.includes(p.key))
+    : []
   const [protocol, setProtocol] = useState('ks05_t_mpsi')
   const [n, setN] = useState('3')
   const [t, setT] = useState('3')
@@ -27,6 +36,11 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [result, setResult] = useState<DemoResult | null>(null)
+
+  // XZH26 is plain MPSI (intersection of all parties), so the threshold is
+  // always N — lock the field and feed N through instead of t.
+  const isFullMpsi = protocol === 'xzh26_ec_mpsi'
+  const effT = isFullMpsi ? n : t
 
   const loadDefaults = async (overrideSizes?: number[]) => {
     const N = Math.max(2, parseInt(n, 10) || 2)
@@ -64,7 +78,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
     try {
       const body: Parameters<typeof api.demo>[0] = {
         num_parties: parseInt(n, 10),
-        threshold: parseInt(t, 10),
+        threshold: parseInt(effT, 10),
         protocol,
         auto_cluster: autoCluster,
       }
@@ -94,11 +108,14 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
         <label className="field grow">
           <span>{tr('demo.protocol')}</span>
           <Select
-            options={PROTOCOLS}
+            options={protocolOptions}
             value={protocol}
             onChange={(v) => setProtocol(v as string)}
             disabled={busy}
           />
+          {missingProtocols.length > 0 && (
+            <small>{tr('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
+          )}
         </label>
         <label className="field" style={{ width: 110 }}>
           <span>{tr('demo.n')}</span>
@@ -109,7 +126,12 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
         </label>
         <label className="field" style={{ width: 130 }}>
           <span>{tr('demo.t')}</span>
-          <Input value={t} disabled={busy} onChange={(e) => setT(e.target.value.replace(/\D/g, ''))} />
+          <Input
+            value={effT}
+            disabled={busy || isFullMpsi}
+            onChange={(e) => setT(e.target.value.replace(/\D/g, ''))}
+          />
+          {isFullMpsi && <small>{tr('demo.t.lockedMpsi')}</small>}
         </label>
       </div>
       <div className="row" style={{ marginTop: 8 }}>
@@ -188,7 +210,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
         <div className="aii-busy-inline">
           <Loading active style={{ height: 320 }} />
           <div className="aii-busy-msg">
-            {tr('demo.busy', { protocol, n, t })}
+            {tr('demo.busy', { protocol, n, t: effT })}
           </div>
         </div>
       )}

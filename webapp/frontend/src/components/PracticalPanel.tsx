@@ -5,12 +5,19 @@ import { useI18n } from '../i18n'
 
 const PROTOCOLS = [
   { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
-  { key: 'beh21_t_mpsi',  label: 'BEH21 T-MPSI' },
+  { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
   { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
+  { key: 'xzh26_ec_mpsi', label: 'XZH26 MPSI' },
 ]
 
-export function PracticalPanel() {
+export function PracticalPanel({ available }: { available?: string[] | null }) {
   const { t: tr } = useI18n()
+  const protocolOptions = available && available.length
+    ? PROTOCOLS.filter((p) => available.includes(p.key))
+    : PROTOCOLS
+  const missingProtocols = available && available.length
+    ? PROTOCOLS.filter((p) => !available.includes(p.key))
+    : []
   const ROLES = [
     { key: 'member', label: tr('pr.role.member') },
     { key: 'leader', label: tr('pr.role.leader') },
@@ -30,6 +37,10 @@ export function PracticalPanel() {
   const [err, setErr] = useState<string | null>(null)
   const [result, setResult] = useState<SubmitResult | null>(null)
 
+  // XZH26 is plain MPSI (intersection of all parties): threshold is always N.
+  const isFullMpsi = protocol === 'xzh26_ec_mpsi'
+  const effT = isFullMpsi ? n : t
+
   const submit = async () => {
     setBusy(true); setErr(null); setResult(null)
     try {
@@ -39,7 +50,7 @@ export function PracticalPanel() {
         elements: els,
         protocol,
         num_parties: parseInt(n, 10),
-        threshold: parseInt(t, 10),
+        threshold: parseInt(effT, 10),
         tls,
       }
       if (tls) {
@@ -84,11 +95,14 @@ export function PracticalPanel() {
         <label className="field grow">
           <span>{tr('pr.protocol')}</span>
           <Select
-            options={PROTOCOLS}
+            options={protocolOptions}
             value={protocol}
             onChange={(v) => setProtocol(v as string)}
             disabled={busy}
           />
+          {missingProtocols.length > 0 && (
+            <small>{tr('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
+          )}
         </label>
         <label className="field" style={{ width: 100 }}>
           <span>N</span>
@@ -96,7 +110,11 @@ export function PracticalPanel() {
         </label>
         <label className="field" style={{ width: 100 }}>
           <span>t</span>
-          <Input value={t} disabled={busy} onChange={(e) => setT(e.target.value.replace(/\D/g, ''))} />
+          <Input
+            value={effT}
+            disabled={busy || isFullMpsi}
+            onChange={(e) => setT(e.target.value.replace(/\D/g, ''))}
+          />
         </label>
       </div>
       <label className="field">

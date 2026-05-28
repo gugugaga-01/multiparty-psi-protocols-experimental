@@ -46,13 +46,17 @@ public:
         if (it == protocols_.end()) {
             auto* status = response->mutable_status();
             status->set_code(STATUS_INVALID_PARAMS);
-            std::string msg = "Unsupported protocol: " + protocol + ". Available: ";
+            std::string available;
             bool first = true;
             for (const auto& [name, _] : protocols_) {
-                if (!first) msg += ", ";
-                msg += name;
+                if (!first) available += ", ";
+                available += name;
                 first = false;
             }
+            std::string msg =
+                "The requested protocol \"" + protocol + "\" is not available on "
+                "this party. It was not compiled into psi_party on this server. "
+                "Supported protocols: " + (available.empty() ? "(none)" : available) + ".";
             status->set_message(msg);
             return grpc::Status::OK;
         }

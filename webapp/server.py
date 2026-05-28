@@ -133,6 +133,14 @@ UNIQUE_POOL = [
 
 MIN_PARTY_SIZE = len(ALL_COMMON)  # smaller would drop the all-parties intersection
 
+# Protocols whose hashing/OT machinery requires every party to hold the same
+# number of elements; unequal sizes abort the leader mid-protocol (e.g. XZH26's
+# OPPRF throws "size not expected"). Both XZH26 and BEH21 are such protocols.
+EQUAL_SIZE_PROTOCOLS = {"xzh26_ec_mpsi", "beh21_ot_mpsi"}
+# Default per-party size used when an equal-size protocol falls back to
+# generated inputs (matches the mid value of the KS05 default ladder).
+EQUAL_SIZE_DEFAULT = 16
+
 
 def build_demo_inputs(n: int, sizes: list[int] | None = None) -> list[list[str]]:
     # Default sizes mirror service/demos/ks05/demo.sh: party 0 = 12, mid = 16,
@@ -225,9 +233,24 @@ def handle_demo(req: dict[str, Any]) -> dict[str, Any]:
             inputs.append(cleaned)
         log.info("demo: using custom inputs (sizes=%s)", [len(s) for s in inputs])
     else:
+        if sizes is None and protocol in EQUAL_SIZE_PROTOCOLS:
+            sizes = [EQUAL_SIZE_DEFAULT] * n
+            log.info("demo: %s requires equal sizes — generating %d per party",
+                     protocol, EQUAL_SIZE_DEFAULT)
         inputs = build_demo_inputs(n, sizes=sizes)
         if sizes is not None:
             log.info("demo: using generated inputs with custom sizes=%s", sizes)
+
+    # Equal-size protocols (e.g. XZH26) fail mid-run if party sets differ in
+    # length — reject early with a clear message instead of a cryptic crash.
+    if protocol in EQUAL_SIZE_PROTOCOLS:
+        lengths = {len(s) for s in inputs}
+        if len(lengths) > 1:
+            raise ValueError(
+                f"{protocol} requires every party to have the same number of "
+                f"elements; got sizes {[len(s) for s in inputs]}."
+            )
+
     expected = expected_intersection(inputs, t)
 
     inter_addrs = [f"127.0.0.1:{inter_port_base + i}" for i in range(n)]

@@ -193,10 +193,14 @@ target_link_libraries(psi_party PRIVATE ks05_protocol ks05_crypto mpsi_core mpsi
 if(MPSI_BUILD_YYH26)
     target_sources(psi_party PRIVATE $<TARGET_OBJECTS:yyh26_plugin>)
     target_link_libraries(psi_party PRIVATE yyh26_protocol)
+    # The vendored libOTe/miracl archives contain objects built without -fPIC
+    # (non-PIC relocations), which cannot be linked into a default PIE binary.
+    # Link psi_party as non-PIE so these archives are accepted.
+    target_link_options(psi_party PRIVATE -no-pie)
 endif()
 
 # BEH21 OT-MPSI protocol (optional, uses Paillier from ks05_crypto + Bloom filters)
-option(MPSI_BUILD_BEH21 "Build BEH21 OT-MPSI protocol support" OFF)
+option(MPSI_BUILD_BEH21 "Build BEH21 OT-MPSI protocol support" ON)
 
 if(MPSI_BUILD_BEH21)
     add_library(beh21_crypto
@@ -222,7 +226,7 @@ if(MPSI_BUILD_BEH21)
 endif()
 
 # XZH26 EC-ElGamal Bloom OPPRF MPSI protocol (optional)
-option(MPSI_BUILD_XZH26 "Build XZH26 EC-MPSI protocol support" OFF)
+option(MPSI_BUILD_XZH26 "Build XZH26 EC-MPSI protocol support" ON)
 
 if(MPSI_BUILD_XZH26)
     find_library(SODIUM_LIB sodium)
@@ -230,11 +234,23 @@ if(MPSI_BUILD_XZH26)
         message(FATAL_ERROR "libsodium not found. Install: sudo apt install libsodium-dev")
     endif()
 
-    # cryptoTools headers and sources from yyh26 upstream
+    # cryptoTools headers and sources from yyh26 upstream (a git submodule).
     set(CRYPTOTOOLS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../experiments/yyh26/upstream/cryptoTools")
     set(MIRACL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../experiments/yyh26/upstream/thirdparty/linux/miracl")
 
+    if(NOT EXISTS "${CRYPTOTOOLS_DIR}")
+        message(FATAL_ERROR
+            "XZH26 needs the yyh26 upstream submodule (cryptoTools + miracl). "
+            "Fetch it with: git submodule update --init experiments/yyh26/upstream "
+            "(or pass -DMPSI_BUILD_XZH26=OFF to skip XZH26).")
+    endif()
+
     find_library(MIRACL_LIB NAMES miracl HINTS "${MIRACL_DIR}/miracl/source/")
+    if(NOT MIRACL_LIB)
+        message(FATAL_ERROR
+            "libmiracl.a not found under ${MIRACL_DIR}/miracl/source/. It ships "
+            "prebuilt in the submodule — ensure the submodule is fully checked out.")
+    endif()
     find_package(Boost REQUIRED COMPONENTS system thread)
 
     # Build cryptoTools from yyh26 upstream
@@ -276,8 +292,25 @@ if(MPSI_BUILD_XZH26)
     target_include_directories(xzh26_plugin PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     target_link_libraries(xzh26_plugin PRIVATE xzh26_protocol mpsi_core mpsi_proto)
 
+    # NOTE: XZH26 and YYH26 are mutually exclusive in a single psi_party.
+    # Both vendor their own fork of osuCrypto / cryptoTools (CuckooHasher1,
+    # SimpleHasher1, OPPRF, ...) under the same `osuCrypto` namespace, so linking
+    # both yields "multiple definition" errors. Enable at most one of
+    # MPSI_BUILD_XZH26 / MPSI_BUILD_YYH26.
+    if(MPSI_BUILD_YYH26)
+        message(FATAL_ERROR
+            "MPSI_BUILD_XZH26 and MPSI_BUILD_YYH26 cannot be enabled together "
+            "(duplicate osuCrypto symbols). XZH26 is on by default — to build "
+            "YYH26 instead, configure with "
+            "-DMPSI_BUILD_YYH26=ON -DMPSI_BUILD_XZH26=OFF.")
+    endif()
+
     target_sources(psi_party PRIVATE $<TARGET_OBJECTS:xzh26_plugin>)
     target_link_libraries(psi_party PRIVATE xzh26_protocol xzh26_crypto ${SODIUM_LIB})
+
+    # miracl and the vendored cryptoTools objects are not position-independent,
+    # so psi_party cannot be a default PIE binary when XZH26 is linked in.
+    target_link_options(psi_party PRIVATE -no-pie)
 endif()
 
 # psi_dealer binary (trusted key dealer service)
