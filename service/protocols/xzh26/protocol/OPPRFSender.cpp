@@ -1,5 +1,4 @@
 #include "OPPRFSender.h"
-
 #include <algorithm>
 #include "Crypto/Commit.h"
 #include "Common/Log.h"
@@ -247,9 +246,7 @@ namespace osuCrypto
 								for (u64 idxPos = 0; idxPos < bin.mBits[IdxP].mPos.size(); idxPos++)
 								{
 									//	Log::out << static_cast<int16_t>(bin.mBits[IdxP].mPos[idxPos]) << " ";
-									memcpy(
-										maskView[baseMaskIdx].data() + idxPos,
-										(u8*)&bin.mBits[IdxP].mPos[idxPos], sizeof(u8));
+									maskView[baseMaskIdx][idxPos] = static_cast<u8>(bin.mBits[IdxP].mPos[idxPos]);
 								}
 								//Log::out << Log::endl;
 
@@ -266,10 +263,7 @@ namespace osuCrypto
 
 									MaskIdx = bin.mBits[IdxP].mMaps[i] * bins.mMaskSize + bins.mSimpleBins.mNumBits[bIdxType];
 
-									memcpy(
-										maskView[baseMaskIdx].data() + MaskIdx,
-										encr.data(),
-										bins.mMaskSize);
+									std::copy_n(encr.data(), bins.mMaskSize, maskView[baseMaskIdx].data() + MaskIdx);
 
 									//	Log::out << Log::endl;
 								}
@@ -288,9 +282,7 @@ namespace osuCrypto
 											maskView[baseMaskIdx].data() + MaskIdx,
 											(u8*)&ZeroBlock,  //make randome
 											bins.mMaskSize);*/
-										memcpy(maskView[baseMaskIdx].data() + MaskIdx,
-                                           ZERO_POINT.data(),
-                                           bins.mMaskSize);
+										std::copy_n(ZERO_POINT.data(), bins.mMaskSize, maskView[baseMaskIdx].data() + MaskIdx);
 									}
 								}
 							}
@@ -301,13 +293,11 @@ namespace osuCrypto
 								auto idxDummyPos = 0;
 								while (dummyPos.size()<bins.mSimpleBins.mNumBits[bIdxType])
 								{
-									u64 rand = std::rand() % 128; //choose randome bit location
+									u64 rand = mPrng.get<u64>() % 128; // choose random bit location
 									if (std::find(dummyPos.begin(), dummyPos.end(), rand) == dummyPos.end())
 									{
 										dummyPos.push_back(rand);
-										memcpy(
-											maskView[baseMaskIdx].data() + idxDummyPos,
-											(u8*)&rand, sizeof(u8));
+										maskView[baseMaskIdx][idxDummyPos] = static_cast<u8>(rand);
 										idxDummyPos++;
 									}
 								}
@@ -316,10 +306,7 @@ namespace osuCrypto
 								{
 									MaskIdx = i* bins.mMaskSize + bins.mSimpleBins.mNumBits[bIdxType];
 									//	Log::out << "    cc_Map=" << i << Log::endl;
-									memcpy(
-										maskView[baseMaskIdx].data() + MaskIdx,
-										ZERO_POINT.data(),  //make randome
-										bins.mMaskSize);
+									std::copy_n(ZERO_POINT.data(), bins.mMaskSize, maskView[baseMaskIdx].data() + MaskIdx);
 
 								}
 
@@ -340,7 +327,7 @@ namespace osuCrypto
 
 							for (size_t j = 0; j < mSimpleBins.mMaxBinSize[bIdxType]; j++) {
 								auto theirMask = ZeroBlock;
-								memcpy(&theirMask, maskView[i].data() + j*bins.mMaskSize + mSimpleBins.mNumBits[bIdxType], bins.mMaskSize);
+								std::copy_n(maskView[i].data() + j*bins.mMaskSize + mSimpleBins.mNumBits[bIdxType], bins.mMaskSize, reinterpret_cast<u8*>(&theirMask));
 								if (theirMask != ZeroBlock)
 								{
 									Log::out << theirMask << " " << Log::endl;

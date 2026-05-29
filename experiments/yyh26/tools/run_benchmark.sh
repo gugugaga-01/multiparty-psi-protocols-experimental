@@ -27,7 +27,7 @@ for n in "${number_of_parties[@]}"; do
         echo "" >> "$script_file"
         
         # Loop over the range of participant identifiers and write commands to the script file
-        for ((p=0; p<$n; p++)); do
+        for ((p=0; p<n; p++)); do
             echo "./bin/frontend.exe -n $n -t $t -m $m -p $p &" >> "$script_file"
         done
         

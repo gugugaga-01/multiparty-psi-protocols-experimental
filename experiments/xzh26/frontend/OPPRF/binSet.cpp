@@ -206,12 +206,8 @@ namespace osuCrypto
 				for (u64 bIdx = binStart; bIdx < binEnd;)
 				{
 					u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
-
-					
-					std::mutex mPrintMtx;
-				//	if (bIdx == 23)
+					//	if (bIdx == 23)
 //Log::out << "c" << bIdx << Log::endl;
-					std::lock_guard<std::mutex> lock(mPrintMtx);
 					for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 					{
 						

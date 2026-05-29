@@ -1,5 +1,8 @@
 
+#include <cerrno>
+#include <cstdlib>
 #include <iostream>
+#include <limits>
 #include "Network/BtChannel.h"
 #include "Network/BtEndpoint.h"
 
@@ -14,53 +17,50 @@ using namespace osuCrypto;
 
 void usage(const char* argv0)
 {
-	std::cout << "Error! Please use:" << std::endl;
-	std::cout << "\t 1. For unit test: " << argv0 << " -u" << std::endl;
-	std::cout << "\t 2. For simulation (5 parties <=> 5 terminals): " << std::endl;;
-	std::cout << "\t\t each terminal: " << argv0 << " -n 5 -t 2 -m 12 -p [pIdx]" << std::endl;
+    std::cout << "Error! Please use:" << std::endl;
+    std::cout << "\t 1. For unit test: " << argv0 << " -u" << std::endl;
+    std::cout << "\t 2. For simulation (5 parties <=> 5 terminals): " << std::endl;;
+    std::cout << "\t\t each terminal: " << argv0 << " -n 5 -m 12 -p [pIdx]" << std::endl;
 
 }
+
+static bool parseU64(const char* text, u64& out)
+{
+    if (text == nullptr || *text == '\0')
+        return false;
+
+    errno = 0;
+    char* end = nullptr;
+    unsigned long long value = std::strtoull(text, &end, 10);
+    if (errno == ERANGE || end == text || *end != '\0')
+        return false;
+
+    out = static_cast<u64>(value);
+    return true;
+}
+
 int main(int argc, char** argv)
 {
-	
-	
-	u64 trials = 1;
-	u64 nParties, setSize;
+    u64 trials = 1;
+    u64 nParties = 0, setSize = 0;
 
+    if (argc != 7 || argv[1][0] != '-' || argv[1][1] != 'n' ||
+        argv[3][0] != '-' || argv[3][1] != 'm' ||
+        argv[5][0] != '-' || argv[5][1] != 'p') {
+        usage(argv[0]);
+        return 1;
+    }
 
-	switch (argc) {
-	case 7: 
-		
-		if (argv[1][0] == '-' && argv[1][1] == 'n')
-			nParties = atoi(argv[2]);
-		else
-		{
-			usage(argv[0]);
-			return 0;
-		}
+    u64 logSetSize = 0;
+    u64 pIdx = 0;
+    if (!parseU64(argv[2], nParties) || !parseU64(argv[4], logSetSize) ||
+        !parseU64(argv[6], pIdx) || logSetSize >= 63 || nParties == 0 ||
+        pIdx >= nParties) {
+        usage(argv[0]);
+        return 1;
+    }
 
-		if (argv[3][0] == '-' && argv[3][1] == 'm')
-			setSize = 1 << atoi(argv[4]);
-		else
-		{
-			usage(argv[0]);
-			return 0;
-		}
-
-		if (argv[5][0] == '-' && argv[5][1] == 'p') {
-			u64 pIdx = atoi(argv[6]);
-
-				//cout << nParties << " " << tParties << " " << setSize << " " << pIdx << "\n";
-				tparty(pIdx, nParties, setSize, trials);
-			
-		}
-		else
-		{
-			usage(argv[0]);
-			return 0;
-		}
-		break;
-	}
-
-	return 0;
+    setSize = u64{1} << logSetSize;
+    tparty(pIdx, nParties, setSize, trials);
+    return 0;
 }

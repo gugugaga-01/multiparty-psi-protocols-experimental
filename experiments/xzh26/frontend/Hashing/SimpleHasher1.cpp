@@ -29,6 +29,7 @@ namespace osuCrypto
 
 
 	SimpleHasher1::SimpleHasher1()
+		: mRepSize(0), mInputBitSize(0), mN(0), mBinCount{}, mMaxBinSize{}, mNumHashes{}, mNumBits{}, testMaxBinSize(0), mParams{}
 	{
 	}
 

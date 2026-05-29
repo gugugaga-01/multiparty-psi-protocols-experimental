@@ -3,7 +3,8 @@
 #include "protocols/yyh26/protocol/shamir_ss.h"
 #include "protocols/yyh26/protocol/crt_utils.h"
 
-#include <cstring>
+#include <algorithm>
+#include <array>
 #include <string>
 #include <vector>
 
@@ -396,9 +397,9 @@ TEST(ShamirSSTest, ReconstructWithCrtReduceAndPack) {
     __uint128_t secretVal = static_cast<__uint128_t>(123456789ULL) << 32 | 42;
     NTL::ZZ secret;
     {
-        uint8_t bytes[16];
-        std::memcpy(bytes, &secretVal, 16);
-        secret = NTL::ZZFromBytes(bytes, 16);
+        std::array<uint8_t, 16> bytes{};
+        std::copy_n(reinterpret_cast<const uint8_t*>(&secretVal), bytes.size(), bytes.begin());
+        secret = NTL::ZZFromBytes(bytes.data(), bytes.size());
     }
 
     std::vector<NTL::ZZ> fourModuli;
@@ -431,9 +432,9 @@ TEST(TTMpsiEncodingTest, ElementEncodingConsistency) {
     // value mod each CRT modulus as the block itself.
     auto testString = [](const std::string& s) {
         // Simulate stringToBlock + blockToU128 + ZZFromBytes
-        uint8_t blockBytes[16] = {0};
-        size_t len = std::min(s.size(), sizeof(blockBytes));
-        std::memcpy(blockBytes, s.data(), len);
+        std::array<uint8_t, 16> blockBytes{};
+        size_t len = std::min(s.size(), blockBytes.size());
+        std::copy_n(s.data(), len, blockBytes.begin());
 
         // Compute ui128 from block bytes (little-endian)
         __uint128_t blockVal = 0;
@@ -441,7 +442,7 @@ TEST(TTMpsiEncodingTest, ElementEncodingConsistency) {
             blockVal = (blockVal << 8) | blockBytes[i];
 
         // Compute ZZ from those bytes (NTL uses little-endian byte order)
-        NTL::ZZ zz = NTL::ZZFromBytes(blockBytes, 16);
+        NTL::ZZ zz = NTL::ZZFromBytes(blockBytes.data(), blockBytes.size());
 
         // They should agree mod each CRT modulus
         for (size_t m = 0; m < 4; m++) {

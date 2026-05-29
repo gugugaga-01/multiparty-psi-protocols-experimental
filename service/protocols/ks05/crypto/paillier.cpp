@@ -1,6 +1,7 @@
 #include "paillier.h"
 #include <stdexcept>
 #include <fstream>
+#include <array>
 
 namespace mpsi::ks05 {
 
@@ -115,12 +116,14 @@ void distributedKeyGen(long bits, long n,
     // operations (encryption randomness, blinding polynomials, etc.)
     // are cryptographically unpredictable and independent per party.
     {
-        unsigned char entropy[32];
+        std::array<unsigned char, 32> entropy{};
         std::ifstream urandom("/dev/urandom", std::ios::binary);
         if (!urandom.good())
             throw std::runtime_error("Cannot open /dev/urandom for reseeding");
-        urandom.read(reinterpret_cast<char*>(entropy), sizeof(entropy));
-        NTL::SetSeed(NTL::ZZFromBytes(entropy, sizeof(entropy)));
+        urandom.read(reinterpret_cast<char*>(entropy.data()), entropy.size());
+        if (urandom.gcount() != static_cast<std::streamsize>(entropy.size()))
+            throw std::runtime_error("Short read from /dev/urandom for reseeding");
+        NTL::SetSeed(NTL::ZZFromBytes(entropy.data(), entropy.size()));
     }
 }
 

@@ -20,7 +20,7 @@ import logging
 import os
 import signal
 import socket
-import subprocess
+import subprocess  # nosec B404 - local service binaries are launched with shell=False
 import threading
 import time
 from pathlib import Path
@@ -245,7 +245,7 @@ def start(
                 dealer_args += ["--certs-dir", str(PROJECT_ROOT / "service" / "certs" / "test")]
 
             log.info("starting dealer (%s): %s", protocol, " ".join(dealer_args))
-            _DEALER = subprocess.Popen(
+            _DEALER = subprocess.Popen(  # nosec B603 - args are fixed local binary paths and flags
                 dealer_args,
                 stdout=dealer_log, stderr=subprocess.STDOUT,
                 env=env, start_new_session=True,
@@ -281,7 +281,7 @@ def start(
             party_log = _open_log(f"party-{i}")
             _LOG_HANDLES.append(party_log)
             log.info("starting party %d: %s", i, " ".join(party_args))
-            _PARTIES[i] = subprocess.Popen(
+            _PARTIES[i] = subprocess.Popen(  # nosec B603 - args are fixed local binary paths and flags
                 party_args,
                 stdout=party_log, stderr=subprocess.STDOUT,
                 env=env, start_new_session=True,
@@ -363,8 +363,8 @@ def _stop_unlocked(grace: float = 3.0) -> dict[str, Any]:
     for fh in _LOG_HANDLES:
         try:
             fh.close()
-        except Exception:
-            pass
+        except Exception as e:
+            log.debug("failed to close cluster log handle: %s", e)
 
     _DEALER = None
     _PARTIES = []
@@ -418,5 +418,5 @@ def _cleanup_at_exit() -> None:
             if _proc_alive(_DEALER) or any(_proc_alive(p) for p in _PARTIES):
                 log.info("atexit: stopping cluster")
                 _stop_unlocked(grace=2.0)
-    except Exception:
-        pass
+    except Exception as e:
+        log.debug("atexit cluster cleanup failed: %s", e)

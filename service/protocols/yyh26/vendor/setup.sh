@@ -63,7 +63,8 @@ mkdir -p "$PREFIX/lib"
 
 install_lib() {
     local src="$1"
-    local name="$(basename "$1")"
+    local name
+    name="1000 4 24 27 30 46 100 114 124 1000basename "")"
     if [ -f "$src" ]; then
         cp "$src" "$PREFIX/lib/$name"
         echo "  Installed: $name"

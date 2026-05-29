@@ -1,4 +1,5 @@
 #include "CuckooHasher1.h"
+#include <algorithm>
 #include "Crypto/sha1.h"
 #include "Crypto/PRNG.h"
 #include <random>
@@ -37,7 +38,7 @@ namespace osuCrypto
 
 
     CuckooHasher1::CuckooHasher1()
-        :mTotalTries(0)
+        : mTotalTries(0), mParams{}, mRepSize(0), mInputBitSize(0), mN(0), mBinCount{}
     {
     }
 
@@ -193,7 +194,7 @@ namespace osuCrypto
             throw std::runtime_error("");
         }
 
-        memcpy(mHashesView[inputIdx].data(), hashs.data(), sizeof(u64) * mParams.mNumHashes[0]);
+        std::copy_n(hashs.data(), mParams.mNumHashes[0], mHashesView[inputIdx].data());
 
         insertHelper(inputIdx, 0, 0);
     }

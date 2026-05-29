@@ -6,8 +6,10 @@
 #include <memory>
 #include <stdexcept>
 #include <algorithm>
+#include <array>
 #include <cstring>
 #include <unordered_set>
+#include <fstream>
 
 // cryptoTools networking
 #include "Network/BtEndpoint.h"
@@ -31,6 +33,28 @@
 #include <NTL/ZZ_p.h>
 
 namespace mpsi::yyh26 {
+
+static void readOsEntropy(unsigned char* dest, size_t len) {
+    std::ifstream urandom("/dev/urandom", std::ios::binary);
+    if (!urandom.good())
+        throw std::runtime_error("Cannot open /dev/urandom");
+    urandom.read(reinterpret_cast<char*>(dest), len);
+    if (urandom.gcount() != static_cast<std::streamsize>(len))
+        throw std::runtime_error("Short read from /dev/urandom");
+}
+
+static osuCrypto::block randomPrngSeedBlock() {
+    std::array<unsigned char, 16> seed{};
+    readOsEntropy(seed.data(), seed.size());
+    return _mm_loadu_si128(reinterpret_cast<const osuCrypto::block*>(seed.data()));
+}
+
+static void seedNtlFromOsEntropy() {
+    std::array<unsigned char, 32> entropy{};
+    readOsEntropy(entropy.data(), entropy.size());
+    NTL::SetSeed(NTL::ZZFromBytes(entropy.data(), entropy.size()));
+}
+
 
 // Qualify osuCrypto types explicitly to avoid ambiguity with libOLE's
 // copy of cryptoTools (osuCryptoNew::block vs osuCrypto::block).
@@ -78,7 +102,7 @@ static ui128 zzToUi128(const NTL::ZZ& zz) {
 static block stringToBlock(const std::string& s) {
     block b = ZeroBlock;
     size_t len = std::min(s.size(), sizeof(block));
-    std::memcpy(&b, s.data(), len);
+    std::copy_n(s.data(), len, reinterpret_cast<char*>(&b));
     return b;
 }
 
@@ -301,7 +325,8 @@ struct ProtocolContext {
         if (setSize < MIN_SET_SIZE)
             setSize = MIN_SET_SIZE;
 
-        prng = std::make_unique<PRNG>(_mm_set_epi32(4253465, 3434565, myIdx, myIdx));
+        prng = std::make_unique<PRNG>(randomPrngSeedBlock());
+        seedNtlFromOsEntropy();
 
         p = NTL::conv<NTL::ZZ>("339933312435546022214350946152556052481");
         NTL::ZZ_p::init(p);
@@ -315,9 +340,9 @@ struct ProtocolContext {
         for (u64 i = 0; i < realSize; i++) {
             setBlocks[i] = stringToBlock(inputs[i]);
             ui128 blockVal = blockToU128(setBlocks[i]);
-            uint8_t zzBytes[16];
-            std::memcpy(zzBytes, &blockVal, 16);
-            setZZ[i] = NTL::ZZFromBytes(zzBytes, 16);
+            std::array<uint8_t, 16> zzBytes{};
+            std::copy_n(reinterpret_cast<const uint8_t*>(&blockVal), zzBytes.size(), zzBytes.begin());
+            setZZ[i] = NTL::ZZFromBytes(zzBytes.data(), zzBytes.size());
         }
         // Pad with party-unique dummy elements (won't intersect with other parties)
         for (u64 i = realSize; i < setSize; i++) {
@@ -579,10 +604,10 @@ static Phase2Result runPhase2(ProtocolContext& ctx, Phase1Result& phase1) {
         // Send leader's update values
         for (u64 m = 0; m < 4; m++) {
             for (u64 j = 0; j < updateValueSize; j++) {
-                unsigned char buf[4];
+                std::array<unsigned char, 4> buf{};
                 NTL::ZZ value = NTL::conv<NTL::ZZ>(genUpdateValues[m][j][totalNumShares - 1]);
-                NTL::BytesFromZZ(buf, value, 4);
-                ctx.chls[ctx.leaderIdx][0]->send(buf, 4);
+                NTL::BytesFromZZ(buf.data(), value, buf.size());
+                ctx.chls[ctx.leaderIdx][0]->send(buf.data(), buf.size());
             }
         }
     } else {
@@ -590,9 +615,9 @@ static Phase2Result runPhase2(ProtocolContext& ctx, Phase1Result& phase1) {
         for (u64 pIdx = 0; pIdx < ctx.nParties - 1; pIdx++) {
             for (u64 m = 0; m < 4; m++) {
                 for (u64 j = 0; j < updateValueSize; j++) {
-                    unsigned char buf[4];
-                    ctx.chls[pIdx][0]->recv(buf, 4);
-                    NTL::ZZFromBytes(serverUpdateValues[m][pIdx][j], buf, 4);
+                    std::array<unsigned char, 4> buf{};
+                    ctx.chls[pIdx][0]->recv(buf.data(), buf.size());
+                    NTL::ZZFromBytes(serverUpdateValues[m][pIdx][j], buf.data(), buf.size());
                 }
             }
         }
@@ -637,7 +662,6 @@ static Phase2Result runPhase2(ProtocolContext& ctx, Phase1Result& phase1) {
         {
             int row = 0, col = 0;
             for (u64 pIdx = 0; pIdx < ctx.nParties - 1; pIdx++) {
-                NTL::SetSeed(NTL::ZZ(ctx.myIdx));
                 for (u64 bIdx = 0; bIdx < ctx.bins.mCuckooBins.mBins.size(); bIdx++) {
                     auto& bin = ctx.bins.mCuckooBins.mBins[bIdx];
                     ui128 inputIdx;
@@ -944,13 +968,13 @@ static Phase2Result runPhase2(ProtocolContext& ctx, Phase1Result& phase1) {
             if (bin.mIdx.size() > 0) {
                 for (u64 i = 0; i < bin.mIdx.size(); i++) {
                     ui128 inputIdx = blockToU128(ctx.setBlocks[bin.mIdx[i]]);
-                    ui128 random = randomValue[ctx.myIdx][i][bIdx];
+                    ui128 randomShare = randomValue[ctx.myIdx][i][bIdx];
                     ui128 partial = partUpValue[ctx.myIdx][i][bIdx];
 
                     ui128 res = 0;
                     for (u64 m = 0; m < 4; m++) {
                         uint64_t shift = (3 - m) * 32;
-                        uint64_t r = ((random >> shift) & 0xFFFFFFFF) % CRT_MODULI[m];
+                        uint64_t r = ((randomShare >> shift) & 0xFFFFFFFF) % CRT_MODULI[m];
                         uint64_t p_val = ((partial >> shift) & 0xFFFFFFFF) % CRT_MODULI[m];
                         uint64_t x_m = static_cast<uint64_t>(inputIdx % CRT_MODULI[m]);
                         uint64_t temp = ((CRT_MODULI[m] - r) * x_m + p_val) % CRT_MODULI[m];

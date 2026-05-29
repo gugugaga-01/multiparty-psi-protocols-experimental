@@ -79,8 +79,7 @@ if grep -qP 'namespace osuCrypto\r?$' libOLE/third_party/cryptoTools/cryptoTools
     echo "  Renaming osuCrypto -> osuCryptoNew in libOLE..."
     find libOLE/third_party/cryptoTools/cryptoTools/ libOLE/src/lib/ libOLE/src/demo/ \
         -type f \( -name "*.h" -o -name "*.cpp" -o -name "*.c" \) \
-        -exec grep -l "osuCrypto" {} \; | \
-        xargs sed -i 's/osuCrypto/osuCryptoNew/g'
+        -exec sed -i 's/osuCrypto/osuCryptoNew/g' {} +
     echo "  Namespace rename done"
 else
     echo "  Namespace already renamed"

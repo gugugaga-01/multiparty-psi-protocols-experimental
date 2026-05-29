@@ -3,6 +3,10 @@
 #include "Crypto/PRNG.h"
 #include <random>
 #include <algorithm>
+#include <array>
+#include <fstream>
+#include <limits>
+#include <stdexcept>
 #include "Common/Log.h"
 #include "Common/Log1.h"
 #include <numeric>
@@ -10,15 +14,42 @@
 
 namespace osuCrypto
 {
+	namespace {
+		block freshSeedBlock()
+		{
+			std::array<unsigned char, 16> seed{};
+			std::ifstream source("/dev/urandom", std::ios::binary);
+			if (!source.good())
+				throw std::runtime_error("Cannot open OS entropy source");
+			source.read(reinterpret_cast<char*>(seed.data()), seed.size());
+			if (source.gcount() != static_cast<std::streamsize>(seed.size()))
+				throw std::runtime_error("Short read from OS entropy source");
+			return _mm_loadu_si128(reinterpret_cast<const block*>(seed.data()));
+		}
+
+		u64 chooseIndex(u64 limit)
+		{
+			if (limit == 0)
+				throw std::invalid_argument("chooseIndex limit must be nonzero");
+			static thread_local PRNG gen(freshSeedBlock());
+			const u64 cutoff = std::numeric_limits<u64>::max() - (std::numeric_limits<u64>::max() % limit);
+			u64 value = 0;
+			do {
+				value = gen.get<u64>();
+			} while (value >= cutoff);
+			return value % limit;
+		}
+	}
+
 	block extractBlockFromECpoint(const ECpoint& point, int blockIndex) 
 	{
         block result = ZeroBlock;
         if (blockIndex == 0) {
             // 提取前 16 字节
-            memcpy(&result, point.data(), 16);
+            std::copy_n(point.data(), 16, reinterpret_cast<u8*>(&result));
         } else {
             // 提取后 16 字节
-            memcpy(&result, point.data() + 16, 16);
+            std::copy_n(point.data() + 16, 16, reinterpret_cast<u8*>(&result));
         }
         return result;
     }
@@ -170,7 +201,7 @@ namespace osuCrypto
 		if (codewords.size() == 1) {
 			while (true)
 			{
-				auto rand = std::rand() % /*128*/length; //choose randome bit location
+				auto rand = chooseIndex(length); // choose random bit location
 				if (std::find(mPos.begin(), mPos.end(), rand) == mPos.end())
 				{
 					return rand;
@@ -286,7 +317,7 @@ namespace osuCrypto
 			{
 				bool bit1 = TestBitN(codewords[0], j);
                 bool bit2 = TestBitN(codewords[1], j);
-				//u64 rand = std::rand() % length;
+				//u64 rand = chooseIndex(length);
 				if (/*TestBitN(diff, rand)*/bit1 != bit2)
 				{
 					mPos.push_back(j);
@@ -301,7 +332,7 @@ namespace osuCrypto
 			//while (!isFind)
 			for (int j = 0; j < length && !isFind; j++) 
 			{
-				//u64 rand = std::rand() % length;
+				//u64 rand = chooseIndex(length);
 				bool bit1 = TestBitN(codewords[0], j);
                 bool bit2 = TestBitN(codewords[1], j);
 				if (bit1 != bit2)
@@ -320,7 +351,7 @@ namespace osuCrypto
 				bool bit1 = TestBitN(codewords[0], j);
 				bool bit2 = TestBitN(codewords[2], j);
 				bool bit3 = TestBitN(codewords[1], j);
-				//u64 rand = std::rand() % length;
+				//u64 rand = chooseIndex(length);
 				//if (TestBitN(diff, rand) == false && TestBitN(diff2, rand) == true)
 				if (bit1 != bit2 && bit1 == bit3)
 				{
@@ -356,8 +387,8 @@ namespace osuCrypto
 					bool isRand = true;
 					while (isRand)
 					{
-						u64 rIdx = std::rand() % length;
-						u64 rDiffIdx = std::rand() % sizeDiff;
+						u64 rIdx = chooseIndex(length);
+						u64 rDiffIdx = chooseIndex(sizeDiff);
 						if (TestBitN(diff[rDiffIdx], rIdx))
 							if (std::find(mPos.begin(), mPos.end(), rIdx) == mPos.end())
 							{
@@ -377,9 +408,9 @@ namespace osuCrypto
                     bool isRand = true;
                     while (isRand)
                     {
-                        u64 rIdx = std::rand() % length;
-                        u64 rCodewordIdx1 = std::rand() % codewords.size();
-                        u64 rCodewordIdx2 = std::rand() % codewords.size();
+                        u64 rIdx = chooseIndex(length);
+                        u64 rCodewordIdx1 = chooseIndex(codewords.size());
+                        u64 rCodewordIdx2 = chooseIndex(codewords.size());
                         if (rCodewordIdx1 != rCodewordIdx2) {
                             bool bit1 = TestBitN(codewords[rCodewordIdx1], rIdx);
                             bool bit2 = TestBitN(codewords[rCodewordIdx2], rIdx);
@@ -424,7 +455,7 @@ namespace osuCrypto
 	{
 		while (mPos.size()<mMaxBitSize)
 		{
-			u64 rand = std::rand() % /*128*/256; //choose randome bit location
+			u64 rand = chooseIndex(256); // choose random bit location
 			if (std::find(mPos.begin(), mPos.end(), rand) == mPos.end())
 			{
 				mPos.push_back(rand);
