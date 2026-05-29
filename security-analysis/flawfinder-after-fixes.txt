@@ -1,0 +1,160 @@
+Flawfinder version 2.0.19, (C) 2001-2019 David A. Wheeler.
+Number of rules (primarily dangerous function names) in C/C++ ruleset: 222
+Examining service/tests/protocols/ks05/test_serialization.cpp
+Examining service/tests/protocols/ks05/test_integration.cpp
+Examining service/tests/protocols/ks05/test_paillier.cpp
+Examining service/tests/protocols/ks05/test_polynomial.cpp
+Examining service/tests/protocols/ks05/test_logger.cpp
+Examining service/tests/protocols/ks05/test_grpc_minimal.cpp
+Examining service/tests/protocols/ks05/test_transport.cpp
+Examining service/tests/protocols/ks05/test_grpc_integration.cpp
+Examining service/tests/protocols/ks05/test_dkg.cpp
+Examining service/tests/protocols/ks05/test_threshold.cpp
+Examining service/tests/protocols/beh21/test_bloom_filter.cpp
+Examining service/tests/protocols/beh21/test_beh21_grpc_integration.cpp
+Examining service/tests/protocols/beh21/test_beh21_integration.cpp
+Examining service/tests/protocols/beh21/test_signed_plaintext.cpp
+Examining service/tests/protocols/xzh26/test_xzh26_grpc_integration.cpp
+Examining service/tests/protocols/xzh26/test_xzh26_integration.cpp
+Examining service/tests/protocols/yyh26/test_tt_mpsi.cpp
+Examining service/tests/core/test_config_file.cpp
+Examining service/party/psi_service_impl.h
+Examining service/party/main.cpp
+Examining service/protocols/ks05/ks05_plugin.cpp
+Examining service/protocols/ks05/crypto/polynomial.h
+Examining service/protocols/ks05/crypto/defines.h
+Examining service/protocols/ks05/crypto/polynomial.cpp
+Examining service/protocols/ks05/crypto/paillier.cpp
+Examining service/protocols/ks05/crypto/paillier.h
+Examining service/protocols/ks05/protocol/t_mpsi.h
+Examining service/protocols/ks05/protocol/t_mpsi.cpp
+Examining service/protocols/ks05/protocol/logger.h
+Examining service/protocols/beh21/crypto/bloom_filter.h
+Examining service/protocols/beh21/protocol/ot_mpsi.cpp
+Examining service/protocols/beh21/protocol/ot_mpsi.h
+Examining service/protocols/beh21/beh21_plugin.cpp
+Examining service/protocols/xzh26/crypto/common.h
+Examining service/protocols/xzh26/crypto/murmurhash3.cpp
+Examining service/protocols/xzh26/crypto/point.cpp
+Examining service/protocols/xzh26/crypto/bloom_filter.h
+Examining service/protocols/xzh26/crypto/murmurhash3.h
+Examining service/protocols/xzh26/crypto/point.h
+Examining service/protocols/xzh26/crypto/bloom_filter.cpp
+Examining service/protocols/xzh26/protocol/SimpleHasher1.cpp
+Examining service/protocols/xzh26/protocol/CuckooHasher1.cpp
+Examining service/protocols/xzh26/protocol/OPPRFReceiver.cpp
+Examining service/protocols/xzh26/protocol/OPPRFSender.h
+Examining service/protocols/xzh26/protocol/binSet.cpp
+Examining service/protocols/xzh26/protocol/ec_mpsi.h
+Examining service/protocols/xzh26/protocol/BitPosition.cpp
+Examining service/protocols/xzh26/protocol/ec_mpsi.cpp
+Examining service/protocols/xzh26/protocol/CuckooHasher1.h
+Examining service/protocols/xzh26/protocol/binSet.h
+Examining service/protocols/xzh26/protocol/OPPRFSender.cpp
+Examining service/protocols/xzh26/protocol/SimpleHasher1.h
+Examining service/protocols/xzh26/protocol/OPPRFReceiver.h
+Examining service/protocols/xzh26/protocol/BitPosition.h
+Examining service/protocols/xzh26/protocol/channel_adapter.h
+Examining service/protocols/xzh26/xzh26_plugin.cpp
+Examining service/protocols/yyh26/yyh26_plugin.cpp
+Examining service/protocols/yyh26/protocol/tt_mpsi.cpp
+Examining service/protocols/yyh26/protocol/shamir_ss.h
+Examining service/protocols/yyh26/protocol/crt_utils.h
+Examining service/protocols/yyh26/protocol/tt_mpsi.h
+Examining service/core/protocol.h
+Examining service/core/config.h
+Examining service/core/transport/grpc_channel.h
+Examining service/core/transport/channel.h
+Examining service/core/transport/party_server.h
+Examining service/core/transport/in_process_channel.h
+Examining service/core/party_config.h
+Examining service/core/tls/tls_config.h
+Examining service/dealer/dealer_service.h
+Examining service/dealer/main.cpp
+Examining experiments/ks05/frontend/main.cpp
+Examining experiments/ks05/protocol/polynomial.h
+Examining experiments/ks05/protocol/polynomial.cpp
+Examining experiments/ks05/protocol/t_mpsi.h
+Examining experiments/ks05/protocol/t_mpsi.cpp
+Examining experiments/beh21/frontend/main.cpp
+Examining experiments/beh21/protocol/ot_mpsi.cpp
+Examining experiments/beh21/protocol/ot_mpsi.h
+Examining experiments/beh21/protocol/bloom_filter.h
+Examining experiments/xzh26/frontend/CLP.h
+Examining experiments/xzh26/frontend/OtBinMain.cpp
+Examining experiments/xzh26/frontend/util.h
+Examining experiments/xzh26/frontend/point.cpp
+Examining experiments/xzh26/frontend/CLP.cpp
+Examining experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp
+Examining experiments/xzh26/frontend/Hashing/CuckooHasher1.cpp
+Examining experiments/xzh26/frontend/Hashing/BitPosition.cpp
+Examining experiments/xzh26/frontend/Hashing/CuckooHasher1.h
+Examining experiments/xzh26/frontend/Hashing/SimpleHasher1.h
+Examining experiments/xzh26/frontend/Hashing/BitPosition.h
+Examining experiments/xzh26/frontend/main.cpp
+Examining experiments/xzh26/frontend/OtBinMain.h
+Examining experiments/xzh26/frontend/point.h
+Examining experiments/xzh26/frontend/utils/common.h
+Examining experiments/xzh26/frontend/utils/bloom_filter.h
+Examining experiments/xzh26/frontend/utils/bloom_filter.cpp
+Examining experiments/xzh26/frontend/OPPRF/OPPRFReceiver.cpp
+Examining experiments/xzh26/frontend/OPPRF/OPPRFSender.h
+Examining experiments/xzh26/frontend/OPPRF/binSet.cpp
+Examining experiments/xzh26/frontend/OPPRF/binSet.h
+Examining experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp
+Examining experiments/xzh26/frontend/OPPRF/OPPRFReceiver.h
+Examining experiments/xzh26/frontend/util.cpp
+Examining experiments/shared/util/logger.h
+Examining experiments/shared/crypto/defines.h
+Examining experiments/shared/crypto/paillier.cpp
+Examining experiments/shared/crypto/paillier.h
+
+FINAL RESULTS:
+
+service/tests/core/test_config_file.cpp:13:14:  [2] (tmpfile) mkstemp:
+  Potential for temporary file vulnerability in some circumstances. Some
+  older Unix-like systems create temp files with permission to write by all
+  by default, so be sure to set the umask to override this. Also, some older
+  Unix systems might fail to use O_EXCL when opening the file, so make sure
+  that O_EXCL is used by the library (CWE-377).
+    int fd = mkstemp(path);
+experiments/xzh26/frontend/Hashing/BitPosition.cpp:24:11:  [1] (buffer) read:
+  Check buffer boundaries if used in a loop including recursive loops
+  (CWE-120, CWE-20).
+			source.read(reinterpret_cast<char*>(seed.data()), seed.size());
+service/dealer/dealer_service.h:148:17:  [1] (buffer) read:
+  Check buffer boundaries if used in a loop including recursive loops
+  (CWE-120, CWE-20).
+        urandom.read(reinterpret_cast<char*>(entropy.data()), entropy.size());
+service/protocols/ks05/crypto/paillier.cpp:123:17:  [1] (buffer) read:
+  Check buffer boundaries if used in a loop including recursive loops
+  (CWE-120, CWE-20).
+        urandom.read(reinterpret_cast<char*>(entropy.data()), entropy.size());
+service/protocols/xzh26/protocol/BitPosition.cpp:24:11:  [1] (buffer) read:
+  Check buffer boundaries if used in a loop including recursive loops
+  (CWE-120, CWE-20).
+			source.read(reinterpret_cast<char*>(seed.data()), seed.size());
+service/protocols/yyh26/protocol/tt_mpsi.cpp:41:13:  [1] (buffer) read:
+  Check buffer boundaries if used in a loop including recursive loops
+  (CWE-120, CWE-20).
+    urandom.read(reinterpret_cast<char*>(dest), len);
+
+ANALYSIS SUMMARY:
+
+Hits = 6
+Lines analyzed = 22061 in approximately 0.08 seconds (280739 lines/second)
+Physical Source Lines of Code (SLOC) = 15254
+Hits@level = [0]  39 [1]   5 [2]   1 [3]   0 [4]   0 [5]   0
+Hits@level+ = [0+]  45 [1+]   6 [2+]   1 [3+]   0 [4+]   0 [5+]   0
+Hits/KSLOC@level+ = [0+] 2.95005 [1+] 0.393339 [2+] 0.0655566 [3+]   0 [4+]   0 [5+]   0
+Minimum risk level = 1
+
+Not every hit is necessarily a security vulnerability.
+You can inhibit a report by adding a comment in this form:
+// flawfinder: ignore
+Make *sure* it's a false positive!
+You can use the option --neverignore to show these.
+
+There may be other security vulnerabilities; review your code!
+See 'Secure Programming HOWTO'
+(https://dwheeler.com/secure-programs) for more information.

@@ -5,7 +5,7 @@ import os
 import sys
 import time
 import signal
-import subprocess
+import subprocess  # nosec B404 - test launches local build artifacts with shell=False
 import threading
 
 # Add Python client to path
@@ -52,7 +52,7 @@ def start_dealer() -> subprocess.Popen:
         "--parties", str(NUM_PARTIES),
         "--listen", DEALER_ADDR,
     ]
-    proc = subprocess.Popen(
+    proc = subprocess.Popen(  # nosec B603 - test command uses fixed local build artifact paths
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
@@ -73,7 +73,7 @@ def start_party(party_id: int) -> subprocess.Popen:
         "--dealer", DEALER_ADDR,
         "--listen", CLIENT_ADDRS[party_id],
     ]
-    proc = subprocess.Popen(
+    proc = subprocess.Popen(  # nosec B603 - test command uses fixed local build artifact paths
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,

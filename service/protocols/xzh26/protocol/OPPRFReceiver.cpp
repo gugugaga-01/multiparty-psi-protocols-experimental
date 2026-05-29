@@ -1,4 +1,5 @@
 #include "OPPRFReceiver.h"
+#include <algorithm>
 #include <future>
 
 #include "Crypto/PRNG.h"
@@ -237,8 +238,7 @@ namespace osuCrypto
 								b.mMaxBitSize = mTheirBins_mNumBits;
 								for (u64 i = 0; i < b.mMaxBitSize; i++)
 								{
-									int idxPos = 0;
-									memcpy(&idxPos, maskView[baseMaskIdx].data() + i, sizeof(u8));
+									int idxPos = static_cast<int>(*(maskView[baseMaskIdx].data() + i));
 									b.mPos.push_back(idxPos);
 								}
 #ifdef PRINT
@@ -259,7 +259,7 @@ namespace osuCrypto
 								u64	MaskIdx = bin.mValMap[IdxP] * bins.mMaskSize + mTheirBins_mNumBits;
 
 								auto theirMask = ZERO_POINT;
-								memcpy(&theirMask, maskView[baseMaskIdx].data() + MaskIdx, bins.mMaskSize);
+								std::copy_n(maskView[baseMaskIdx].data() + MaskIdx, bins.mMaskSize, theirMask.data());
 								//提取对应索引的加密块
 
 								//if (!memcmp((u8*)&myMask, &theirMask, maskSize))

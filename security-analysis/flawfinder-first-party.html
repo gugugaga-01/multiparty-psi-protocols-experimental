@@ -1,0 +1,1219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf8">
+<title>Flawfinder Results</title>
+<meta name="author" content="David A. Wheeler">
+<meta name="keywords" lang="en" content="flawfinder results, security scan">
+</head>
+<body>
+<h1>Flawfinder Results</h1>
+Here are the security scan results from
+<a href="https://dwheeler.com/flawfinder">Flawfinder version 2.0.19</a>,
+(C) 2001-2019 <a href="https://dwheeler.com">David A. Wheeler</a>.
+Number of rules (primarily dangerous function names) in C/C++ ruleset: 222
+<p>
+Examining service/tests/protocols/ks05/test_serialization.cpp <br>
+Examining service/tests/protocols/ks05/test_integration.cpp <br>
+Examining service/tests/protocols/ks05/test_paillier.cpp <br>
+Examining service/tests/protocols/ks05/test_polynomial.cpp <br>
+Examining service/tests/protocols/ks05/test_logger.cpp <br>
+Examining service/tests/protocols/ks05/test_grpc_minimal.cpp <br>
+Examining service/tests/protocols/ks05/test_transport.cpp <br>
+Examining service/tests/protocols/ks05/test_grpc_integration.cpp <br>
+Examining service/tests/protocols/ks05/test_dkg.cpp <br>
+Examining service/tests/protocols/ks05/test_threshold.cpp <br>
+Examining service/tests/protocols/beh21/test_bloom_filter.cpp <br>
+Examining service/tests/protocols/beh21/test_beh21_grpc_integration.cpp <br>
+Examining service/tests/protocols/beh21/test_beh21_integration.cpp <br>
+Examining service/tests/protocols/beh21/test_signed_plaintext.cpp <br>
+Examining service/tests/protocols/xzh26/test_xzh26_grpc_integration.cpp <br>
+Examining service/tests/protocols/xzh26/test_xzh26_integration.cpp <br>
+Examining service/tests/protocols/yyh26/test_tt_mpsi.cpp <br>
+Examining service/tests/core/test_config_file.cpp <br>
+Examining service/party/psi_service_impl.h <br>
+Examining service/party/main.cpp <br>
+Examining service/protocols/ks05/ks05_plugin.cpp <br>
+Examining service/protocols/ks05/crypto/polynomial.h <br>
+Examining service/protocols/ks05/crypto/defines.h <br>
+Examining service/protocols/ks05/crypto/polynomial.cpp <br>
+Examining service/protocols/ks05/crypto/paillier.cpp <br>
+Examining service/protocols/ks05/crypto/paillier.h <br>
+Examining service/protocols/ks05/protocol/t_mpsi.h <br>
+Examining service/protocols/ks05/protocol/t_mpsi.cpp <br>
+Examining service/protocols/ks05/protocol/logger.h <br>
+Examining service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp <br>
+Examining service/protocols/beh21/third_party/smhasher/MurmurHash3.h <br>
+Examining service/protocols/beh21/crypto/bloom_filter.h <br>
+Examining service/protocols/beh21/protocol/ot_mpsi.cpp <br>
+Examining service/protocols/beh21/protocol/ot_mpsi.h <br>
+Examining service/protocols/beh21/beh21_plugin.cpp <br>
+Examining service/protocols/xzh26/crypto/common.h <br>
+Examining service/protocols/xzh26/crypto/murmurhash3.cpp <br>
+Examining service/protocols/xzh26/crypto/point.cpp <br>
+Examining service/protocols/xzh26/crypto/bloom_filter.h <br>
+Examining service/protocols/xzh26/crypto/murmurhash3.h <br>
+Examining service/protocols/xzh26/crypto/point.h <br>
+Examining service/protocols/xzh26/crypto/bloom_filter.cpp <br>
+Examining service/protocols/xzh26/protocol/SimpleHasher1.cpp <br>
+Examining service/protocols/xzh26/protocol/CuckooHasher1.cpp <br>
+Examining service/protocols/xzh26/protocol/OPPRFReceiver.cpp <br>
+Examining service/protocols/xzh26/protocol/OPPRFSender.h <br>
+Examining service/protocols/xzh26/protocol/binSet.cpp <br>
+Examining service/protocols/xzh26/protocol/ec_mpsi.h <br>
+Examining service/protocols/xzh26/protocol/BitPosition.cpp <br>
+Examining service/protocols/xzh26/protocol/ec_mpsi.cpp <br>
+Examining service/protocols/xzh26/protocol/CuckooHasher1.h <br>
+Examining service/protocols/xzh26/protocol/binSet.h <br>
+Examining service/protocols/xzh26/protocol/OPPRFSender.cpp <br>
+Examining service/protocols/xzh26/protocol/SimpleHasher1.h <br>
+Examining service/protocols/xzh26/protocol/OPPRFReceiver.h <br>
+Examining service/protocols/xzh26/protocol/BitPosition.h <br>
+Examining service/protocols/xzh26/protocol/channel_adapter.h <br>
+Examining service/protocols/xzh26/xzh26_plugin.cpp <br>
+Examining service/protocols/yyh26/yyh26_plugin.cpp <br>
+Examining service/protocols/yyh26/protocol/tt_mpsi.cpp <br>
+Examining service/protocols/yyh26/protocol/shamir_ss.h <br>
+Examining service/protocols/yyh26/protocol/crt_utils.h <br>
+Examining service/protocols/yyh26/protocol/tt_mpsi.h <br>
+Examining service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.cpp <br>
+Examining service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.cpp <br>
+Examining service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp <br>
+Examining service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.h <br>
+Examining service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.h <br>
+Examining service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h <br>
+Examining service/protocols/yyh26/vendor/libOPRF/yyh26_compat.h <br>
+Examining service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp <br>
+Examining service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.h <br>
+Examining service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp <br>
+Examining service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.h <br>
+Examining service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp <br>
+Examining service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.h <br>
+Examining service/core/protocol.h <br>
+Examining service/core/config.h <br>
+Examining service/core/transport/grpc_channel.h <br>
+Examining service/core/transport/channel.h <br>
+Examining service/core/transport/party_server.h <br>
+Examining service/core/transport/in_process_channel.h <br>
+Examining service/core/party_config.h <br>
+Examining service/core/tls/tls_config.h <br>
+Examining service/dealer/dealer_service.h <br>
+Examining service/dealer/main.cpp <br>
+Examining experiments/ks05/frontend/main.cpp <br>
+Examining experiments/ks05/protocol/polynomial.h <br>
+Examining experiments/ks05/protocol/polynomial.cpp <br>
+Examining experiments/ks05/protocol/t_mpsi.h <br>
+Examining experiments/ks05/protocol/t_mpsi.cpp <br>
+Examining experiments/beh21/third_party/smhasher/MurmurHash3.cpp <br>
+Examining experiments/beh21/third_party/smhasher/MurmurHash3.h <br>
+Examining experiments/beh21/frontend/main.cpp <br>
+Examining experiments/beh21/protocol/ot_mpsi.cpp <br>
+Examining experiments/beh21/protocol/ot_mpsi.h <br>
+Examining experiments/beh21/protocol/bloom_filter.h <br>
+Examining experiments/xzh26/frontend/third_party/nlohmann/json_fwd.hpp <br>
+Examining experiments/xzh26/frontend/third_party/nlohmann/json.hpp <br>
+Examining experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp <br>
+Examining experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.h <br>
+Examining experiments/xzh26/frontend/CLP.h <br>
+Examining experiments/xzh26/frontend/OtBinMain.cpp <br>
+Examining experiments/xzh26/frontend/util.h <br>
+Examining experiments/xzh26/frontend/point.cpp <br>
+Examining experiments/xzh26/frontend/CLP.cpp <br>
+Examining experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp <br>
+Examining experiments/xzh26/frontend/Hashing/CuckooHasher1.cpp <br>
+Examining experiments/xzh26/frontend/Hashing/BitPosition.cpp <br>
+Examining experiments/xzh26/frontend/Hashing/CuckooHasher1.h <br>
+Examining experiments/xzh26/frontend/Hashing/SimpleHasher1.h <br>
+Examining experiments/xzh26/frontend/Hashing/BitPosition.h <br>
+Examining experiments/xzh26/frontend/main.cpp <br>
+Examining experiments/xzh26/frontend/OtBinMain.h <br>
+Examining experiments/xzh26/frontend/point.h <br>
+Examining experiments/xzh26/frontend/utils/common.h <br>
+Examining experiments/xzh26/frontend/utils/bloom_filter.h <br>
+Examining experiments/xzh26/frontend/utils/bloom_filter.cpp <br>
+Examining experiments/xzh26/frontend/OPPRF/OPPRFReceiver.cpp <br>
+Examining experiments/xzh26/frontend/OPPRF/OPPRFSender.h <br>
+Examining experiments/xzh26/frontend/OPPRF/binSet.cpp <br>
+Examining experiments/xzh26/frontend/OPPRF/binSet.h <br>
+Examining experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp <br>
+Examining experiments/xzh26/frontend/OPPRF/OPPRFReceiver.h <br>
+Examining experiments/xzh26/frontend/util.cpp <br>
+Examining experiments/xzh26/build/CMakeFiles/3.28.3/CompilerIdCXX/CMakeCXXCompilerId.cpp <br>
+Examining experiments/xzh26/build/CMakeFiles/3.28.3/CompilerIdC/CMakeCCompilerId.c <br>
+Examining experiments/shared/util/logger.h <br>
+Examining experiments/shared/crypto/defines.h <br>
+Examining experiments/shared/crypto/paillier.cpp <br>
+Examining experiments/shared/crypto/paillier.h <br>
+
+<h2>Final Results</h2>
+<ul>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:1637:86: <b>  [4] </b> (format) <i> printf:
+  If format strings can be influenced by an attacker, they can be exploited
+  (<a href="https://cwe.mitre.org/data/definitions/134.html">CWE-134</a>).
+  Use a constant for the format specification. </i>
+<pre>
+    #define JSON_HEDLEY_PRINTF_FORMAT(string_idx,first_to_check) __declspec(vaformat(printf,string_idx,first_to_check))
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:8763:41: <b>  [4] </b> (format) <i> snprintf:
+  If format strings can be influenced by an attacker, they can be exploited,
+  and note that sprintf variations do not always \0-terminate (<a
+  href="https://cwe.mitre.org/data/definitions/134.html">CWE-134</a>). Use a
+  constant for the format specification. </i>
+<pre>
+                static_cast&lt;void&gt;((std::snprintf)(cs.data(), cs.size(), "&lt;U+%.4X&gt;", static_cast&lt;unsigned char&gt;(c))); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:9410:41: <b>  [4] </b> (format) <i> snprintf:
+  If format strings can be influenced by an attacker, they can be exploited,
+  and note that sprintf variations do not always \0-terminate (<a
+  href="https://cwe.mitre.org/data/definitions/134.html">CWE-134</a>). Use a
+  constant for the format specification. </i>
+<pre>
+                static_cast&lt;void&gt;((std::snprintf)(cr.data(), cr.size(), "%.2hhX", static_cast&lt;unsigned char&gt;(element_type))); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:11982:33: <b>  [4] </b> (format) <i> snprintf:
+  If format strings can be influenced by an attacker, they can be exploited,
+  and note that sprintf variations do not always \0-terminate (<a
+  href="https://cwe.mitre.org/data/definitions/134.html">CWE-134</a>). Use a
+  constant for the format specification. </i>
+<pre>
+        static_cast&lt;void&gt;((std::snprintf)(cr.data(), cr.size(), "%.2hhX", static_cast&lt;unsigned char&gt;(current))); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:18391:61: <b>  [4] </b> (format) <i> snprintf:
+  If format strings can be influenced by an attacker, they can be exploited,
+  and note that sprintf variations do not always \0-terminate (<a
+  href="https://cwe.mitre.org/data/definitions/134.html">CWE-134</a>). Use a
+  constant for the format specification. </i>
+<pre>
+                                    static_cast&lt;void&gt;((std::snprintf)(string_buffer.data() + bytes, 7, "\\u%04x",
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:18398:61: <b>  [4] </b> (format) <i> snprintf:
+  If format strings can be influenced by an attacker, they can be exploited,
+  and note that sprintf variations do not always \0-terminate (<a
+  href="https://cwe.mitre.org/data/definitions/134.html">CWE-134</a>). Use a
+  constant for the format specification. </i>
+<pre>
+                                    static_cast&lt;void&gt;((std::snprintf)(string_buffer.data() + bytes, 13, "\\u%04x\\u%04x",
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:18757:36: <b>  [4] </b> (format) <i> snprintf:
+  If format strings can be influenced by an attacker, they can be exploited,
+  and note that sprintf variations do not always \0-terminate (<a
+  href="https://cwe.mitre.org/data/definitions/134.html">CWE-134</a>). Use a
+  constant for the format specification. </i>
+<pre>
+        std::ptrdiff_t len = (std::snprintf)(number_buffer.data(), number_buffer.size(), "%.*g", d, x);
+</pre>
+<li>service/protocols/yyh26/protocol/tt_mpsi.cpp:953:40: <b>  [3] </b> (random) <i> random:
+  This function is not sufficiently random for security-related functions
+  such as key and nonce creation (<a
+  href="https://cwe.mitre.org/data/definitions/327.html">CWE-327</a>). Use a
+  more secure technique for acquiring random values. </i>
+<pre>
+                        uint64_t r = ((random &gt;&gt; shift) &amp; 0xFFFFFFFF) % CRT_MODULI[m];
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:440:8: <b>  [3] </b> (random) <i> random:
+  This function is not sufficiently random for security-related functions
+  such as key and nonce creation (<a
+  href="https://cwe.mitre.org/data/definitions/327.html">CWE-327</a>). Use a
+  more secure technique for acquiring random values. </i>
+<pre>
+		NTL::random(dummy_polynomial, degree - setX.size());
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1790:10: <b>  [3] </b> (random) <i> random:
+  This function is not sufficiently random for security-related functions
+  such as key and nonce creation (<a
+  href="https://cwe.mitre.org/data/definitions/327.html">CWE-327</a>). Use a
+  more secure technique for acquiring random values. </i>
+<pre>
+				NTL::random(e);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1792:10: <b>  [3] </b> (random) <i> random:
+  This function is not sufficiently random for security-related functions
+  such as key and nonce creation (<a
+  href="https://cwe.mitre.org/data/definitions/327.html">CWE-327</a>). Use a
+  more secure technique for acquiring random values. </i>
+<pre>
+				NTL::random(e);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1648:10: <b>  [3] </b> (random) <i> random:
+  This function is not sufficiently random for security-related functions
+  such as key and nonce creation (<a
+  href="https://cwe.mitre.org/data/definitions/327.html">CWE-327</a>). Use a
+  more secure technique for acquiring random values. </i>
+<pre>
+				NTL::random(e);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1650:10: <b>  [3] </b> (random) <i> random:
+  This function is not sufficiently random for security-related functions
+  such as key and nonce creation (<a
+  href="https://cwe.mitre.org/data/definitions/327.html">CWE-327</a>). Use a
+  more secure technique for acquiring random values. </i>
+<pre>
+				NTL::random(e);
+</pre>
+<li>experiments/xzh26/frontend/Hashing/BitPosition.cpp:18:13: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+            memcpy(&amp;result, point.data(), 16);
+</pre>
+<li>experiments/xzh26/frontend/Hashing/BitPosition.cpp:21:13: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+            memcpy(&amp;result, point.data() + 16, 16);
+</pre>
+<li>experiments/xzh26/frontend/Hashing/CuckooHasher1.cpp:196:9: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+        memcpy(mHashesView[inputIdx].data(), hashs.data(), sizeof(u64) * mParams.mNumHashes[0]);
+</pre>
+<li>experiments/xzh26/frontend/OPPRF/OPPRFReceiver.cpp:241:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+									memcpy(&amp;idxPos, maskView[baseMaskIdx].data() + i, sizeof(u8));
+</pre>
+<li>experiments/xzh26/frontend/OPPRF/OPPRFReceiver.cpp:262:9: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+								memcpy(&amp;theirMask, maskView[baseMaskIdx].data() + MaskIdx, bins.mMaskSize);
+</pre>
+<li>experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:250:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+									memcpy(
+</pre>
+<li>experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:269:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+									memcpy(
+</pre>
+<li>experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:291:11: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+										memcpy(maskView[baseMaskIdx].data() + MaskIdx,
+</pre>
+<li>experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:308:11: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+										memcpy(
+</pre>
+<li>experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:319:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+									memcpy(
+</pre>
+<li>experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:343:9: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+								memcpy(&amp;theirMask, maskView[i].data() + j*bins.mMaskSize + mSimpleBins.mNumBits[bIdxType], bins.mMaskSize);
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:72:14: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    unsigned char block_bytes[16];  // block是16字节
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:73:5: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+    memcpy(block_bytes, &amp;input, 16);
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:76:14: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    unsigned char hash_64bytes[crypto_hash_sha512_BYTES];
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:119:11: <b>  [2] </b> (misc) <i> open:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (<a
+  href="https://cwe.mitre.org/data/definitions/362.html">CWE-362</a>). </i>
+<pre>
+		runtime.open("./runtime_client.txt", runtime.app | runtime.out);
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:122:11: <b>  [2] </b> (misc) <i> open:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (<a
+  href="https://cwe.mitre.org/data/definitions/362.html">CWE-362</a>). </i>
+<pre>
+		runtime.open("./runtime_leader.txt", runtime.app | runtime.out);
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:390:22: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+            unsigned char buf[crypto_core_ristretto255_BYTES];
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:392:13: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+            memcpy(beta.data(), buf, crypto_core_ristretto255_BYTES);
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:406:26: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+                unsigned char buf[crypto_core_ristretto255_BYTES];
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:411:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+                memcpy(other_share.data(), buf, crypto_core_ristretto255_BYTES);
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:569:26: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+                unsigned char buf[crypto_core_ristretto255_BYTES];
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:575:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+                memcpy(encrypted_bloom_filter[i].first.data(), buf, crypto_core_ristretto255_BYTES);
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:581:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+                memcpy(encrypted_bloom_filter[i].second.data(), buf, crypto_core_ristretto255_BYTES);
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:684:26: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+                unsigned char buf[crypto_core_ristretto255_BYTES];
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:686:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+                memcpy(blindedPoints[i].data(), buf, crypto_core_ristretto255_BYTES);
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:757:34: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+                        unsigned char buf[crypto_core_ristretto255_BYTES];
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:759:25: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+                        memcpy(processedPointsFromClients[pIdx][i].data(), buf, 
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:1038:26: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+                unsigned char buf[crypto_core_ristretto255_BYTES];
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:1042:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+                memcpy(recvResult[i].first.data(), buf, crypto_core_ristretto255_BYTES);
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:1117:34: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+                        unsigned char buf[crypto_core_ristretto255_BYTES];
+</pre>
+<li>experiments/xzh26/frontend/OtBinMain.cpp:1125:25: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+                        memcpy(partial_decryption[i][pIdxCopy].data(), buf, crypto_core_ristretto255_BYTES);
+</pre>
+<li>experiments/xzh26/frontend/main.cpp:35:15: <b>  [2] </b> (integer) <i> atoi:
+  Unless checked, the resulting number can exceed the expected range (<a
+  href="https://cwe.mitre.org/data/definitions/190.html">CWE-190</a>). If
+  source untrusted, check both minimum and maximum, even if the input had no
+  minus sign (large numbers can roll over into negative number; consider
+  saving to an unsigned value if that is intended). </i>
+<pre>
+			nParties = atoi(argv[2]);
+</pre>
+<li>experiments/xzh26/frontend/main.cpp:43:19: <b>  [2] </b> (integer) <i> atoi:
+  Unless checked, the resulting number can exceed the expected range (<a
+  href="https://cwe.mitre.org/data/definitions/190.html">CWE-190</a>). If
+  source untrusted, check both minimum and maximum, even if the input had no
+  minus sign (large numbers can roll over into negative number; consider
+  saving to an unsigned value if that is intended). </i>
+<pre>
+			setSize = 1 &lt;&lt; atoi(argv[4]);
+</pre>
+<li>experiments/xzh26/frontend/main.cpp:51:15: <b>  [2] </b> (integer) <i> atoi:
+  Unless checked, the resulting number can exceed the expected range (<a
+  href="https://cwe.mitre.org/data/definitions/190.html">CWE-190</a>). If
+  source untrusted, check both minimum and maximum, even if the input had no
+  minus sign (large numbers can roll over into negative number; consider
+  saving to an unsigned value if that is intended). </i>
+<pre>
+			u64 pIdx = atoi(argv[6]);
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:2136:12: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+((struct { char v[sizeof(void) * 2]; } *) 1) \
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:3970:9: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+        char x[2]; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:11890:14: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+        std::memcpy(&amp;result, vec.data(), sizeof(NumberType));
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:16702:14: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+        std::memcpy(vec.data(), &amp;n, sizeof(NumberType));
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:16760:14: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+        std::memcpy(&amp;result, &amp;x, sizeof(x));
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:16874:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+    std::memcpy(&amp;target, &amp;source, sizeof(Source));
+</pre>
+<li>service/dealer/dealer_service.h:143:18: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+        unsigned char entropy[32];
+</pre>
+<li>service/protocols/ks05/crypto/paillier.cpp:118:18: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+        unsigned char entropy[32];
+</pre>
+<li>service/protocols/xzh26/protocol/BitPosition.cpp:18:13: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+            memcpy(&amp;result, point.data(), 16);
+</pre>
+<li>service/protocols/xzh26/protocol/BitPosition.cpp:21:13: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+            memcpy(&amp;result, point.data() + 16, 16);
+</pre>
+<li>service/protocols/xzh26/protocol/CuckooHasher1.cpp:196:9: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+        memcpy(mHashesView[inputIdx].data(), hashs.data(), sizeof(u64) * mParams.mNumHashes[0]);
+</pre>
+<li>service/protocols/xzh26/protocol/OPPRFReceiver.cpp:241:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+									memcpy(&amp;idxPos, maskView[baseMaskIdx].data() + i, sizeof(u8));
+</pre>
+<li>service/protocols/xzh26/protocol/OPPRFReceiver.cpp:262:9: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+								memcpy(&amp;theirMask, maskView[baseMaskIdx].data() + MaskIdx, bins.mMaskSize);
+</pre>
+<li>service/protocols/xzh26/protocol/OPPRFSender.cpp:250:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+									memcpy(
+</pre>
+<li>service/protocols/xzh26/protocol/OPPRFSender.cpp:269:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+									memcpy(
+</pre>
+<li>service/protocols/xzh26/protocol/OPPRFSender.cpp:291:11: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+										memcpy(maskView[baseMaskIdx].data() + MaskIdx,
+</pre>
+<li>service/protocols/xzh26/protocol/OPPRFSender.cpp:308:11: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+										memcpy(
+</pre>
+<li>service/protocols/xzh26/protocol/OPPRFSender.cpp:319:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+									memcpy(
+</pre>
+<li>service/protocols/xzh26/protocol/OPPRFSender.cpp:343:9: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+								memcpy(&amp;theirMask, maskView[i].data() + j*bins.mMaskSize + mSimpleBins.mNumBits[bIdxType], bins.mMaskSize);
+</pre>
+<li>service/protocols/xzh26/protocol/channel_adapter.h:67:14: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+        std::memcpy(dest, data.data(), length);
+</pre>
+<li>service/protocols/xzh26/protocol/channel_adapter.h:77:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+            std::memcpy(bs-&gt;data(), data.data(), data.size());
+</pre>
+<li>service/protocols/xzh26/protocol/ec_mpsi.cpp:33:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+    std::memcpy(pt.data(), data.data(), crypto_core_ristretto255_BYTES);
+</pre>
+<li>service/protocols/xzh26/protocol/ec_mpsi.cpp:37:14: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    unsigned char block_bytes[16];
+</pre>
+<li>service/protocols/xzh26/protocol/ec_mpsi.cpp:38:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+    std::memcpy(block_bytes, &amp;input, 16);
+</pre>
+<li>service/protocols/xzh26/protocol/ec_mpsi.cpp:39:14: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    unsigned char hash_64bytes[crypto_hash_sha512_BYTES];
+</pre>
+<li>service/protocols/yyh26/protocol/tt_mpsi.cpp:81:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+    std::memcpy(&amp;b, s.data(), len);
+</pre>
+<li>service/protocols/yyh26/protocol/tt_mpsi.cpp:319:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+            std::memcpy(zzBytes, &amp;blockVal, 16);
+</pre>
+<li>service/protocols/yyh26/protocol/tt_mpsi.cpp:582:26: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+                unsigned char buf[4];
+</pre>
+<li>service/protocols/yyh26/protocol/tt_mpsi.cpp:593:30: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+                    unsigned char buf[4];
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.cpp:180:9: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+        memcpy(mHashesView[inputIdx].data(), hashs.data(), sizeof(u64) * mParams.mNumHashes[0]);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:814:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(&amp;idxPos, maskView[baseMaskIdx].data() + i, sizeof(u8));
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:834:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+														  memcpy(&amp;theirMask, maskView[baseMaskIdx].data() + MaskIdx, bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:844:22: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+														  std::memcpy(&amp;mask_my, &amp;myMask, sizeof(block));
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:845:22: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+														  std::memcpy(&amp;mask_their, &amp;theirMask, sizeof(block));
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:945:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(&amp;idxPos, maskView[baseMaskIdx].data() + i, sizeof(u8));
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:965:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+														  memcpy(&amp;theirMask, maskView[baseMaskIdx].data() + MaskIdx, bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1071:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(&amp;bin.mCoeffs[IdxP][i], maskView[baseMaskIdx].data() + i * bins.mMaskSize, bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1139:5: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+				memcpy(&amp;blkCoff, maskView[hIdx * mN + i].data(), bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1307:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(&amp;theirBFMask, maskBFView[hIdx * mBfSize + idx].data(), bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1422:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1439:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1457:19: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+																  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1475:19: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+																  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1486:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1507:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+														  memcpy(&amp;theirMask, maskView[i].data() + j * bins.mMaskSize + mSimpleBins.mNumBits[bIdxType], bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1651:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1661:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1823:5: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+				memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1936:19: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+																  memcpy(maskBFView[hIdx * mBfSize + idx].data(), (u8 *)&amp;GarbleBF[hIdx][idx], bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1950:16: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+													  memcpy(maskBFView[hIdx * mBfSize + firstFreeIdx].data(), (u8 *)&amp;GarbleBF[hIdx][firstFreeIdx], bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1981:6: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+					memcpy(maskBFView[hIdx * mBfSize + i].data(), (u8 *)&amp;GarbleBF[hIdx][i], bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:849:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:873:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:891:19: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+																  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:909:19: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+																  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:920:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:941:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+														  memcpy(&amp;theirMask, maskView[i].data() + j * bins.mMaskSize + mSimpleBins.mNumBits[bIdxType], bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1057:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1094:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1111:19: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+																  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1129:19: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+																  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1140:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1161:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+														  memcpy(&amp;theirMask, maskView[i].data() + j * bins.mMaskSize + mSimpleBins.mNumBits[bIdxType], bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1277:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1297:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1314:19: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+																  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1332:19: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+																  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1343:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1364:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+														  memcpy(&amp;theirMask, maskView[i].data() + j * bins.mMaskSize + mSimpleBins.mNumBits[bIdxType], bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1508:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1519:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1681:5: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+				memcpy(
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1796:19: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+																  memcpy(maskBFView[hIdx * mBfSize + idx].data(), (u8 *)&amp;GarbleBF[hIdx][idx], bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1810:16: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+													  memcpy(maskBFView[hIdx * mBfSize + firstFreeIdx].data(), (u8 *)&amp;GarbleBF[hIdx][firstFreeIdx], bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1841:6: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+					memcpy(maskBFView[hIdx * mBfSize + i].data(), (u8 *)&amp;GarbleBF[hIdx][i], bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1930:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(&amp;idxPos, maskView[baseMaskIdx].data() + i, sizeof(u8));
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1950:17: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+														  memcpy(&amp;theirMask, maskView[baseMaskIdx].data() + MaskIdx, bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:2056:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(&amp;bin.mCoeffs[IdxP][i], maskView[baseMaskIdx].data() + i * bins.mMaskSize, bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:2124:5: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+				memcpy(&amp;blkCoff, maskView[hIdx * mN + i].data(), bins.mMaskSize);
+</pre>
+<li>service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:2292:18: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+															  memcpy(&amp;theirBFMask, maskBFView[hIdx * mBfSize + idx].data(), bins.mMaskSize);
+</pre>
+<li>service/tests/core/test_config_file.cpp:13:14: <b>  [2] </b> (tmpfile) <i> mkstemp:
+  Potential for temporary file vulnerability in some circumstances. Some
+  older Unix-like systems create temp files with permission to write by all
+  by default, so be sure to set the umask to override this. Also, some older
+  Unix systems might fail to use O_EXCL when opening the file, so make sure
+  that O_EXCL is used by the library (<a
+  href="https://cwe.mitre.org/data/definitions/377.html">CWE-377</a>). </i>
+<pre>
+    int fd = mkstemp(path);
+</pre>
+<li>service/tests/protocols/beh21/test_beh21_grpc_integration.cpp:32:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+    std::memcpy(e.data(), &amp;val, sizeof(val));
+</pre>
+<li>service/tests/protocols/beh21/test_beh21_integration.cpp:21:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+    std::memcpy(e.data(), &amp;val, sizeof(val));
+</pre>
+<li>service/tests/protocols/beh21/test_bloom_filter.cpp:9:10: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+    std::memcpy(e.data(), &amp;val, sizeof(val));
+</pre>
+<li>service/tests/protocols/yyh26/test_tt_mpsi.cpp:400:14: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+        std::memcpy(bytes, &amp;secretVal, 16);
+</pre>
+<li>service/tests/protocols/yyh26/test_tt_mpsi.cpp:436:14: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+        std::memcpy(blockBytes, s.data(), len);
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:4187:14: <b>  [1] </b> (buffer) <i> strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (<a
+  href="https://cwe.mitre.org/data/definitions/126.html">CWE-126</a>). </i>
+<pre>
+    return ::strlen(cstr) + concat_length(std::forward&lt;Args&gt;(rest)...);
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:6139:21: <b>  [1] </b> (buffer) <i> fgetc:
+  Check buffer boundaries if used in a loop including recursive loops (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>, <a
+  href="https://cwe.mitre.org/data/definitions/20.html">CWE-20</a>). </i>
+<pre>
+        return std::fgetc(m_file);
+</pre>
+<li>experiments/xzh26/frontend/third_party/nlohmann/json.hpp:6524:24: <b>  [1] </b> (buffer) <i> strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (<a
+  href="https://cwe.mitre.org/data/definitions/126.html">CWE-126</a>). </i>
+<pre>
+    auto length = std::strlen(reinterpret_cast&lt;const char*&gt;(b));
+</pre>
+<li>service/dealer/dealer_service.h:147:17: <b>  [1] </b> (buffer) <i> read:
+  Check buffer boundaries if used in a loop including recursive loops (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>, <a
+  href="https://cwe.mitre.org/data/definitions/20.html">CWE-20</a>). </i>
+<pre>
+        urandom.read(reinterpret_cast&lt;char*&gt;(entropy), sizeof(entropy));
+</pre>
+<li>service/protocols/ks05/crypto/paillier.cpp:122:17: <b>  [1] </b> (buffer) <i> read:
+  Check buffer boundaries if used in a loop including recursive loops (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>, <a
+  href="https://cwe.mitre.org/data/definitions/20.html">CWE-20</a>). </i>
+<pre>
+        urandom.read(reinterpret_cast&lt;char*&gt;(entropy), sizeof(entropy));
+</pre>
+</ul>
+<h2>Analysis Summary</h2>
+<p>
+Hits = 138
+<br>
+Lines analyzed = 56586 in approximately 0.21 seconds (263489 lines/second)
+<br>
+Physical Source Lines of Code (SLOC) = 39251
+<br>
+Hits@level = [0]  48 [1]   5 [2] 120 [3]   6 [4]   7 [5]   0 <br>
+Hits@level+ = [0+] 186 [1+] 138 [2+] 133 [3+]  13 [4+]   7 [5+]   0 <br>
+Hits/KSLOC@level+ = [0+] 4.73873 [1+] 3.51583 [2+] 3.38845 [3+] 0.331202 [4+] 0.178339 [5+]   0 <br>
+Dot directories skipped = 6 (--followdotdir overrides)
+<br>
+Minimum risk level = 1
+<br>
+Not every hit is necessarily a security vulnerability.
+You can inhibit a report by adding a comment in this form:
+// flawfinder: ignore
+Make *sure* it's a false positive!
+You can use the option --neverignore to show these.
+<br>
+There may be other security vulnerabilities; review your code!
+<br>
+See '<a href="https://dwheeler.com/secure-programs">Secure Programming HOWTO</a>'
+(<a href="https://dwheeler.com/secure-programs">https://dwheeler.com/secure-programs</a>) for more information.
+</body>
+</html>

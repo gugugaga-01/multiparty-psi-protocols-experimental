@@ -19,8 +19,8 @@ using namespace osuCrypto;
 #include "utils/bloom_filter.h" //frontend
 #include "utils/common.h"
 #include <chrono>
+#include <algorithm>
 #include <array>
-#include <cstring>
 #include <sodium.h>
 
 #define ZZtoBytesSize 256
@@ -69,16 +69,16 @@ void FullyDecrypt(ECpoint &plaintext, const std::vector<ECpoint> &decryption_sha
 
 ECpoint block_to_point(const block &input) {
     // 1. 序列化block为字节数组（小端/大端均可，需保持一致性）
-    unsigned char block_bytes[16];  // block是16字节
-    memcpy(block_bytes, &input, 16);
+    std::array<unsigned char, 16> block_bytes{};  // block is 16 bytes
+    std::copy_n(reinterpret_cast<const unsigned char*>(&input), block_bytes.size(), block_bytes.begin());
 
     // SHA-512哈希
-    unsigned char hash_64bytes[crypto_hash_sha512_BYTES];
-    crypto_hash_sha512(hash_64bytes, block_bytes, 16);
+    std::array<unsigned char, crypto_hash_sha512_BYTES> hash_64bytes{};
+    crypto_hash_sha512(hash_64bytes.data(), block_bytes.data(), block_bytes.size());
 
     // 映射到Ristretto255点
     ECpoint result_point;
-    int ret = crypto_core_ristretto255_from_hash(result_point.data(), hash_64bytes);
+    int ret = crypto_core_ristretto255_from_hash(result_point.data(), hash_64bytes.data());
     
     if (ret != 0) {
         std::cerr << "Error: block_to_ristretto_point failed!" << std::endl;
@@ -110,16 +110,16 @@ void tparty(u64 myIdx, u64 nParties, u64 setSize, u64 nTrials)
         return;
     }
     //u64 opt = 0;
-	std::fstream runtime;
+	std::ofstream runtime;
 	u64 leaderIdx = nParties - 1; //leader party
 
     std::string outputDir = "output";
 
 	if (myIdx == 0)
-		runtime.open("./runtime_client.txt", runtime.app | runtime.out);
+		runtime = std::ofstream("./runtime_client.txt", std::ios::app);
 
 	if (myIdx == leaderIdx)
-		runtime.open("./runtime_leader.txt", runtime.app | runtime.out);
+		runtime = std::ofstream("./runtime_leader.txt", std::ios::app);
     //为客户端（myIdx=0）和 leader 分别打开运行时记录文件
 
 #pragma region setup
@@ -387,9 +387,9 @@ void tparty(u64 myIdx, u64 nParties, u64 setSize, u64 nTrials)
 			//ZZFromBytes(recvPay[0], buf, ZZtoBytesSize);
 			//beta = recvPay[0];
             //接收联合公钥
-            unsigned char buf[crypto_core_ristretto255_BYTES];
-            chl.recv(&buf, crypto_core_ristretto255_BYTES);
-            memcpy(beta.data(), buf, crypto_core_ristretto255_BYTES);
+            std::array<unsigned char, crypto_core_ristretto255_BYTES> buf{};
+            chl.recv(buf.data(), buf.size());
+            std::copy_n(buf.data(), buf.size(), beta.data());
 		}
 		else
         //Leader端收集所有Client的公钥份额
@@ -403,12 +403,12 @@ void tparty(u64 myIdx, u64 nParties, u64 setSize, u64 nTrials)
 				
 				// std::cout<<"recv "<<recvPay[0]<<std::endl;
                 //unsigned char buf[ZZtoBytesSize];
-                unsigned char buf[crypto_core_ristretto255_BYTES];
+                std::array<unsigned char, crypto_core_ristretto255_BYTES> buf{};
                 //chl.recv(&buf, ZZtoBytesSize);
-                chl.recv(&buf, crypto_core_ristretto255_BYTES);
+                chl.recv(buf.data(), buf.size());
                 ECpoint other_share;
                 //ZZFromBytes(recvPay[0], buf, ZZtoBytesSize);
-                memcpy(other_share.data(), buf, crypto_core_ristretto255_BYTES);
+                std::copy_n(buf.data(), buf.size(), other_share.data());
                 //NTL::MulMod(beta, beta, recvPay[0], p);
                 beta = point_add(beta, other_share);
 			}
@@ -537,7 +537,7 @@ void tparty(u64 myIdx, u64 nParties, u64 setSize, u64 nTrials)
                     {
                         //unsigned char buf[2048/8];
                         //缓冲区
-                        //unsigned char buf[crypto_core_ristretto255_BYTES];
+                        //std::array<unsigned char, crypto_core_ristretto255_BYTES> buf{};
         
                         //BytesFromZZ(buf, encrypted_bloom_filter[i].first, 2048/8);
                         //chls[pIdx][0]->send(&buf, 2048/8);
@@ -566,19 +566,19 @@ void tparty(u64 myIdx, u64 nParties, u64 setSize, u64 nTrials)
             {
                 //unsigned char buf[2048/8];
                 //缓冲区
-                unsigned char buf[crypto_core_ristretto255_BYTES];
+                std::array<unsigned char, crypto_core_ristretto255_BYTES> buf{};
 
                 //chls[leaderIdx][0]->recv(&buf, 2048/8);
                 //ZZFromBytes(encrypted_bloom_filter[i].first, buf, 2048/8);
                 //接收第一个密文
-                chls[leaderIdx][0]->recv(&buf, crypto_core_ristretto255_BYTES);
-                memcpy(encrypted_bloom_filter[i].first.data(), buf, crypto_core_ristretto255_BYTES);
+                chls[leaderIdx][0]->recv(buf.data(), buf.size());
+                std::copy_n(buf.data(), buf.size(), encrypted_bloom_filter[i].first.data());
 
                 //chls[leaderIdx][0]->recv(&buf, 2048/8);
                 //ZZFromBytes(encrypted_bloom_filter[i].second, buf, 2048/8);
                 //接收第二个密文
-                chls[leaderIdx][0]->recv(&buf, crypto_core_ristretto255_BYTES);
-                memcpy(encrypted_bloom_filter[i].second.data(), buf, crypto_core_ristretto255_BYTES);
+                chls[leaderIdx][0]->recv(buf.data(), buf.size());
+                std::copy_n(buf.data(), buf.size(), encrypted_bloom_filter[i].second.data());
 
             }
         }
@@ -681,9 +681,9 @@ void tparty(u64 myIdx, u64 nParties, u64 setSize, u64 nTrials)
             auto& chl = *chls[leaderIdx][0];
             std::vector<ECpoint> blindedPoints(setSize);
             for (size_t i = 0; i < setSize; ++i) {
-                unsigned char buf[crypto_core_ristretto255_BYTES];
-                chl.recv(&buf, crypto_core_ristretto255_BYTES);
-                memcpy(blindedPoints[i].data(), buf, crypto_core_ristretto255_BYTES);
+                std::array<unsigned char, crypto_core_ristretto255_BYTES> buf{};
+                chl.recv(buf.data(), buf.size());
+                std::copy_n(buf.data(), buf.size(), blindedPoints[i].data());
             }
             //std::cout << "client self blindedPoints completed" << std::endl;
 
@@ -754,10 +754,9 @@ void tparty(u64 myIdx, u64 nParties, u64 setSize, u64 nTrials)
                     auto& chl = *chls[pIdx][0];
                     processedPointsFromClients[pIdx].resize(setSize);
                     for (size_t i = 0; i < setSize; ++i) {
-                        unsigned char buf[crypto_core_ristretto255_BYTES];
-                        chl.recv(&buf, crypto_core_ristretto255_BYTES);
-                        memcpy(processedPointsFromClients[pIdx][i].data(), buf, 
-                            crypto_core_ristretto255_BYTES);
+                        std::array<unsigned char, crypto_core_ristretto255_BYTES> buf{};
+                        chl.recv(buf.data(), buf.size());
+                        std::copy_n(buf.data(), buf.size(), processedPointsFromClients[pIdx][i].data());
                     }
                 });
             }
@@ -1035,11 +1034,11 @@ void tparty(u64 myIdx, u64 nParties, u64 setSize, u64 nTrials)
             for (size_t i = 0; i < setSize; ++i) 
             {
                 //unsigned char buf[2048/8];
-                unsigned char buf[crypto_core_ristretto255_BYTES];
+                std::array<unsigned char, crypto_core_ristretto255_BYTES> buf{};
 				//chls[leaderIdx][0]->recv(&buf, 2048/8);
-                chls[leaderIdx][0]->recv(&buf, crypto_core_ristretto255_BYTES);
+                chls[leaderIdx][0]->recv(buf.data(), buf.size());
 				//ZZFromBytes(recvResult[i].first, buf, 2048/8);
-                memcpy(recvResult[i].first.data(), buf, crypto_core_ristretto255_BYTES);
+                std::copy_n(buf.data(), buf.size(), recvResult[i].first.data());
             }
         }
 
@@ -1114,15 +1113,15 @@ void tparty(u64 myIdx, u64 nParties, u64 setSize, u64 nTrials)
                     {
                         //unsigned char buf[2048/8];
                         //缓冲区
-                        unsigned char buf[crypto_core_ristretto255_BYTES];
+                        std::array<unsigned char, crypto_core_ristretto255_BYTES> buf{};
                         //chls[pIdxCopy][0]->recv(&buf, 2048/8);
                         //NTL::ZZ temp;
                         //缓冲区
                         //ZZFromBytes(temp, buf, 2048/8);
                         //partial_decryption[i][pIdxCopy] = temp;
                         //转化并赋值
-                        chls[pIdxCopy][0]->recv(&buf, crypto_core_ristretto255_BYTES);
-                        memcpy(partial_decryption[i][pIdxCopy].data(), buf, crypto_core_ristretto255_BYTES);
+                        chls[pIdxCopy][0]->recv(buf.data(), buf.size());
+                        std::copy_n(buf.data(), buf.size(), partial_decryption[i][pIdxCopy].data());
                     }
                 }, pIdx);
             }

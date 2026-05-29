@@ -1,0 +1,2114 @@
+service/dealer/main.cpp:23:0: information: Include file: "dealer/dealer_service.h" not found. [missingInclude]
+#include "dealer/dealer_service.h"
+^
+service/dealer/main.cpp:24:0: information: Include file: "core/transport/party_server.h" not found. [missingInclude]
+#include "core/transport/party_server.h"
+^
+service/dealer/main.cpp:25:0: information: Include file: "core/config.h" not found. [missingInclude]
+#include "core/config.h"
+^
+service/party/psi_service_impl.h:3:0: information: Include file: "psi_service.grpc.pb.h" not found. [missingInclude]
+#include "psi_service.grpc.pb.h"
+^
+service/party/psi_service_impl.h:4:0: information: Include file: "core/protocol.h" not found. [missingInclude]
+#include "core/protocol.h"
+^
+service/party/psi_service_impl.h:5:0: information: Include file: "core/party_config.h" not found. [missingInclude]
+#include "core/party_config.h"
+^
+service/party/main.cpp:2:0: information: Include file: "core/config.h" not found. [missingInclude]
+#include "core/config.h"
+^
+service/party/main.cpp:3:0: information: Include file: "core/tls/tls_config.h" not found. [missingInclude]
+#include "core/tls/tls_config.h"
+^
+service/party/psi_service_impl.h:126:22: style: Consider using std::copy algorithm instead of a raw loop. [useStlAlgorithm]
+            elements.push_back(elem);
+                     ^
+service/protocols/beh21/beh21_plugin.cpp:1:0: information: Include file: "core/protocol.h" not found. [missingInclude]
+#include "core/protocol.h"
+^
+service/protocols/beh21/beh21_plugin.cpp:2:0: information: Include file: "core/transport/party_server.h" not found. [missingInclude]
+#include "core/transport/party_server.h"
+^
+service/protocols/beh21/beh21_plugin.cpp:3:0: information: Include file: "core/transport/grpc_channel.h" not found. [missingInclude]
+#include "core/transport/grpc_channel.h"
+^
+service/protocols/beh21/beh21_plugin.cpp:4:0: information: Include file: "protocols/beh21/protocol/ot_mpsi.h" not found. [missingInclude]
+#include "protocols/beh21/protocol/ot_mpsi.h"
+^
+service/protocols/beh21/beh21_plugin.cpp:5:0: information: Include file: "protocols/beh21/crypto/bloom_filter.h" not found. [missingInclude]
+#include "protocols/beh21/crypto/bloom_filter.h"
+^
+service/protocols/beh21/beh21_plugin.cpp:6:0: information: Include file: "dealer.grpc.pb.h" not found. [missingInclude]
+#include "dealer.grpc.pb.h"
+^
+service/protocols/beh21/protocol/ot_mpsi.h:6:0: information: Include file: "protocols/ks05/crypto/paillier.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/paillier.h"
+^
+service/protocols/beh21/protocol/ot_mpsi.h:7:0: information: Include file: "core/transport/channel.h" not found. [missingInclude]
+#include "core/transport/channel.h"
+^
+service/protocols/beh21/protocol/ot_mpsi.cpp:3:0: information: Include file: "protocols/ks05/protocol/logger.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/logger.h"
+^
+service/protocols/beh21/crypto/bloom_filter.h:63:9: style: Consider using std::all_of or std::none_of algorithm instead of a raw loop. [useStlAlgorithm]
+        for (uint32_t seed : mSeeds)
+        ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:97:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *data = (const uint8_t *)key;
+                           ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:108:31: style: C-style pointer casting [cstyleCast]
+    const uint32_t *blocks = (const uint32_t *)(data + nblocks * 4);
+                              ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:126:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *tail = (const uint8_t *)(data + nblocks * 4);
+                           ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:151:6: style: C-style pointer casting [cstyleCast]
+    *(uint32_t *)out = h1;
+     ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:159:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *data = (const uint8_t *)key;
+                           ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:175:31: style: C-style pointer casting [cstyleCast]
+    const uint32_t *blocks = (const uint32_t *)(data + nblocks * 16);
+                              ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:224:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *tail = (const uint8_t *)(data + nblocks * 16);
+                           ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:311:6: style: C-style pointer casting [cstyleCast]
+    ((uint32_t *)out)[0] = h1;
+     ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:312:6: style: C-style pointer casting [cstyleCast]
+    ((uint32_t *)out)[1] = h2;
+     ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:313:6: style: C-style pointer casting [cstyleCast]
+    ((uint32_t *)out)[2] = h3;
+     ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:314:6: style: C-style pointer casting [cstyleCast]
+    ((uint32_t *)out)[3] = h4;
+     ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:322:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *data = (const uint8_t *)key;
+                           ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:334:31: style: C-style pointer casting [cstyleCast]
+    const uint64_t *blocks = (const uint64_t *)(data);
+                              ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:363:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *tail = (const uint8_t *)(data + nblocks * 16);
+                           ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:426:6: style: C-style pointer casting [cstyleCast]
+    ((uint64_t *)out)[0] = h1;
+     ^
+service/protocols/beh21/third_party/smhasher/MurmurHash3.cpp:427:6: style: C-style pointer casting [cstyleCast]
+    ((uint64_t *)out)[1] = h2;
+     ^
+service/protocols/ks05/crypto/polynomial.h:12:5: style: Struct 'Polynomial' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    Polynomial(const std::vector<ZZ>& coeffs = {}) : coefficients(coeffs) {}
+    ^
+service/protocols/ks05/crypto/polynomial.cpp:97:15: style: Consider using std::fill or std::generate algorithm instead of a raw loop. [useStlAlgorithm]
+        coeff = NTL::to_ZZ(1);
+              ^
+service/protocols/ks05/crypto/polynomial.cpp:161:26: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        encrypted_coeffs.push_back(enc(coeff, pk));
+                         ^
+service/protocols/ks05/crypto/polynomial.cpp:171:26: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        encrypted_coeffs.push_back(enc(coeff, pk));
+                         ^
+service/protocols/ks05/ks05_plugin.cpp:1:0: information: Include file: "core/protocol.h" not found. [missingInclude]
+#include "core/protocol.h"
+^
+service/protocols/ks05/ks05_plugin.cpp:2:0: information: Include file: "core/transport/party_server.h" not found. [missingInclude]
+#include "core/transport/party_server.h"
+^
+service/protocols/ks05/ks05_plugin.cpp:3:0: information: Include file: "core/transport/grpc_channel.h" not found. [missingInclude]
+#include "core/transport/grpc_channel.h"
+^
+service/protocols/ks05/ks05_plugin.cpp:4:0: information: Include file: "protocols/ks05/protocol/t_mpsi.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/t_mpsi.h"
+^
+service/protocols/ks05/ks05_plugin.cpp:5:0: information: Include file: "protocols/ks05/protocol/logger.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/logger.h"
+^
+service/protocols/ks05/ks05_plugin.cpp:6:0: information: Include file: "dealer.grpc.pb.h" not found. [missingInclude]
+#include "dealer.grpc.pb.h"
+^
+service/protocols/ks05/protocol/t_mpsi.h:8:0: information: Include file: "core/transport/channel.h" not found. [missingInclude]
+#include "core/transport/channel.h"
+^
+service/protocols/ks05/protocol/t_mpsi.cpp:82:65: style: Parameter 'channels' can be declared as reference to const [constParameterReference]
+void TMpsiLeader::negotiateSetSize(std::vector<mpsi::Channel*>& channels) {
+                                                                ^
+service/protocols/ks05/protocol/t_mpsi.cpp:306:28: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        partialDecryptions.push_back(partialDec(ct, mPubKey, mPrivKey));
+                           ^
+service/protocols/xzh26/crypto/bloom_filter.cpp:3:0: information: Include file: "protocols/xzh26/crypto/murmurhash3.h" not found. [missingInclude]
+#include "protocols/xzh26/crypto/murmurhash3.h"
+^
+service/protocols/xzh26/crypto/bloom_filter.cpp:15:14: style: Variable 'pos' can be declared as reference to const [constVariableReference]
+  for (auto &pos : GetPositions(e)) {
+             ^
+service/protocols/xzh26/crypto/bloom_filter.cpp:15:3: style: Consider using std::all_of or std::none_of algorithm instead of a raw loop. [useStlAlgorithm]
+  for (auto &pos : GetPositions(e)) {
+  ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:97:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * data = (const uint8_t*)key;
+                          ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:108:30: style: C-style pointer casting [cstyleCast]
+  const uint32_t * blocks = (const uint32_t *)(data + nblocks*4);
+                             ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:126:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*4);
+                          ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:145:4: style: C-style pointer casting [cstyleCast]
+  *(uint32_t*)out = h1;
+   ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:153:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * data = (const uint8_t*)key;
+                          ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:169:30: style: C-style pointer casting [cstyleCast]
+  const uint32_t * blocks = (const uint32_t *)(data + nblocks*16);
+                             ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:198:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*16);
+                          ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:247:4: style: C-style pointer casting [cstyleCast]
+  ((uint32_t*)out)[0] = h1;
+   ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:248:4: style: C-style pointer casting [cstyleCast]
+  ((uint32_t*)out)[1] = h2;
+   ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:249:4: style: C-style pointer casting [cstyleCast]
+  ((uint32_t*)out)[2] = h3;
+   ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:250:4: style: C-style pointer casting [cstyleCast]
+  ((uint32_t*)out)[3] = h4;
+   ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:258:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * data = (const uint8_t*)key;
+                          ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:270:30: style: C-style pointer casting [cstyleCast]
+  const uint64_t * blocks = (const uint64_t *)(data);
+                             ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:289:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*16);
+                          ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:330:4: style: C-style pointer casting [cstyleCast]
+  ((uint64_t*)out)[0] = h1;
+   ^
+service/protocols/xzh26/crypto/murmurhash3.cpp:331:4: style: C-style pointer casting [cstyleCast]
+  ((uint64_t*)out)[1] = h2;
+   ^
+service/protocols/xzh26/protocol/BitPosition.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/xzh26/protocol/BitPosition.h:3:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/xzh26/protocol/BitPosition.h:4:0: information: Include file: "Common/BitVector.h" not found. [missingInclude]
+#include "Common/BitVector.h"
+^
+service/protocols/xzh26/protocol/BitPosition.h:5:0: information: Include file: "Common/ArrayView.h" not found. [missingInclude]
+#include "Common/ArrayView.h"
+^
+service/protocols/xzh26/protocol/BitPosition.h:6:0: information: Include file: "Common/MatrixView.h" not found. [missingInclude]
+#include "Common/MatrixView.h"
+^
+service/protocols/xzh26/protocol/BitPosition.h:12:0: information: Include file: "protocols/xzh26/crypto/point.h" not found. [missingInclude]
+#include "protocols/xzh26/crypto/point.h"
+^
+service/protocols/xzh26/protocol/BitPosition.cpp:2:0: information: Include file: "Crypto/sha1.h" not found. [missingInclude]
+#include "Crypto/sha1.h"
+^
+service/protocols/xzh26/protocol/BitPosition.cpp:3:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/xzh26/protocol/BitPosition.cpp:6:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/xzh26/protocol/BitPosition.cpp:7:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/xzh26/protocol/BitPosition.h:56:11: performance: Variable 'mRealBitSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+          mRealBitSize = other.mRealBitSize;
+          ^
+service/protocols/xzh26/protocol/BitPosition.h:57:10: performance: Variable 'mMaxBitSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mMaxBitSize = other.mMaxBitSize;
+         ^
+service/protocols/xzh26/protocol/BitPosition.h:58:10: performance: Variable 'mNumTrial' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mNumTrial = other.mNumTrial;
+         ^
+service/protocols/xzh26/protocol/BitPosition.h:59:10: performance: Variable 'mPos' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mPos = other.mPos;
+         ^
+service/protocols/xzh26/protocol/BitPosition.h:60:10: performance: Variable 'mMaps' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mMaps = other.mMaps;
+         ^
+service/protocols/xzh26/protocol/BitPosition.cpp:228:24: style: The scope of the variable 'testSet1' can be reduced. [variableScope]
+  std::vector<ECpoint> testSet1;
+                       ^
+service/protocols/xzh26/protocol/BitPosition.cpp:229:24: style: The scope of the variable 'testSet2' can be reduced. [variableScope]
+  std::vector<ECpoint> testSet2;
+                       ^
+service/protocols/xzh26/protocol/BitPosition.cpp:34:21: style: Parameter 'v' can be declared as reference to const [constParameterReference]
+ int isSet(ECpoint& v, int n)
+                    ^
+service/protocols/xzh26/protocol/BitPosition.cpp:69:25: style: Parameter 'value' can be declared as reference to const [constParameterReference]
+ bool TestBitN(ECpoint& value, int N)
+                        ^
+service/protocols/xzh26/protocol/BitPosition.cpp:165:15: style: Variable 'temp' is assigned a value that is never used. [unreadVariable]
+  size_t temp = 0;
+              ^
+service/protocols/xzh26/protocol/CuckooHasher1.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/xzh26/protocol/CuckooHasher1.h:3:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/xzh26/protocol/CuckooHasher1.h:4:0: information: Include file: "Common/BitVector.h" not found. [missingInclude]
+#include "Common/BitVector.h"
+^
+service/protocols/xzh26/protocol/CuckooHasher1.h:5:0: information: Include file: "Common/ArrayView.h" not found. [missingInclude]
+#include "Common/ArrayView.h"
+^
+service/protocols/xzh26/protocol/CuckooHasher1.h:6:0: information: Include file: "Common/MatrixView.h" not found. [missingInclude]
+#include "Common/MatrixView.h"
+^
+service/protocols/xzh26/protocol/CuckooHasher1.h:8:0: information: Include file: "protocols/xzh26/crypto/point.h" not found. [missingInclude]
+#include "protocols/xzh26/crypto/point.h"
+^
+service/protocols/xzh26/protocol/CuckooHasher1.cpp:2:0: information: Include file: "Crypto/sha1.h" not found. [missingInclude]
+#include "Crypto/sha1.h"
+^
+service/protocols/xzh26/protocol/CuckooHasher1.cpp:3:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/xzh26/protocol/CuckooHasher1.cpp:5:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/xzh26/protocol/CuckooHasher1.cpp:6:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/xzh26/protocol/CuckooHasher1.cpp:39:20: warning: Member variable 'CuckooHasher1::mParams' is not initialized in the constructor. [uninitMemberVar]
+    CuckooHasher1::CuckooHasher1()
+                   ^
+service/protocols/xzh26/protocol/CuckooHasher1.h:171:13: performance: Variable 'mTotalTries' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+            mTotalTries = other.mTotalTries;
+            ^
+service/protocols/xzh26/protocol/CuckooHasher1.h:172:13: performance: Variable 'mParams' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+            mParams = other.mParams;
+            ^
+service/protocols/xzh26/protocol/CuckooHasher1.h:174:13: performance: Variable 'mRepSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+            mRepSize = other.mRepSize;
+            ^
+service/protocols/xzh26/protocol/CuckooHasher1.h:175:13: performance: Variable 'mInputBitSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+            mInputBitSize = other.mInputBitSize;
+            ^
+service/protocols/xzh26/protocol/CuckooHasher1.h:176:13: performance: Variable 'mN' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+            mN = other.mN;
+            ^
+service/protocols/xzh26/protocol/CuckooHasher1.h:82:13: style: Struct 'Workspace' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+            Workspace(u64 n)
+            ^
+service/protocols/xzh26/protocol/CuckooHasher1.cpp:170:12: style: Condition 'opt==0' is always true [knownConditionTrueFalse]
+   if (opt == 0)
+           ^
+service/protocols/xzh26/protocol/CuckooHasher1.cpp:152:17: note: Assignment 'opt=0', assigned value is 0
+      u64 opt = 0;
+                ^
+service/protocols/xzh26/protocol/CuckooHasher1.cpp:170:12: note: Condition 'opt==0' is always true
+   if (opt == 0)
+           ^
+service/protocols/xzh26/protocol/OPPRFReceiver.h:3:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/xzh26/protocol/OPPRFReceiver.h:4:0: information: Include file: "Network/Channel.h" not found. [missingInclude]
+#include "Network/Channel.h"
+^
+service/protocols/xzh26/protocol/SimpleHasher1.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/xzh26/protocol/SimpleHasher1.h:3:0: information: Include file: "Common/BitVector.h" not found. [missingInclude]
+#include "Common/BitVector.h"
+^
+service/protocols/xzh26/protocol/SimpleHasher1.h:4:0: information: Include file: "Common/ArrayView.h" not found. [missingInclude]
+#include "Common/ArrayView.h"
+^
+service/protocols/xzh26/protocol/binSet.h:3:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/xzh26/protocol/binSet.h:4:0: information: Include file: "Network/Channel.h" not found. [missingInclude]
+#include "Network/Channel.h"
+^
+service/protocols/xzh26/protocol/OPPRFReceiver.cpp:4:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/xzh26/protocol/OPPRFReceiver.cpp:5:0: information: Include file: "Crypto/Commit.h" not found. [missingInclude]
+#include "Crypto/Commit.h"
+^
+service/protocols/xzh26/protocol/OPPRFReceiver.cpp:7:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/xzh26/protocol/OPPRFReceiver.cpp:8:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/xzh26/protocol/SimpleHasher1.h:59:11: performance: Variable 'mIdx' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+          mIdx = other.mIdx;
+          ^
+service/protocols/xzh26/protocol/SimpleHasher1.h:60:11: performance: Variable 'hIdx' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+          hIdx = other.hIdx;
+          ^
+service/protocols/xzh26/protocol/SimpleHasher1.h:61:11: performance: Variable 'mBits' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+          mBits = other.mBits;
+          ^
+service/protocols/xzh26/protocol/SimpleHasher1.h:120:10: performance: Variable 'mRepSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mRepSize = other.mRepSize;
+         ^
+service/protocols/xzh26/protocol/SimpleHasher1.h:121:10: performance: Variable 'mInputBitSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mInputBitSize = other.mInputBitSize;
+         ^
+service/protocols/xzh26/protocol/SimpleHasher1.h:122:10: performance: Variable 'mN' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mN = other.mN;
+         ^
+service/protocols/xzh26/protocol/binSet.h:55:10: performance: Variable 'mN' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mN = other.mN;
+         ^
+service/protocols/xzh26/protocol/binSet.h:56:10: performance: Variable 'mParties' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mParties = other.mParties;
+         ^
+service/protocols/xzh26/protocol/binSet.h:57:10: performance: Variable 'mMyIdx' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mMyIdx = other.mMyIdx;
+         ^
+service/protocols/xzh26/protocol/binSet.h:58:10: performance: Variable 'mStatSecParam' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mStatSecParam = other.mStatSecParam;
+         ^
+service/protocols/xzh26/protocol/binSet.h:59:10: performance: Variable 'mNcoInputBlkSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mNcoInputBlkSize = other.mNcoInputBlkSize;
+         ^
+service/protocols/xzh26/protocol/binSet.h:60:11: performance: Variable 'mHashingSeed' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+          mHashingSeed = other.mHashingSeed;
+          ^
+service/protocols/xzh26/protocol/binSet.h:61:10: performance: Variable 'mMaskSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mMaskSize = other.mMaskSize;
+         ^
+service/protocols/xzh26/protocol/binSet.h:65:10: performance: Variable 'mNcoInputBuff' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mNcoInputBuff = other.mNcoInputBuff;
+         ^
+service/protocols/xzh26/protocol/binSet.h:70:10: performance: Variable 'mCuckooBins' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mCuckooBins = other.mCuckooBins;
+         ^
+service/protocols/xzh26/protocol/binSet.h:71:10: performance: Variable 'mSimpleBins' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mSimpleBins = other.mSimpleBins;
+         ^
+service/protocols/xzh26/protocol/OPPRFSender.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/xzh26/protocol/OPPRFSender.h:3:0: information: Include file: "Network/Channel.h" not found. [missingInclude]
+#include "Network/Channel.h"
+^
+service/protocols/xzh26/protocol/OPPRFSender.cpp:4:0: information: Include file: "Crypto/Commit.h" not found. [missingInclude]
+#include "Crypto/Commit.h"
+^
+service/protocols/xzh26/protocol/OPPRFSender.cpp:5:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/xzh26/protocol/OPPRFSender.cpp:6:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/xzh26/protocol/OPPRFSender.cpp:7:0: information: Include file: "Common/Timer.h" not found. [missingInclude]
+#include "Common/Timer.h"
+^
+service/protocols/xzh26/protocol/OPPRFSender.cpp:364:14: style: The if condition is the same as the previous if condition [duplicateCondition]
+    if (tIdx == 0) gTimer.setTimePoint("online.send.finalMask");
+             ^
+service/protocols/xzh26/protocol/OPPRFSender.cpp:355:14: note: First condition
+    if (tIdx == 0) gTimer.setTimePoint("online.send.sendMask");
+             ^
+service/protocols/xzh26/protocol/OPPRFSender.cpp:364:14: note: Second condition
+    if (tIdx == 0) gTimer.setTimePoint("online.send.finalMask");
+             ^
+service/protocols/xzh26/protocol/OPPRFSender.cpp:252:11: style: C-style pointer casting [cstyleCast]
+          (u8*)&bin.mBits[IdxP].mPos[idxPos], sizeof(u8));
+          ^
+service/protocols/xzh26/protocol/OPPRFSender.cpp:310:12: style: C-style pointer casting [cstyleCast]
+           (u8*)&rand, sizeof(u8));
+           ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:2:0: information: Include file: "Crypto/sha1.h" not found. [missingInclude]
+#include "Crypto/sha1.h"
+^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:3:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:6:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:7:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:31:17: warning: Member variable 'SimpleHasher1::mParams' is not initialized in the constructor. [uninitMemberVar]
+ SimpleHasher1::SimpleHasher1()
+                ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:192:11: style: Condition 'opt==0' is always true [knownConditionTrueFalse]
+  if (opt == 0)
+          ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:174:13: note: Assignment 'opt=0', assigned value is 0
+  u64 opt = 0;
+            ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:192:11: note: Condition 'opt==0' is always true
+  if (opt == 0)
+          ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:272:17: style: C-style pointer casting [cstyleCast]
+    u64 addr = *(u64*)&hashs[j][k] % mBinCount[0];
+                ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:289:22: style: C-style pointer casting [cstyleCast]
+    u64 addrStash = *(u64*)&hashs[j][k] % mBinCount[1] + mBinCount[0];
+                     ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:137:26: style: The comparison 'opt == 0' is always true. [knownConditionTrueFalse]
+      if (isOPRF && (opt == 0 || opt==1))//seperated oprf
+                         ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:81:13: note: 'opt' is assigned value '0' here.
+  int opt = 0;
+            ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:137:26: note: The comparison 'opt == 0' is always true.
+      if (isOPRF && (opt == 0 || opt==1))//seperated oprf
+                         ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:143:23: style: The comparison 'opt == 0' is always true. [knownConditionTrueFalse]
+      if (isMap && opt==0)
+                      ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:81:13: note: 'opt' is assigned value '0' here.
+  int opt = 0;
+            ^
+service/protocols/xzh26/protocol/SimpleHasher1.cpp:143:23: note: The comparison 'opt == 0' is always true.
+      if (isMap && opt==0)
+                      ^
+service/protocols/xzh26/protocol/binSet.cpp:4:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/xzh26/protocol/binSet.cpp:5:0: information: Include file: "Crypto/Commit.h" not found. [missingInclude]
+#include "Crypto/Commit.h"
+^
+service/protocols/xzh26/protocol/binSet.cpp:7:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/xzh26/protocol/binSet.cpp:8:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/xzh26/protocol/binSet.cpp:131:24: style: C-style pointer casting [cstyleCast]
+       hashes[j][k] = *(u64*)&mNcoInputBuff[k][i + j];
+                       ^
+service/protocols/xzh26/protocol/binSet.cpp:154:29: style: C-style pointer casting [cstyleCast]
+       stashHashes[j][k] = *(u64*)&mNcoInputBuff[k][mCuckooBins.mStashIdxs[j]];
+                            ^
+service/protocols/xzh26/protocol/binSet.cpp:214:34: warning: The lock is ineffective because the mutex is locked at the same scope as the mutex itself. [localMutex]
+     std::lock_guard<std::mutex> lock(mPrintMtx);
+                                 ^
+service/protocols/xzh26/protocol/ec_mpsi.cpp:1:0: information: Include file: "protocols/xzh26/protocol/ec_mpsi.h" not found. [missingInclude]
+#include "protocols/xzh26/protocol/ec_mpsi.h"
+^
+service/protocols/xzh26/protocol/ec_mpsi.cpp:2:0: information: Include file: "protocols/xzh26/crypto/point.h" not found. [missingInclude]
+#include "protocols/xzh26/crypto/point.h"
+^
+service/protocols/xzh26/protocol/ec_mpsi.cpp:3:0: information: Include file: "protocols/xzh26/crypto/bloom_filter.h" not found. [missingInclude]
+#include "protocols/xzh26/crypto/bloom_filter.h"
+^
+service/protocols/xzh26/protocol/ec_mpsi.cpp:4:0: information: Include file: "protocols/xzh26/crypto/common.h" not found. [missingInclude]
+#include "protocols/xzh26/crypto/common.h"
+^
+service/protocols/xzh26/protocol/ec_mpsi.cpp:5:0: information: Include file: "protocols/xzh26/protocol/channel_adapter.h" not found. [missingInclude]
+#include "protocols/xzh26/protocol/channel_adapter.h"
+^
+service/protocols/xzh26/protocol/ec_mpsi.cpp:6:0: information: Include file: "protocols/xzh26/protocol/OPPRFSender.h" not found. [missingInclude]
+#include "protocols/xzh26/protocol/OPPRFSender.h"
+^
+service/protocols/xzh26/protocol/ec_mpsi.cpp:7:0: information: Include file: "protocols/xzh26/protocol/OPPRFReceiver.h" not found. [missingInclude]
+#include "protocols/xzh26/protocol/OPPRFReceiver.h"
+^
+service/protocols/xzh26/protocol/ec_mpsi.cpp:8:0: information: Include file: "protocols/xzh26/protocol/binSet.h" not found. [missingInclude]
+#include "protocols/xzh26/protocol/binSet.h"
+^
+service/protocols/xzh26/protocol/ec_mpsi.cpp:10:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/xzh26/protocol/ec_mpsi.cpp:11:0: information: Include file: "Common/Timer.h" not found. [missingInclude]
+#include "Common/Timer.h"
+^
+service/protocols/xzh26/protocol/ec_mpsi.cpp:12:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/xzh26/xzh26_plugin.cpp:1:0: information: Include file: "core/protocol.h" not found. [missingInclude]
+#include "core/protocol.h"
+^
+service/protocols/xzh26/xzh26_plugin.cpp:2:0: information: Include file: "core/transport/party_server.h" not found. [missingInclude]
+#include "core/transport/party_server.h"
+^
+service/protocols/xzh26/xzh26_plugin.cpp:3:0: information: Include file: "core/transport/grpc_channel.h" not found. [missingInclude]
+#include "core/transport/grpc_channel.h"
+^
+service/protocols/xzh26/xzh26_plugin.cpp:4:0: information: Include file: "protocols/xzh26/protocol/ec_mpsi.h" not found. [missingInclude]
+#include "protocols/xzh26/protocol/ec_mpsi.h"
+^
+service/protocols/xzh26/xzh26_plugin.cpp:5:0: information: Include file: "protocols/xzh26/crypto/murmurhash3.h" not found. [missingInclude]
+#include "protocols/xzh26/crypto/murmurhash3.h"
+^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:13:0: information: Include file: "Network/BtEndpoint.h" not found. [missingInclude]
+#include "Network/BtEndpoint.h"
+^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:14:0: information: Include file: "Network/BtIOService.h" not found. [missingInclude]
+#include "Network/BtIOService.h"
+^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:15:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:16:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:19:0: information: Include file: "NChooseOne/KkrtNcoOtReceiver.h" not found. [missingInclude]
+#include "NChooseOne/KkrtNcoOtReceiver.h"
+^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:20:0: information: Include file: "NChooseOne/KkrtNcoOtSender.h" not found. [missingInclude]
+#include "NChooseOne/KkrtNcoOtSender.h"
+^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:23:0: information: Include file: "OPPRF/OPPRFSender.h" not found. [missingInclude]
+#include "OPPRF/OPPRFSender.h"
+^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:24:0: information: Include file: "OPPRF/OPPRFReceiver.h" not found. [missingInclude]
+#include "OPPRF/OPPRFReceiver.h"
+^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:27:0: information: Include file: "pke/ole.h" not found. [missingInclude]
+#include "pke/ole.h"
+^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:28:0: information: Include file: "pke/gazelle-network.h" not found. [missingInclude]
+#include "pke/gazelle-network.h"
+^
+service/protocols/yyh26/protocol/tt_mpsi.h:46:1: style: The class 'TTMpsiLeader' does not declare a constructor although it has private member variables which likely require initialization. [noConstructor]
+class TTMpsiLeader {
+^
+service/protocols/yyh26/protocol/tt_mpsi.h:59:1: style: The class 'TTMpsiMember' does not declare a constructor although it has private member variables which likely require initialization. [noConstructor]
+class TTMpsiMember {
+^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:117:5: style: Struct 'FourBOLEReceiverInputs < encoding_input_t >' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    FourBOLEReceiverInputs(ui32 numBlocks) {
+    ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:545:54: style: The scope of the variable 'genUpdateValues' can be reduced. [variableScope]
+    std::vector<std::vector<std::vector<NTL::ZZ_p>>> genUpdateValues(4);
+                                                     ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:628:37: style: The scope of the variable 'recvOLE' can be reduced. [variableScope]
+    std::vector<std::vector<ui128>> recvOLE;
+                                    ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:173:38: style: Parameter 'receiverInput' can be declared as reference to const [constParameterReference]
+    std::vector<std::vector<ui128>>& receiverInput,
+                                     ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:180:11: style: Variable 'sk' can be declared as reference to const [constVariableReference]
+    auto& sk = kpSeeded.sk;
+          ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:1110:41: style: Parameter 'phase3' can be declared as reference to const [constParameterReference]
+    ProtocolContext& ctx, Phase3Result& phase3)
+                                        ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:310:26: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+            fourModuloZZ.push_back(NTL::ZZ(mod));
+                         ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:1133:73: style: Consider using std::any_of algorithm instead of a raw loop. [useStlAlgorithm]
+                                    ctx.fourModuloZZ, ctx.setZZ[eIdx])) {
+                                                                        ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:227:32: style: int result is assigned to long variable. If the variable is long to avoid loss of information, then you have loss of information. [truncLongCastAssignment]
+                uint64_t shift = (3 - m) * 32;
+                               ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:798:36: style: int result is assigned to long variable. If the variable is long to avoid loss of information, then you have loss of information. [truncLongCastAssignment]
+                    uint64_t shift = (3 - m) * 32;
+                                   ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:867:44: style: int result is assigned to long variable. If the variable is long to avoid loss of information, then you have loss of information. [truncLongCastAssignment]
+                            uint64_t shift = (3 - m) * 32;
+                                           ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:902:44: style: int result is assigned to long variable. If the variable is long to avoid loss of information, then you have loss of information. [truncLongCastAssignment]
+                            uint64_t shift = (3 - m) * 32;
+                                           ^
+service/protocols/yyh26/protocol/tt_mpsi.cpp:1205:17: style: Variable 'phase3' is assigned a value that is never used. [unreadVariable]
+    auto phase3 = runPhase3(ctx, phase1, phase2);
+                ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:3:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:4:0: information: Include file: "Common/BitVector.h" not found. [missingInclude]
+#include "Common/BitVector.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:5:0: information: Include file: "Common/ArrayView.h" not found. [missingInclude]
+#include "Common/ArrayView.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:6:0: information: Include file: "Common/MatrixView.h" not found. [missingInclude]
+#include "Common/MatrixView.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:12:0: information: Include file: "NTL/GF2EX.h" not found. [missingInclude]
+#include "NTL/GF2EX.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:13:0: information: Include file: "NTL/GF2XFactoring.h" not found. [missingInclude]
+#include "NTL/GF2XFactoring.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:15:0: information: Include file: "NTL/GF2EX.h" not found. [missingInclude]
+#include "NTL/GF2EX.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:18:0: information: Include file: "NTL/GF2EX.h" not found. [missingInclude]
+#include "NTL/GF2EX.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:19:0: information: Include file: "NTL/ZZ_p.h" not found. [missingInclude]
+#include "NTL/ZZ_p.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:20:0: information: Include file: "NTL/GF2EX.h" not found. [missingInclude]
+#include "NTL/GF2EX.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.h:21:0: information: Include file: "NTL/GF2XFactoring.h" not found. [missingInclude]
+#include "NTL/GF2XFactoring.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:2:0: information: Include file: "Crypto/sha1.h" not found. [missingInclude]
+#include "Crypto/sha1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:3:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:5:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:6:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:365:29: style: C-style pointer casting [cstyleCast]
+  NTL::GF2XFromBytes(mGf2x, (u8 *)&blk, size);
+                            ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:378:17: style: C-style pointer casting [cstyleCast]
+  BytesFromGF2X((u8 *)&blk, fromEl, size);
+                ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:176:22: style: The scope of the variable 'testSet1' can be reduced. [variableScope]
+  std::vector<block> testSet1;
+                     ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:177:22: style: The scope of the variable 'testSet2' can be reduced. [variableScope]
+  std::vector<block> testSet2;
+                     ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:70:49: style: Parameter 'codeword' can be declared as reference to const [constParameterReference]
+ bool BitPosition::getMasks(std::vector<block> &codeword)
+                                                ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:99:35: style: Parameter 'codeword' can be declared as reference to const [constParameterReference]
+ void BitPosition::getMask(block &codeword, u8 &mask)
+                                  ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:116:46: style: Parameter 'codewords' can be declared as reference to const [constParameterReference]
+ int BitPosition::midIdx(std::vector<block> &codewords, int length)
+                                             ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/BitPosition.cpp:118:12: style: Variable 'temp' is assigned a value that is never used. [unreadVariable]
+  int temp = 0;
+           ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.h:3:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.h:4:0: information: Include file: "Common/BitVector.h" not found. [missingInclude]
+#include "Common/BitVector.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.h:5:0: information: Include file: "Common/ArrayView.h" not found. [missingInclude]
+#include "Common/ArrayView.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.h:6:0: information: Include file: "Common/MatrixView.h" not found. [missingInclude]
+#include "Common/MatrixView.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.h:7:0: information: Include file: "Hashing/BitPosition.h" not found. [missingInclude]
+#include "Hashing/BitPosition.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.cpp:2:0: information: Include file: "Crypto/sha1.h" not found. [missingInclude]
+#include "Crypto/sha1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.cpp:3:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.cpp:5:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.cpp:6:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.cpp:32:20: warning: Member variable 'CuckooHasher1::mParams' is not initialized in the constructor. [uninitMemberVar]
+    CuckooHasher1::CuckooHasher1()
+                   ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/CuckooHasher1.h:60:13: style: Struct 'Workspace' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+            Workspace(u64 n)
+            ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.h:3:0: information: Include file: "Common/BitVector.h" not found. [missingInclude]
+#include "Common/BitVector.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.h:4:0: information: Include file: "Common/ArrayView.h" not found. [missingInclude]
+#include "Common/ArrayView.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.h:5:0: information: Include file: "Hashing/BitPosition.h" not found. [missingInclude]
+#include "Hashing/BitPosition.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.cpp:2:0: information: Include file: "Crypto/sha1.h" not found. [missingInclude]
+#include "Crypto/sha1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.cpp:3:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.cpp:5:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.cpp:6:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.cpp:23:17: warning: Member variable 'SimpleHasher1::mParams' is not initialized in the constructor. [uninitMemberVar]
+ SimpleHasher1::SimpleHasher1()
+                ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.cpp:255:17: style: C-style pointer casting [cstyleCast]
+    u64 addr = *(u64 *)&hashs[j][k] % mBinCount[0];
+                ^
+service/protocols/yyh26/vendor/libOPRF/Hashing/SimpleHasher1.cpp:272:22: style: C-style pointer casting [cstyleCast]
+    u64 addrStash = *(u64 *)&hashs[j][k] % mBinCount[1] + mBinCount[0];
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.h:3:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.h:4:0: information: Include file: "Network/Channel.h" not found. [missingInclude]
+#include "Network/Channel.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.h:5:0: information: Include file: "NChooseOne/NcoOtExt.h" not found. [missingInclude]
+#include "NChooseOne/NcoOtExt.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.h:6:0: information: Include file: "Hashing/CuckooHasher1.h" not found. [missingInclude]
+#include "Hashing/CuckooHasher1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.h:7:0: information: Include file: "Hashing/SimpleHasher1.h" not found. [missingInclude]
+#include "Hashing/SimpleHasher1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.h:8:0: information: Include file: "OPPRF/binSet.h" not found. [missingInclude]
+#include "OPPRF/binSet.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:4:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:5:0: information: Include file: "Crypto/Commit.h" not found. [missingInclude]
+#include "Crypto/Commit.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:7:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:8:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:9:0: information: Include file: "Base/naor-pinkas.h" not found. [missingInclude]
+#include "Base/naor-pinkas.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:13:0: information: Include file: "TwoChooseOne/IknpOtExtReceiver.h" not found. [missingInclude]
+#include "TwoChooseOne/IknpOtExtReceiver.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:14:0: information: Include file: "TwoChooseOne/IknpOtExtSender.h" not found. [missingInclude]
+#include "TwoChooseOne/IknpOtExtSender.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:15:0: information: Include file: "Hashing/BitPosition.h" not found. [missingInclude]
+#include "Hashing/BitPosition.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1526:22: style: The if condition is the same as the previous if condition [duplicateCondition]
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1518:22: note: First condition
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1526:22: note: Second condition
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:847:49: style: C-style pointer casting [cstyleCast]
+                NTL::ZZ num1 = NTL::ZZFromBytes((u8 *)&mask_their, sizeof(block));
+                                                ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:848:49: style: C-style pointer casting [cstyleCast]
+                NTL::ZZ num2 = NTL::ZZFromBytes((u8 *)&mask_my, sizeof(block));
+                                                ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:852:34: style: C-style pointer casting [cstyleCast]
+                NTL::BytesFromZZ((u8 *)&plaintexts[inputIdx], result, sizeof(block));
+                                 ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1304:30: style: C-style pointer casting [cstyleCast]
+                 u64 &idx = *(u64 *)&hashOut;
+                             ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1424:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&bin.mBits[IdxP].mPos[idxPos], sizeof(u8));
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1441:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&encr,
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1459:20: style: C-style pointer casting [cstyleCast]
+                   (u8 *)&ZeroBlock, // make randome
+                   ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1477:20: style: C-style pointer casting [cstyleCast]
+                   (u8 *)&rand, sizeof(u8));
+                   ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1488:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&ZeroBlock, // make randome
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1653:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&coeffs[i],
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1663:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&ZeroBlock, // make randome
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1825:6: style: C-style pointer casting [cstyleCast]
+     (u8 *)&coeffs[hIdx][i], // make randome
+     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1914:28: style: C-style pointer casting [cstyleCast]
+               u64 &idx = *(u64 *)&hashOut;
+                           ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1936:67: style: C-style pointer casting [cstyleCast]
+                  memcpy(maskBFView[hIdx * mBfSize + idx].data(), (u8 *)&GarbleBF[hIdx][idx], bins.mMaskSize);
+                                                                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1950:73: style: C-style pointer casting [cstyleCast]
+               memcpy(maskBFView[hIdx * mBfSize + firstFreeIdx].data(), (u8 *)&GarbleBF[hIdx][firstFreeIdx], bins.mMaskSize);
+                                                                        ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1981:52: style: C-style pointer casting [cstyleCast]
+     memcpy(maskBFView[hIdx * mBfSize + i].data(), (u8 *)&GarbleBF[hIdx][i], bins.mMaskSize);
+                                                   ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:740:154: performance: Function parameter 'FourModulo' should be passed by const reference. [passedByValue]
+ void OPPRFReceiver::recvSSTableBased(u64 IdxP, binSet &bins, std::vector<block> &plaintexts, const std::vector<Channel *> &chls, const std::vector<u64> FourModulo, const u64 index)
+                                                                                                                                                         ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFReceiver.cpp:1718:19: style: Variable 'chl' can be declared as reference to const [constVariableReference]
+            auto &chl = *chls[tIdx];
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.h:3:0: information: Include file: "Network/Channel.h" not found. [missingInclude]
+#include "Network/Channel.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.h:4:0: information: Include file: "NChooseOne/NcoOtExt.h" not found. [missingInclude]
+#include "NChooseOne/NcoOtExt.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.h:5:0: information: Include file: "Hashing/SimpleHasher1.h" not found. [missingInclude]
+#include "Hashing/SimpleHasher1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.h:6:0: information: Include file: "Hashing/CuckooHasher1.h" not found. [missingInclude]
+#include "Hashing/CuckooHasher1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.h:7:0: information: Include file: "Hashing/BitPosition.h" not found. [missingInclude]
+#include "Hashing/BitPosition.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.h:8:0: information: Include file: "OPPRF/binSet.h" not found. [missingInclude]
+#include "OPPRF/binSet.h"
+^
+service/protocols/yyh26/vendor/libOPRF/yyh26_compat.h:5:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:3:0: information: Include file: "Crypto/Commit.h" not found. [missingInclude]
+#include "Crypto/Commit.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:4:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:5:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:6:0: information: Include file: "Common/Timer.h" not found. [missingInclude]
+#include "Common/Timer.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:7:0: information: Include file: "Base/naor-pinkas.h" not found. [missingInclude]
+#include "Base/naor-pinkas.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:8:0: information: Include file: "TwoChooseOne/IknpOtExtReceiver.h" not found. [missingInclude]
+#include "TwoChooseOne/IknpOtExtReceiver.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:9:0: information: Include file: "TwoChooseOne/IknpOtExtSender.h" not found. [missingInclude]
+#include "TwoChooseOne/IknpOtExtSender.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:960:22: style: The if condition is the same as the previous if condition [duplicateCondition]
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:952:22: note: First condition
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:960:22: note: Second condition
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1180:22: style: The if condition is the same as the previous if condition [duplicateCondition]
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1172:22: note: First condition
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1180:22: note: Second condition
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1383:22: style: The if condition is the same as the previous if condition [duplicateCondition]
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1375:22: note: First condition
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1383:22: note: Second condition
+            if (tIdx == 0)
+                     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:851:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&bin.mBits[IdxP].mPos[idxPos], sizeof(u8));
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:860:50: style: C-style pointer casting [cstyleCast]
+                 NTL::ZZ num1 = NTL::ZZFromBytes((u8 *)&bin.mValOPRF[IdxP][i], sizeof(block));
+                                                 ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:861:50: style: C-style pointer casting [cstyleCast]
+                 NTL::ZZ num2 = NTL::ZZFromBytes((u8 *)&plaintexts[inputIdx], sizeof(block));
+                                                 ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:865:35: style: C-style pointer casting [cstyleCast]
+                 NTL::BytesFromZZ((u8 *)&encr, result, sizeof(block));
+                                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:875:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&encr,
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:893:20: style: C-style pointer casting [cstyleCast]
+                   (u8 *)&ZeroBlock, // make randome
+                   ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:911:20: style: C-style pointer casting [cstyleCast]
+                   (u8 *)&rand, sizeof(u8));
+                   ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:922:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&ZeroBlock, // make randome
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1059:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&bin.mBits[IdxP].mPos[idxPos], sizeof(u8));
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1081:50: style: C-style pointer casting [cstyleCast]
+                 NTL::ZZ num3 = NTL::ZZFromBytes((u8 *)&bin.mValOPRF[IdxP][i], sizeof(block));
+                                                 ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1082:50: style: C-style pointer casting [cstyleCast]
+                 NTL::ZZ num4 = NTL::ZZFromBytes((u8 *)&program_value, sizeof(block));
+                                                 ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1086:35: style: C-style pointer casting [cstyleCast]
+                 NTL::BytesFromZZ((u8 *)&encr, result, sizeof(block));
+                                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1096:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&encr,
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1113:20: style: C-style pointer casting [cstyleCast]
+                   (u8 *)&ZeroBlock, // make randome
+                   ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1131:20: style: C-style pointer casting [cstyleCast]
+                   (u8 *)&rand, sizeof(u8));
+                   ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1142:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&ZeroBlock, // make randome
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1279:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&bin.mBits[IdxP].mPos[idxPos], sizeof(u8));
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1299:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&encr,
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1316:20: style: C-style pointer casting [cstyleCast]
+                   (u8 *)&ZeroBlock, // make randome
+                   ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1334:20: style: C-style pointer casting [cstyleCast]
+                   (u8 *)&rand, sizeof(u8));
+                   ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1345:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&ZeroBlock, // make randome
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1510:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&coeffs[i], // make randome
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1521:19: style: C-style pointer casting [cstyleCast]
+                  (u8 *)&ZeroBlock, // make randome
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1683:6: style: C-style pointer casting [cstyleCast]
+     (u8 *)&coeffs[hIdx][i], // make randome
+     ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1774:28: style: C-style pointer casting [cstyleCast]
+               u64 &idx = *(u64 *)&hashOut;
+                           ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1796:67: style: C-style pointer casting [cstyleCast]
+                  memcpy(maskBFView[hIdx * mBfSize + idx].data(), (u8 *)&GarbleBF[hIdx][idx], bins.mMaskSize);
+                                                                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1810:73: style: C-style pointer casting [cstyleCast]
+               memcpy(maskBFView[hIdx * mBfSize + firstFreeIdx].data(), (u8 *)&GarbleBF[hIdx][firstFreeIdx], bins.mMaskSize);
+                                                                        ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1841:52: style: C-style pointer casting [cstyleCast]
+     memcpy(maskBFView[hIdx * mBfSize + i].data(), (u8 *)&GarbleBF[hIdx][i], bins.mMaskSize);
+                                                   ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:2289:30: style: C-style pointer casting [cstyleCast]
+                 u64 &idx = *(u64 *)&hashOut;
+                             ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:761:152: performance: Function parameter 'FourModulo' should be passed by const reference. [passedByValue]
+ void OPPRFSender::sendSSTableBased(u64 IdxP, binSet &bins, std::vector<block> &plaintexts, const std::vector<Channel *> &chls, const std::vector<u64> FourModulo, const u64 index)
+                                                                                                                                                       ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:973:195: performance: Function parameter 'FourModulo' should be passed by const reference. [passedByValue]
+ void OPPRFSender::sendSSTableBased(u64 IdxP, binSet &bins, std::vector<block> &plaintexts, std::vector<std::vector<u128>> OLE_result, const std::vector<Channel *> &chls, const std::vector<u64> FourModulo, const u64 index)
+                                                                                                                                                                                                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/OPPRFSender.cpp:1576:19: style: Variable 'chl' can be declared as reference to const [constVariableReference]
+            auto &chl = *chls[tIdx];
+                  ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.h:3:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.h:4:0: information: Include file: "Network/Channel.h" not found. [missingInclude]
+#include "Network/Channel.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.h:5:0: information: Include file: "NChooseOne/NcoOtExt.h" not found. [missingInclude]
+#include "NChooseOne/NcoOtExt.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.h:6:0: information: Include file: "Hashing/CuckooHasher1.h" not found. [missingInclude]
+#include "Hashing/CuckooHasher1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.h:7:0: information: Include file: "Hashing/SimpleHasher1.h" not found. [missingInclude]
+#include "Hashing/SimpleHasher1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp:4:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp:5:0: information: Include file: "Crypto/Commit.h" not found. [missingInclude]
+#include "Crypto/Commit.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp:7:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp:8:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp:9:0: information: Include file: "Base/naor-pinkas.h" not found. [missingInclude]
+#include "Base/naor-pinkas.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp:13:0: information: Include file: "TwoChooseOne/IknpOtExtReceiver.h" not found. [missingInclude]
+#include "TwoChooseOne/IknpOtExtReceiver.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp:14:0: information: Include file: "TwoChooseOne/IknpOtExtSender.h" not found. [missingInclude]
+#include "TwoChooseOne/IknpOtExtSender.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp:15:0: information: Include file: "Hashing/BitPosition.h" not found. [missingInclude]
+#include "Hashing/BitPosition.h"
+^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp:129:32: style: C-style pointer casting [cstyleCast]
+               hashes[j][k] = *(u64 *)&mNcoInputBuff[k][i + j];
+                               ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp:152:37: style: C-style pointer casting [cstyleCast]
+               stashHashes[j][k] = *(u64 *)&mNcoInputBuff[k][mCuckooBins.mStashIdxs[j]];
+                                    ^
+service/protocols/yyh26/vendor/libOPRF/OPPRF/binSet.cpp:208:42: warning: The lock is ineffective because the mutex is locked at the same scope as the mutex itself. [localMutex]
+             std::lock_guard<std::mutex> lock(mPrintMtx);
+                                         ^
+service/protocols/yyh26/yyh26_plugin.cpp:1:0: information: Include file: "core/protocol.h" not found. [missingInclude]
+#include "core/protocol.h"
+^
+service/protocols/yyh26/yyh26_plugin.cpp:2:0: information: Include file: "protocols/yyh26/protocol/tt_mpsi.h" not found. [missingInclude]
+#include "protocols/yyh26/protocol/tt_mpsi.h"
+^
+service/tests/core/test_config_file.cpp:2:0: information: Include file: "core/config.h" not found. [missingInclude]
+#include "core/config.h"
+^
+service/tests/protocols/beh21/test_beh21_grpc_integration.cpp:12:0: information: Include file: "core/transport/grpc_channel.h" not found. [missingInclude]
+#include "core/transport/grpc_channel.h"
+^
+service/tests/protocols/beh21/test_beh21_grpc_integration.cpp:13:0: information: Include file: "core/transport/party_server.h" not found. [missingInclude]
+#include "core/transport/party_server.h"
+^
+service/tests/protocols/beh21/test_beh21_grpc_integration.cpp:14:0: information: Include file: "protocols/beh21/protocol/ot_mpsi.h" not found. [missingInclude]
+#include "protocols/beh21/protocol/ot_mpsi.h"
+^
+service/tests/protocols/beh21/test_beh21_grpc_integration.cpp:15:0: information: Include file: "protocols/beh21/crypto/bloom_filter.h" not found. [missingInclude]
+#include "protocols/beh21/crypto/bloom_filter.h"
+^
+service/tests/protocols/beh21/test_beh21_grpc_integration.cpp:16:0: information: Include file: "protocols/ks05/crypto/paillier.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/paillier.h"
+^
+service/tests/protocols/beh21/test_beh21_grpc_integration.cpp:17:0: information: Include file: "protocols/ks05/protocol/t_mpsi.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/t_mpsi.h"
+^
+service/tests/protocols/beh21/test_beh21_grpc_integration.cpp:18:0: information: Include file: "protocols/ks05/protocol/logger.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/logger.h"
+^
+service/tests/protocols/beh21/test_beh21_integration.cpp:8:0: information: Include file: "core/transport/in_process_channel.h" not found. [missingInclude]
+#include "core/transport/in_process_channel.h"
+^
+service/tests/protocols/beh21/test_beh21_integration.cpp:9:0: information: Include file: "protocols/beh21/protocol/ot_mpsi.h" not found. [missingInclude]
+#include "protocols/beh21/protocol/ot_mpsi.h"
+^
+service/tests/protocols/beh21/test_beh21_integration.cpp:10:0: information: Include file: "protocols/beh21/crypto/bloom_filter.h" not found. [missingInclude]
+#include "protocols/beh21/crypto/bloom_filter.h"
+^
+service/tests/protocols/beh21/test_beh21_integration.cpp:11:0: information: Include file: "protocols/ks05/crypto/paillier.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/paillier.h"
+^
+service/tests/protocols/beh21/test_beh21_integration.cpp:12:0: information: Include file: "protocols/ks05/protocol/t_mpsi.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/t_mpsi.h"
+^
+service/tests/protocols/beh21/test_beh21_integration.cpp:13:0: information: Include file: "protocols/ks05/protocol/logger.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/logger.h"
+^
+service/tests/protocols/beh21/test_beh21_integration.cpp:31:14: style: Same expression used in consecutive assignments of 'leaderIdx' and 'numMembers'. [duplicateAssignExpression]
+    uint64_t leaderIdx = numParties - 1;
+             ^
+service/tests/protocols/beh21/test_beh21_integration.cpp:32:14: note: Same expression used in consecutive assignments of 'leaderIdx' and 'numMembers'.
+    uint64_t numMembers = numParties - 1;
+             ^
+service/tests/protocols/beh21/test_beh21_integration.cpp:31:14: note: Same expression used in consecutive assignments of 'leaderIdx' and 'numMembers'.
+    uint64_t leaderIdx = numParties - 1;
+             ^
+service/tests/protocols/beh21/test_bloom_filter.cpp:3:0: information: Include file: "protocols/beh21/crypto/bloom_filter.h" not found. [missingInclude]
+#include "protocols/beh21/crypto/bloom_filter.h"
+^
+service/tests/protocols/beh21/test_signed_plaintext.cpp:2:0: information: Include file: "protocols/beh21/protocol/ot_mpsi.h" not found. [missingInclude]
+#include "protocols/beh21/protocol/ot_mpsi.h"
+^
+service/tests/protocols/beh21/test_signed_plaintext.cpp:3:0: information: Include file: "protocols/ks05/crypto/paillier.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/paillier.h"
+^
+service/tests/protocols/ks05/test_dkg.cpp:6:0: information: Include file: "dealer/dealer_service.h" not found. [missingInclude]
+#include "dealer/dealer_service.h"
+^
+service/tests/protocols/ks05/test_dkg.cpp:7:0: information: Include file: "protocols/ks05/crypto/paillier.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/paillier.h"
+^
+service/tests/protocols/ks05/test_dkg.cpp:8:0: information: Include file: "protocols/ks05/protocol/t_mpsi.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/t_mpsi.h"
+^
+service/tests/protocols/ks05/test_dkg.cpp:167:18: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        partials.push_back(partialDec(ct, pk, sk));
+                 ^
+service/tests/protocols/ks05/test_grpc_integration.cpp:11:0: information: Include file: "core/transport/grpc_channel.h" not found. [missingInclude]
+#include "core/transport/grpc_channel.h"
+^
+service/tests/protocols/ks05/test_grpc_integration.cpp:12:0: information: Include file: "core/transport/party_server.h" not found. [missingInclude]
+#include "core/transport/party_server.h"
+^
+service/tests/protocols/ks05/test_grpc_integration.cpp:13:0: information: Include file: "protocols/ks05/protocol/t_mpsi.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/t_mpsi.h"
+^
+service/tests/protocols/ks05/test_grpc_integration.cpp:14:0: information: Include file: "protocols/ks05/crypto/paillier.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/paillier.h"
+^
+service/tests/protocols/ks05/test_grpc_integration.cpp:15:0: information: Include file: "protocols/ks05/protocol/logger.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/logger.h"
+^
+service/tests/protocols/ks05/test_grpc_minimal.cpp:6:0: information: Include file: "ks05_party.grpc.pb.h" not found. [missingInclude]
+#include "ks05_party.grpc.pb.h"
+^
+service/tests/protocols/ks05/test_integration.cpp:7:0: information: Include file: "core/transport/in_process_channel.h" not found. [missingInclude]
+#include "core/transport/in_process_channel.h"
+^
+service/tests/protocols/ks05/test_integration.cpp:8:0: information: Include file: "protocols/ks05/protocol/t_mpsi.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/t_mpsi.h"
+^
+service/tests/protocols/ks05/test_integration.cpp:9:0: information: Include file: "protocols/ks05/crypto/paillier.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/paillier.h"
+^
+service/tests/protocols/ks05/test_integration.cpp:10:0: information: Include file: "protocols/ks05/protocol/logger.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/logger.h"
+^
+service/tests/protocols/ks05/test_logger.cpp:2:0: information: Include file: "protocols/ks05/protocol/logger.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/logger.h"
+^
+service/tests/protocols/ks05/test_paillier.cpp:2:0: information: Include file: "protocols/ks05/crypto/paillier.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/paillier.h"
+^
+service/tests/protocols/ks05/test_paillier.cpp:24:18: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        partials.push_back(partialDec(ct, pub, sk));
+                 ^
+service/tests/protocols/ks05/test_paillier.cpp:36:18: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        partials.push_back(partialDec(ct, pub, sk));
+                 ^
+service/tests/protocols/ks05/test_paillier.cpp:51:18: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        partials.push_back(partialDec(ct_sum, pub, sk));
+                 ^
+service/tests/protocols/ks05/test_paillier.cpp:65:18: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        partials.push_back(partialDec(ct_mul, pub, sk));
+                 ^
+service/tests/protocols/ks05/test_paillier.cpp:82:22: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+            partials.push_back(partialDec(ct, pub, sk));
+                     ^
+service/tests/protocols/ks05/test_paillier.cpp:99:18: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        partials.push_back(partialDec(ct_diff, pub, sk));
+                 ^
+service/tests/protocols/ks05/test_paillier.cpp:116:22: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+            partials.push_back(partialDec(c, pub, sk));
+                     ^
+service/tests/protocols/ks05/test_paillier.cpp:130:18: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        partials.push_back(partialDec(ct, pub, sk));
+                 ^
+service/tests/protocols/ks05/test_polynomial.cpp:2:0: information: Include file: "protocols/ks05/crypto/polynomial.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/polynomial.h"
+^
+service/tests/protocols/ks05/test_polynomial.cpp:3:0: information: Include file: "protocols/ks05/crypto/paillier.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/paillier.h"
+^
+service/tests/protocols/ks05/test_polynomial.cpp:76:22: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+            partials.push_back(partialDec(ct, pub, sk));
+                     ^
+service/tests/protocols/ks05/test_serialization.cpp:2:0: information: Include file: "protocols/ks05/protocol/t_mpsi.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/t_mpsi.h"
+^
+service/tests/protocols/ks05/test_serialization.cpp:3:0: information: Include file: "protocols/ks05/crypto/paillier.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/paillier.h"
+^
+service/tests/protocols/ks05/test_threshold.cpp:6:0: information: Include file: "core/transport/in_process_channel.h" not found. [missingInclude]
+#include "core/transport/in_process_channel.h"
+^
+service/tests/protocols/ks05/test_threshold.cpp:7:0: information: Include file: "protocols/ks05/protocol/t_mpsi.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/t_mpsi.h"
+^
+service/tests/protocols/ks05/test_threshold.cpp:8:0: information: Include file: "protocols/ks05/crypto/paillier.h" not found. [missingInclude]
+#include "protocols/ks05/crypto/paillier.h"
+^
+service/tests/protocols/ks05/test_threshold.cpp:9:0: information: Include file: "protocols/ks05/protocol/logger.h" not found. [missingInclude]
+#include "protocols/ks05/protocol/logger.h"
+^
+service/tests/protocols/ks05/test_transport.cpp:3:0: information: Include file: "core/transport/channel.h" not found. [missingInclude]
+#include "core/transport/channel.h"
+^
+service/tests/protocols/ks05/test_transport.cpp:4:0: information: Include file: "core/transport/in_process_channel.h" not found. [missingInclude]
+#include "core/transport/in_process_channel.h"
+^
+service/tests/protocols/xzh26/test_xzh26_grpc_integration.cpp:12:0: information: Include file: "core/transport/grpc_channel.h" not found. [missingInclude]
+#include "core/transport/grpc_channel.h"
+^
+service/tests/protocols/xzh26/test_xzh26_grpc_integration.cpp:13:0: information: Include file: "core/transport/party_server.h" not found. [missingInclude]
+#include "core/transport/party_server.h"
+^
+service/tests/protocols/xzh26/test_xzh26_grpc_integration.cpp:14:0: information: Include file: "protocols/xzh26/protocol/ec_mpsi.h" not found. [missingInclude]
+#include "protocols/xzh26/protocol/ec_mpsi.h"
+^
+service/tests/protocols/xzh26/test_xzh26_integration.cpp:7:0: information: Include file: "core/transport/in_process_channel.h" not found. [missingInclude]
+#include "core/transport/in_process_channel.h"
+^
+service/tests/protocols/xzh26/test_xzh26_integration.cpp:8:0: information: Include file: "protocols/xzh26/protocol/ec_mpsi.h" not found. [missingInclude]
+#include "protocols/xzh26/protocol/ec_mpsi.h"
+^
+service/tests/protocols/xzh26/test_xzh26_integration.cpp:17:14: style: Same expression used in consecutive assignments of 'leaderIdx' and 'numMembers'. [duplicateAssignExpression]
+    uint64_t leaderIdx = numParties - 1;
+             ^
+service/tests/protocols/xzh26/test_xzh26_integration.cpp:18:14: note: Same expression used in consecutive assignments of 'leaderIdx' and 'numMembers'.
+    uint64_t numMembers = numParties - 1;
+             ^
+service/tests/protocols/xzh26/test_xzh26_integration.cpp:17:14: note: Same expression used in consecutive assignments of 'leaderIdx' and 'numMembers'.
+    uint64_t leaderIdx = numParties - 1;
+             ^
+service/tests/protocols/yyh26/test_tt_mpsi.cpp:2:0: information: Include file: "protocols/yyh26/protocol/tt_mpsi.h" not found. [missingInclude]
+#include "protocols/yyh26/protocol/tt_mpsi.h"
+^
+service/tests/protocols/yyh26/test_tt_mpsi.cpp:3:0: information: Include file: "protocols/yyh26/protocol/shamir_ss.h" not found. [missingInclude]
+#include "protocols/yyh26/protocol/shamir_ss.h"
+^
+service/tests/protocols/yyh26/test_tt_mpsi.cpp:4:0: information: Include file: "protocols/yyh26/protocol/crt_utils.h" not found. [missingInclude]
+#include "protocols/yyh26/protocol/crt_utils.h"
+^
+service/tests/protocols/yyh26/test_tt_mpsi.cpp:166:22: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+            selected.push_back({NTL::ZZ(idx + 1), NTL::rep(shares[idx])});
+                     ^
+experiments/ks05/protocol/t_mpsi.h:4:0: information: Include file: "shared/crypto/defines.h" not found. [missingInclude]
+#include "shared/crypto/defines.h"
+^
+experiments/ks05/protocol/t_mpsi.h:5:0: information: Include file: "shared/crypto/paillier.h" not found. [missingInclude]
+#include "shared/crypto/paillier.h"
+^
+experiments/ks05/frontend/main.cpp:4:0: information: Include file: "shared/util/logger.h" not found. [missingInclude]
+#include "shared/util/logger.h"
+^
+experiments/ks05/frontend/main.cpp:5:0: information: Include file: "cryptoTools/Common/CLP.h" not found. [missingInclude]
+#include "cryptoTools/Common/CLP.h"
+^
+experiments/ks05/frontend/main.cpp:6:0: information: Include file: "cryptoTools/Common/Timer.h" not found. [missingInclude]
+#include "cryptoTools/Common/Timer.h"
+^
+experiments/ks05/frontend/main.cpp:7:0: information: Include file: "coproto/Socket/AsioSocket.h" not found. [missingInclude]
+#include "coproto/Socket/AsioSocket.h"
+^
+experiments/ks05/frontend/main.cpp:8:0: information: Include file: "coproto/Socket/BufferingSocket.h" not found. [missingInclude]
+#include "coproto/Socket/BufferingSocket.h"
+^
+experiments/ks05/frontend/main.cpp:9:0: information: Include file: "coproto/coproto.h" not found. [missingInclude]
+#include "coproto/coproto.h"
+^
+experiments/ks05/frontend/main.cpp:65:30: style: The scope of the variable 'pThreads' can be reduced. [variableScope]
+    std::vector<std::thread> pThreads;
+                             ^
+experiments/ks05/frontend/main.cpp:421:20: style: The scope of the variable 'stddev' can be reduced. [variableScope]
+            double stddev = std::sqrt(variance);
+                   ^
+experiments/ks05/frontend/main.cpp:298:20: style: Local variable 'sharedPrng' shadows outer variable [shadowVariable]
+            OcPRNG sharedPrng(commonSeed);                            // PRNG for shared items
+                   ^
+experiments/ks05/frontend/main.cpp:222:16: note: Shadowed declaration
+        OcPRNG sharedPrng(commonSeed);                            // PRNG for shared items
+               ^
+experiments/ks05/frontend/main.cpp:298:20: note: Shadow variable
+            OcPRNG sharedPrng(commonSeed);                            // PRNG for shared items
+                   ^
+experiments/ks05/frontend/main.cpp:299:20: style: Local variable 'uniquePrng' shadows outer variable [shadowVariable]
+            OcPRNG uniquePrng(commonSeed ^ oc::toBlock(partyID + 1)); // PRNG for unique items
+                   ^
+experiments/ks05/frontend/main.cpp:223:16: note: Shadowed declaration
+        OcPRNG uniquePrng(commonSeed ^ oc::toBlock(partyID + 1)); // PRNG for unique items
+               ^
+experiments/ks05/frontend/main.cpp:299:20: note: Shadow variable
+            OcPRNG uniquePrng(commonSeed ^ oc::toBlock(partyID + 1)); // PRNG for unique items
+                   ^
+experiments/ks05/frontend/main.cpp:408:21: style: Consider using std::accumulate algorithm instead of a raw loop. [useStlAlgorithm]
+                sum += t;
+                    ^
+experiments/ks05/protocol/polynomial.h:5:0: information: Include file: "shared/crypto/defines.h" not found. [missingInclude]
+#include "shared/crypto/defines.h"
+^
+experiments/ks05/protocol/polynomial.h:6:0: information: Include file: "shared/crypto/paillier.h" not found. [missingInclude]
+#include "shared/crypto/paillier.h"
+^
+experiments/ks05/protocol/polynomial.h:14:5: style: Struct 'Polynomial' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    Polynomial(const std::vector<ZZ> &coeffs = {}) : coefficients(coeffs) {}
+    ^
+experiments/ks05/protocol/polynomial.cpp:144:15: style: Consider using std::fill or std::generate algorithm instead of a raw loop. [useStlAlgorithm]
+        coeff = NTL::to_ZZ(1);
+              ^
+experiments/ks05/protocol/polynomial.cpp:247:26: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        encrypted_coeffs.push_back(enc(coeff, pk));
+                         ^
+experiments/ks05/protocol/polynomial.cpp:262:26: style: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        encrypted_coeffs.push_back(enc(coeff, pk));
+                         ^
+experiments/ks05/protocol/t_mpsi.cpp:2:0: information: Include file: "shared/util/logger.h" not found. [missingInclude]
+#include "shared/util/logger.h"
+^
+experiments/ks05/protocol/t_mpsi.cpp:3:0: information: Include file: "shared/crypto/defines.h" not found. [missingInclude]
+#include "shared/crypto/defines.h"
+^
+experiments/ks05/protocol/t_mpsi.cpp:4:0: information: Include file: "cryptoTools/Common/CuckooIndex.h" not found. [missingInclude]
+#include "cryptoTools/Common/CuckooIndex.h"
+^
+experiments/ks05/protocol/t_mpsi.cpp:5:0: information: Include file: "volePSI/SimpleIndex.h" not found. [missingInclude]
+#include "volePSI/SimpleIndex.h"
+^
+experiments/beh21/protocol/ot_mpsi.h:4:0: information: Include file: "shared/crypto/defines.h" not found. [missingInclude]
+#include "shared/crypto/defines.h"
+^
+experiments/beh21/protocol/ot_mpsi.h:5:0: information: Include file: "shared/crypto/paillier.h" not found. [missingInclude]
+#include "shared/crypto/paillier.h"
+^
+experiments/beh21/frontend/main.cpp:4:0: information: Include file: "shared/util/logger.h" not found. [missingInclude]
+#include "shared/util/logger.h"
+^
+experiments/beh21/frontend/main.cpp:5:0: information: Include file: "cryptoTools/Common/CLP.h" not found. [missingInclude]
+#include "cryptoTools/Common/CLP.h"
+^
+experiments/beh21/frontend/main.cpp:6:0: information: Include file: "cryptoTools/Common/Timer.h" not found. [missingInclude]
+#include "cryptoTools/Common/Timer.h"
+^
+experiments/beh21/frontend/main.cpp:7:0: information: Include file: "coproto/Socket/AsioSocket.h" not found. [missingInclude]
+#include "coproto/Socket/AsioSocket.h"
+^
+experiments/beh21/frontend/main.cpp:8:0: information: Include file: "coproto/Socket/BufferingSocket.h" not found. [missingInclude]
+#include "coproto/Socket/BufferingSocket.h"
+^
+experiments/beh21/frontend/main.cpp:9:0: information: Include file: "coproto/coproto.h" not found. [missingInclude]
+#include "coproto/coproto.h"
+^
+experiments/beh21/frontend/main.cpp:65:30: style: The scope of the variable 'pThreads' can be reduced. [variableScope]
+    std::vector<std::thread> pThreads;
+                             ^
+experiments/beh21/frontend/main.cpp:421:20: style: The scope of the variable 'stddev' can be reduced. [variableScope]
+            double stddev = std::sqrt(variance);
+                   ^
+experiments/beh21/frontend/main.cpp:298:20: style: Local variable 'sharedPrng' shadows outer variable [shadowVariable]
+            OcPRNG sharedPrng(commonSeed);                            // PRNG for shared items
+                   ^
+experiments/beh21/frontend/main.cpp:222:16: note: Shadowed declaration
+        OcPRNG sharedPrng(commonSeed);                            // PRNG for shared items
+               ^
+experiments/beh21/frontend/main.cpp:298:20: note: Shadow variable
+            OcPRNG sharedPrng(commonSeed);                            // PRNG for shared items
+                   ^
+experiments/beh21/frontend/main.cpp:299:20: style: Local variable 'uniquePrng' shadows outer variable [shadowVariable]
+            OcPRNG uniquePrng(commonSeed ^ oc::toBlock(partyID + 1)); // PRNG for unique items
+                   ^
+experiments/beh21/frontend/main.cpp:223:16: note: Shadowed declaration
+        OcPRNG uniquePrng(commonSeed ^ oc::toBlock(partyID + 1)); // PRNG for unique items
+               ^
+experiments/beh21/frontend/main.cpp:299:20: note: Shadow variable
+            OcPRNG uniquePrng(commonSeed ^ oc::toBlock(partyID + 1)); // PRNG for unique items
+                   ^
+experiments/beh21/frontend/main.cpp:408:21: style: Consider using std::accumulate algorithm instead of a raw loop. [useStlAlgorithm]
+                sum += t;
+                    ^
+experiments/beh21/protocol/ot_mpsi.cpp:2:0: information: Include file: "shared/util/logger.h" not found. [missingInclude]
+#include "shared/util/logger.h"
+^
+experiments/beh21/protocol/ot_mpsi.cpp:3:0: information: Include file: "shared/crypto/defines.h" not found. [missingInclude]
+#include "shared/crypto/defines.h"
+^
+experiments/beh21/protocol/ot_mpsi.cpp:4:0: information: Include file: "cryptoTools/Common/CuckooIndex.h" not found. [missingInclude]
+#include "cryptoTools/Common/CuckooIndex.h"
+^
+experiments/beh21/protocol/ot_mpsi.cpp:5:0: information: Include file: "volePSI/SimpleIndex.h" not found. [missingInclude]
+#include "volePSI/SimpleIndex.h"
+^
+experiments/beh21/protocol/bloom_filter.h:8:0: information: Include file: "shared/crypto/defines.h" not found. [missingInclude]
+#include "shared/crypto/defines.h"
+^
+experiments/beh21/protocol/bloom_filter.h:69:9: style: Consider using std::all_of or std::none_of algorithm instead of a raw loop. [useStlAlgorithm]
+        for (u32 seed : mSeeds)
+        ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:97:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *data = (const uint8_t *)key;
+                           ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:108:31: style: C-style pointer casting [cstyleCast]
+    const uint32_t *blocks = (const uint32_t *)(data + nblocks * 4);
+                              ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:126:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *tail = (const uint8_t *)(data + nblocks * 4);
+                           ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:151:6: style: C-style pointer casting [cstyleCast]
+    *(uint32_t *)out = h1;
+     ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:159:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *data = (const uint8_t *)key;
+                           ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:175:31: style: C-style pointer casting [cstyleCast]
+    const uint32_t *blocks = (const uint32_t *)(data + nblocks * 16);
+                              ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:224:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *tail = (const uint8_t *)(data + nblocks * 16);
+                           ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:311:6: style: C-style pointer casting [cstyleCast]
+    ((uint32_t *)out)[0] = h1;
+     ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:312:6: style: C-style pointer casting [cstyleCast]
+    ((uint32_t *)out)[1] = h2;
+     ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:313:6: style: C-style pointer casting [cstyleCast]
+    ((uint32_t *)out)[2] = h3;
+     ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:314:6: style: C-style pointer casting [cstyleCast]
+    ((uint32_t *)out)[3] = h4;
+     ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:322:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *data = (const uint8_t *)key;
+                           ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:334:31: style: C-style pointer casting [cstyleCast]
+    const uint64_t *blocks = (const uint64_t *)(data);
+                              ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:363:28: style: C-style pointer casting [cstyleCast]
+    const uint8_t *tail = (const uint8_t *)(data + nblocks * 16);
+                           ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:426:6: style: C-style pointer casting [cstyleCast]
+    ((uint64_t *)out)[0] = h1;
+     ^
+experiments/beh21/third_party/smhasher/MurmurHash3.cpp:427:6: style: C-style pointer casting [cstyleCast]
+    ((uint64_t *)out)[1] = h2;
+     ^
+experiments/xzh26/build/CMakeFiles/3.28.3/CompilerIdC/CMakeCCompilerId.c:0:0: information: Too many #ifdef configurations - cppcheck only checks 12 of 151 configurations. Use --force to check all configurations. [toomanyconfigs]
+
+^
+experiments/xzh26/build/CMakeFiles/3.28.3/CompilerIdCXX/CMakeCXXCompilerId.cpp:0:0: information: Too many #ifdef configurations - cppcheck only checks 12 of 149 configurations. Use --force to check all configurations. [toomanyconfigs]
+
+^
+experiments/xzh26/frontend/CLP.cpp:34:62: style: Condition 'argv[i][0]=='-'' is always true [knownConditionTrueFalse]
+        while (i < argc && (argv[i][0] != '-' || (argv[i][0] == '-' && argv[i][1] >='0' && argv[i][1] <= '9')))
+                                                             ^
+experiments/xzh26/frontend/CLP.cpp:34:40: note: Assuming that condition 'argv[i][0]!='-'' is not redundant
+        while (i < argc && (argv[i][0] != '-' || (argv[i][0] == '-' && argv[i][1] >='0' && argv[i][1] <= '9')))
+                                       ^
+experiments/xzh26/frontend/CLP.cpp:34:62: note: Condition 'argv[i][0]=='-'' is always true
+        while (i < argc && (argv[i][0] != '-' || (argv[i][0] == '-' && argv[i][1] >='0' && argv[i][1] <= '9')))
+                                                             ^
+experiments/xzh26/frontend/CLP.cpp:58:47: performance: Function parameter 'keys' should be passed by const reference. [passedByValue]
+void CLP::setDefault(std::vector<std::string> keys, std::string value)
+                                              ^
+experiments/xzh26/frontend/CLP.cpp:58:65: performance: Function parameter 'value' should be passed by const reference. [passedByValue]
+void CLP::setDefault(std::vector<std::string> keys, std::string value)
+                                                                ^
+experiments/xzh26/frontend/CLP.cpp:71:42: performance: Function parameter 'names' should be passed by const reference. [passedByValue]
+bool CLP::isSet(std::vector<std::string> names)
+                                         ^
+experiments/xzh26/frontend/CLP.cpp:73:15: performance: Range variable 'name' should be declared as const reference. [iterateByValue]
+    for (auto name : names)
+              ^
+experiments/xzh26/frontend/CLP.cpp:87:45: performance: Function parameter 'names' should be passed by const reference. [passedByValue]
+bool CLP::hasValue(std::vector<std::string> names)
+                                            ^
+experiments/xzh26/frontend/CLP.cpp:89:15: performance: Range variable 'name' should be declared as const reference. [iterateByValue]
+    for (auto name : names)
+              ^
+experiments/xzh26/frontend/CLP.cpp:99:29: performance: Function parameter 'name' should be passed by const reference. [passedByValue]
+int CLP::getInt(std::string name)
+                            ^
+experiments/xzh26/frontend/CLP.cpp:110:42: performance: Function parameter 'names' should be passed by const reference. [passedByValue]
+int CLP::getInt(std::vector<std::string> names, std::string failMessage)
+                                         ^
+experiments/xzh26/frontend/CLP.cpp:110:61: performance: Function parameter 'failMessage' should be passed by const reference. [passedByValue]
+int CLP::getInt(std::vector<std::string> names, std::string failMessage)
+                                                            ^
+experiments/xzh26/frontend/CLP.cpp:112:15: performance: Range variable 'name' should be declared as const reference. [iterateByValue]
+    for (auto name : names)
+              ^
+experiments/xzh26/frontend/CLP.cpp:126:35: performance: Function parameter 'name' should be passed by const reference. [passedByValue]
+double CLP::getDouble(std::string name)
+                                  ^
+experiments/xzh26/frontend/CLP.cpp:137:48: performance: Function parameter 'names' should be passed by const reference. [passedByValue]
+double CLP::getDouble(std::vector<std::string> names, std::string failMessage)
+                                               ^
+experiments/xzh26/frontend/CLP.cpp:137:67: performance: Function parameter 'failMessage' should be passed by const reference. [passedByValue]
+double CLP::getDouble(std::vector<std::string> names, std::string failMessage)
+                                                                  ^
+experiments/xzh26/frontend/CLP.cpp:139:15: performance: Range variable 'name' should be declared as const reference. [iterateByValue]
+    for (auto name : names)
+              ^
+experiments/xzh26/frontend/CLP.cpp:153:40: performance: Function parameter 'name' should be passed by const reference. [passedByValue]
+std::string CLP::getString(std::string name)
+                                       ^
+experiments/xzh26/frontend/CLP.cpp:158:52: performance: Function parameter 'name' should be passed by const reference. [passedByValue]
+std::list<std::string> CLP::getStrings(std::string name)
+                                                   ^
+experiments/xzh26/frontend/CLP.cpp:163:65: performance: Function parameter 'names' should be passed by const reference. [passedByValue]
+std::list<std::string> CLP::getStrings(std::vector<std::string> names, std::string failMessage)
+                                                                ^
+experiments/xzh26/frontend/CLP.cpp:163:84: performance: Function parameter 'failMessage' should be passed by const reference. [passedByValue]
+std::list<std::string> CLP::getStrings(std::vector<std::string> names, std::string failMessage)
+                                                                                   ^
+experiments/xzh26/frontend/CLP.cpp:165:15: performance: Range variable 'name' should be declared as const reference. [iterateByValue]
+    for (auto name : names)
+              ^
+experiments/xzh26/frontend/CLP.cpp:180:53: performance: Function parameter 'names' should be passed by const reference. [passedByValue]
+std::string CLP::getString(std::vector<std::string> names, std::string failMessage)
+                                                    ^
+experiments/xzh26/frontend/CLP.cpp:180:72: performance: Function parameter 'failMessage' should be passed by const reference. [passedByValue]
+std::string CLP::getString(std::vector<std::string> names, std::string failMessage)
+                                                                       ^
+experiments/xzh26/frontend/CLP.cpp:182:15: performance: Range variable 'name' should be declared as const reference. [iterateByValue]
+    for (auto name : names)
+              ^
+experiments/xzh26/frontend/CLP.cpp:73:5: style: Consider using std::any_of algorithm instead of a raw loop. [useStlAlgorithm]
+    for (auto name : names)
+    ^
+experiments/xzh26/frontend/CLP.cpp:89:5: style: Consider using std::any_of algorithm instead of a raw loop. [useStlAlgorithm]
+    for (auto name : names)
+    ^
+experiments/xzh26/frontend/CLP.cpp:115:9: style: Consider using std::find_if algorithm instead of a raw loop. [useStlAlgorithm]
+        {
+        ^
+experiments/xzh26/frontend/CLP.cpp:142:9: style: Consider using std::find_if algorithm instead of a raw loop. [useStlAlgorithm]
+        {
+        ^
+experiments/xzh26/frontend/CLP.cpp:168:9: style: Consider using std::find_if algorithm instead of a raw loop. [useStlAlgorithm]
+        {
+        ^
+experiments/xzh26/frontend/CLP.cpp:185:9: style: Consider using std::find_if algorithm instead of a raw loop. [useStlAlgorithm]
+        {
+        ^
+experiments/xzh26/frontend/Hashing/BitPosition.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+experiments/xzh26/frontend/Hashing/BitPosition.h:3:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+experiments/xzh26/frontend/Hashing/BitPosition.h:4:0: information: Include file: "Common/BitVector.h" not found. [missingInclude]
+#include "Common/BitVector.h"
+^
+experiments/xzh26/frontend/Hashing/BitPosition.h:5:0: information: Include file: "Common/ArrayView.h" not found. [missingInclude]
+#include "Common/ArrayView.h"
+^
+experiments/xzh26/frontend/Hashing/BitPosition.h:6:0: information: Include file: "Common/MatrixView.h" not found. [missingInclude]
+#include "Common/MatrixView.h"
+^
+experiments/xzh26/frontend/Hashing/BitPosition.h:12:0: information: Include file: "point.h" not found. [missingInclude]
+#include "point.h"
+^
+experiments/xzh26/frontend/Hashing/BitPosition.cpp:2:0: information: Include file: "Crypto/sha1.h" not found. [missingInclude]
+#include "Crypto/sha1.h"
+^
+experiments/xzh26/frontend/Hashing/BitPosition.cpp:3:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+experiments/xzh26/frontend/Hashing/BitPosition.cpp:6:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+experiments/xzh26/frontend/Hashing/BitPosition.cpp:7:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+experiments/xzh26/frontend/Hashing/BitPosition.h:56:11: performance: Variable 'mRealBitSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+          mRealBitSize = other.mRealBitSize;
+          ^
+experiments/xzh26/frontend/Hashing/BitPosition.h:57:10: performance: Variable 'mMaxBitSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mMaxBitSize = other.mMaxBitSize;
+         ^
+experiments/xzh26/frontend/Hashing/BitPosition.h:58:10: performance: Variable 'mNumTrial' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mNumTrial = other.mNumTrial;
+         ^
+experiments/xzh26/frontend/Hashing/BitPosition.h:59:10: performance: Variable 'mPos' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mPos = other.mPos;
+         ^
+experiments/xzh26/frontend/Hashing/BitPosition.h:60:10: performance: Variable 'mMaps' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mMaps = other.mMaps;
+         ^
+experiments/xzh26/frontend/Hashing/BitPosition.cpp:228:24: style: The scope of the variable 'testSet1' can be reduced. [variableScope]
+  std::vector<ECpoint> testSet1;
+                       ^
+experiments/xzh26/frontend/Hashing/BitPosition.cpp:229:24: style: The scope of the variable 'testSet2' can be reduced. [variableScope]
+  std::vector<ECpoint> testSet2;
+                       ^
+experiments/xzh26/frontend/Hashing/BitPosition.cpp:34:21: style: Parameter 'v' can be declared as reference to const [constParameterReference]
+ int isSet(ECpoint& v, int n)
+                    ^
+experiments/xzh26/frontend/Hashing/BitPosition.cpp:69:25: style: Parameter 'value' can be declared as reference to const [constParameterReference]
+ bool TestBitN(ECpoint& value, int N)
+                        ^
+experiments/xzh26/frontend/Hashing/BitPosition.cpp:165:15: style: Variable 'temp' is assigned a value that is never used. [unreadVariable]
+  size_t temp = 0;
+              ^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:3:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:4:0: information: Include file: "Common/BitVector.h" not found. [missingInclude]
+#include "Common/BitVector.h"
+^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:5:0: information: Include file: "Common/ArrayView.h" not found. [missingInclude]
+#include "Common/ArrayView.h"
+^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:6:0: information: Include file: "Common/MatrixView.h" not found. [missingInclude]
+#include "Common/MatrixView.h"
+^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:7:0: information: Include file: "Hashing/BitPosition.h" not found. [missingInclude]
+#include "Hashing/BitPosition.h"
+^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:8:0: information: Include file: "point.h" not found. [missingInclude]
+#include "point.h"
+^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.cpp:2:0: information: Include file: "Crypto/sha1.h" not found. [missingInclude]
+#include "Crypto/sha1.h"
+^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.cpp:3:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.cpp:5:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.cpp:6:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.cpp:39:20: warning: Member variable 'CuckooHasher1::mParams' is not initialized in the constructor. [uninitMemberVar]
+    CuckooHasher1::CuckooHasher1()
+                   ^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:171:13: performance: Variable 'mTotalTries' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+            mTotalTries = other.mTotalTries;
+            ^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:172:13: performance: Variable 'mParams' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+            mParams = other.mParams;
+            ^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:174:13: performance: Variable 'mRepSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+            mRepSize = other.mRepSize;
+            ^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:175:13: performance: Variable 'mInputBitSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+            mInputBitSize = other.mInputBitSize;
+            ^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:176:13: performance: Variable 'mN' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+            mN = other.mN;
+            ^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.h:82:13: style: Struct 'Workspace' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+            Workspace(u64 n)
+            ^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.cpp:170:12: style: Condition 'opt==0' is always true [knownConditionTrueFalse]
+   if (opt == 0)
+           ^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.cpp:152:17: note: Assignment 'opt=0', assigned value is 0
+      u64 opt = 0;
+                ^
+experiments/xzh26/frontend/Hashing/CuckooHasher1.cpp:170:12: note: Condition 'opt==0' is always true
+   if (opt == 0)
+           ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.h:3:0: information: Include file: "Common/BitVector.h" not found. [missingInclude]
+#include "Common/BitVector.h"
+^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.h:4:0: information: Include file: "Common/ArrayView.h" not found. [missingInclude]
+#include "Common/ArrayView.h"
+^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.h:5:0: information: Include file: "Hashing/BitPosition.h" not found. [missingInclude]
+#include "Hashing/BitPosition.h"
+^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:2:0: information: Include file: "Crypto/sha1.h" not found. [missingInclude]
+#include "Crypto/sha1.h"
+^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:3:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:6:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:7:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:31:17: warning: Member variable 'SimpleHasher1::mParams' is not initialized in the constructor. [uninitMemberVar]
+ SimpleHasher1::SimpleHasher1()
+                ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.h:59:11: performance: Variable 'mIdx' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+          mIdx = other.mIdx;
+          ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.h:60:11: performance: Variable 'hIdx' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+          hIdx = other.hIdx;
+          ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.h:61:11: performance: Variable 'mBits' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+          mBits = other.mBits;
+          ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.h:120:10: performance: Variable 'mRepSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mRepSize = other.mRepSize;
+         ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.h:121:10: performance: Variable 'mInputBitSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mInputBitSize = other.mInputBitSize;
+         ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.h:122:10: performance: Variable 'mN' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mN = other.mN;
+         ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:192:11: style: Condition 'opt==0' is always true [knownConditionTrueFalse]
+  if (opt == 0)
+          ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:174:13: note: Assignment 'opt=0', assigned value is 0
+  u64 opt = 0;
+            ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:192:11: note: Condition 'opt==0' is always true
+  if (opt == 0)
+          ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:272:17: style: C-style pointer casting [cstyleCast]
+    u64 addr = *(u64*)&hashs[j][k] % mBinCount[0];
+                ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:289:22: style: C-style pointer casting [cstyleCast]
+    u64 addrStash = *(u64*)&hashs[j][k] % mBinCount[1] + mBinCount[0];
+                     ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:137:26: style: The comparison 'opt == 0' is always true. [knownConditionTrueFalse]
+      if (isOPRF && (opt == 0 || opt==1))//seperated oprf
+                         ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:81:13: note: 'opt' is assigned value '0' here.
+  int opt = 0;
+            ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:137:26: note: The comparison 'opt == 0' is always true.
+      if (isOPRF && (opt == 0 || opt==1))//seperated oprf
+                         ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:143:23: style: The comparison 'opt == 0' is always true. [knownConditionTrueFalse]
+      if (isMap && opt==0)
+                      ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:81:13: note: 'opt' is assigned value '0' here.
+  int opt = 0;
+            ^
+experiments/xzh26/frontend/Hashing/SimpleHasher1.cpp:143:23: note: The comparison 'opt == 0' is always true.
+      if (isMap && opt==0)
+                      ^
+experiments/xzh26/frontend/OPPRF/OPPRFReceiver.h:3:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFReceiver.h:4:0: information: Include file: "Network/Channel.h" not found. [missingInclude]
+#include "Network/Channel.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFReceiver.h:5:0: information: Include file: "Hashing/CuckooHasher1.h" not found. [missingInclude]
+#include "Hashing/CuckooHasher1.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFReceiver.h:6:0: information: Include file: "Hashing/SimpleHasher1.h" not found. [missingInclude]
+#include "Hashing/SimpleHasher1.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFReceiver.h:7:0: information: Include file: "OPPRF/binSet.h" not found. [missingInclude]
+#include "OPPRF/binSet.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFReceiver.cpp:4:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFReceiver.cpp:5:0: information: Include file: "Crypto/Commit.h" not found. [missingInclude]
+#include "Crypto/Commit.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFReceiver.cpp:7:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFReceiver.cpp:8:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFReceiver.cpp:10:0: information: Include file: "Hashing/BitPosition.h" not found. [missingInclude]
+#include "Hashing/BitPosition.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.h:2:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.h:3:0: information: Include file: "Network/Channel.h" not found. [missingInclude]
+#include "Network/Channel.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.h:4:0: information: Include file: "Hashing/SimpleHasher1.h" not found. [missingInclude]
+#include "Hashing/SimpleHasher1.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.h:5:0: information: Include file: "Hashing/CuckooHasher1.h" not found. [missingInclude]
+#include "Hashing/CuckooHasher1.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.h:6:0: information: Include file: "Hashing/BitPosition.h" not found. [missingInclude]
+#include "Hashing/BitPosition.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.h:7:0: information: Include file: "OPPRF/binSet.h" not found. [missingInclude]
+#include "OPPRF/binSet.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:4:0: information: Include file: "Crypto/Commit.h" not found. [missingInclude]
+#include "Crypto/Commit.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:5:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:6:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:7:0: information: Include file: "Common/Timer.h" not found. [missingInclude]
+#include "Common/Timer.h"
+^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:364:14: style: The if condition is the same as the previous if condition [duplicateCondition]
+    if (tIdx == 0) gTimer.setTimePoint("online.send.finalMask");
+             ^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:355:14: note: First condition
+    if (tIdx == 0) gTimer.setTimePoint("online.send.sendMask");
+             ^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:364:14: note: Second condition
+    if (tIdx == 0) gTimer.setTimePoint("online.send.finalMask");
+             ^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:252:11: style: C-style pointer casting [cstyleCast]
+          (u8*)&bin.mBits[IdxP].mPos[idxPos], sizeof(u8));
+          ^
+experiments/xzh26/frontend/OPPRF/OPPRFSender.cpp:310:12: style: C-style pointer casting [cstyleCast]
+           (u8*)&rand, sizeof(u8));
+           ^
+experiments/xzh26/frontend/OPPRF/binSet.h:3:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+experiments/xzh26/frontend/OPPRF/binSet.h:4:0: information: Include file: "Network/Channel.h" not found. [missingInclude]
+#include "Network/Channel.h"
+^
+experiments/xzh26/frontend/OPPRF/binSet.h:6:0: information: Include file: "Hashing/CuckooHasher1.h" not found. [missingInclude]
+#include "Hashing/CuckooHasher1.h"
+^
+experiments/xzh26/frontend/OPPRF/binSet.h:7:0: information: Include file: "Hashing/SimpleHasher1.h" not found. [missingInclude]
+#include "Hashing/SimpleHasher1.h"
+^
+experiments/xzh26/frontend/OPPRF/binSet.cpp:4:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+experiments/xzh26/frontend/OPPRF/binSet.cpp:5:0: information: Include file: "Crypto/Commit.h" not found. [missingInclude]
+#include "Crypto/Commit.h"
+^
+experiments/xzh26/frontend/OPPRF/binSet.cpp:7:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+experiments/xzh26/frontend/OPPRF/binSet.cpp:8:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+experiments/xzh26/frontend/OPPRF/binSet.cpp:10:0: information: Include file: "Hashing/BitPosition.h" not found. [missingInclude]
+#include "Hashing/BitPosition.h"
+^
+experiments/xzh26/frontend/OPPRF/binSet.h:55:10: performance: Variable 'mN' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mN = other.mN;
+         ^
+experiments/xzh26/frontend/OPPRF/binSet.h:56:10: performance: Variable 'mParties' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mParties = other.mParties;
+         ^
+experiments/xzh26/frontend/OPPRF/binSet.h:57:10: performance: Variable 'mMyIdx' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mMyIdx = other.mMyIdx;
+         ^
+experiments/xzh26/frontend/OPPRF/binSet.h:58:10: performance: Variable 'mStatSecParam' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mStatSecParam = other.mStatSecParam;
+         ^
+experiments/xzh26/frontend/OPPRF/binSet.h:59:10: performance: Variable 'mNcoInputBlkSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mNcoInputBlkSize = other.mNcoInputBlkSize;
+         ^
+experiments/xzh26/frontend/OPPRF/binSet.h:60:11: performance: Variable 'mHashingSeed' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+          mHashingSeed = other.mHashingSeed;
+          ^
+experiments/xzh26/frontend/OPPRF/binSet.h:61:10: performance: Variable 'mMaskSize' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mMaskSize = other.mMaskSize;
+         ^
+experiments/xzh26/frontend/OPPRF/binSet.h:65:10: performance: Variable 'mNcoInputBuff' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mNcoInputBuff = other.mNcoInputBuff;
+         ^
+experiments/xzh26/frontend/OPPRF/binSet.h:70:10: performance: Variable 'mCuckooBins' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mCuckooBins = other.mCuckooBins;
+         ^
+experiments/xzh26/frontend/OPPRF/binSet.h:71:10: performance: Variable 'mSimpleBins' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+         mSimpleBins = other.mSimpleBins;
+         ^
+experiments/xzh26/frontend/OPPRF/binSet.cpp:131:24: style: C-style pointer casting [cstyleCast]
+       hashes[j][k] = *(u64*)&mNcoInputBuff[k][i + j];
+                       ^
+experiments/xzh26/frontend/OPPRF/binSet.cpp:154:29: style: C-style pointer casting [cstyleCast]
+       stashHashes[j][k] = *(u64*)&mNcoInputBuff[k][mCuckooBins.mStashIdxs[j]];
+                            ^
+experiments/xzh26/frontend/OPPRF/binSet.cpp:214:34: warning: The lock is ineffective because the mutex is locked at the same scope as the mutex itself. [localMutex]
+     std::lock_guard<std::mutex> lock(mPrintMtx);
+                                 ^
+experiments/xzh26/frontend/OtBinMain.cpp:1:0: information: Include file: "Network/BtEndpoint.h" not found. [missingInclude]
+#include "Network/BtEndpoint.h"  //cryptoTools
+^
+experiments/xzh26/frontend/util.h:5:0: information: Include file: "Network/Channel.h" not found. [missingInclude]
+#include "Network/Channel.h"
+^
+experiments/xzh26/frontend/OtBinMain.cpp:10:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+experiments/xzh26/frontend/OtBinMain.cpp:11:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+experiments/xzh26/frontend/OtBinMain.cpp:12:0: information: Include file: "Common/Log1.h" not found. [missingInclude]
+#include "Common/Log1.h"
+^
+experiments/xzh26/frontend/OtBinMain.cpp:13:0: information: Include file: "Common/Timer.h" not found. [missingInclude]
+#include "Common/Timer.h"
+^
+experiments/xzh26/frontend/OtBinMain.cpp:14:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+experiments/xzh26/frontend/OtBinMain.h:4:0: information: Include file: "Crypto/PRNG.h" not found. [missingInclude]
+#include "Crypto/PRNG.h"
+^
+experiments/xzh26/frontend/utils/common.h:9:0: information: Include file: "third_party/nlohmann/json.hpp" not found. [missingInclude]
+#include "third_party/nlohmann/json.hpp"
+^
+experiments/xzh26/frontend/OtBinMain.cpp:127:27: style: The scope of the variable 'totalAvgTime' can be reduced. [variableScope]
+    double totalTime = 0, totalAvgTime = 0;
+                          ^
+experiments/xzh26/frontend/OtBinMain.cpp:477:39: style: Local variable 'pThrds' shadows outer variable [shadowVariable]
+            std::vector<std::thread>  pThrds(nParties - 1);
+                                      ^
+experiments/xzh26/frontend/OtBinMain.cpp:274:35: note: Shadowed declaration
+        std::vector<std::thread>  pThrds(num_threads);
+                                  ^
+experiments/xzh26/frontend/OtBinMain.cpp:477:39: note: Shadow variable
+            std::vector<std::thread>  pThrds(nParties - 1);
+                                      ^
+experiments/xzh26/frontend/OtBinMain.cpp:484:21: style: Local variable 'start' shadows outer variable [shadowVariable]
+                int start = pIdx * elements_per_thread;
+                    ^
+experiments/xzh26/frontend/OtBinMain.cpp:285:14: note: Shadowed declaration
+        auto start = std::chrono::high_resolution_clock::now();
+             ^
+experiments/xzh26/frontend/OtBinMain.cpp:484:21: note: Shadow variable
+                int start = pIdx * elements_per_thread;
+                    ^
+experiments/xzh26/frontend/OtBinMain.cpp:530:38: style: Local variable 'pThrds' shadows outer variable [shadowVariable]
+            std::vector<std::thread> pThrds(nParties - 1);
+                                     ^
+experiments/xzh26/frontend/OtBinMain.cpp:274:35: note: Shadowed declaration
+        std::vector<std::thread>  pThrds(num_threads);
+                                  ^
+experiments/xzh26/frontend/OtBinMain.cpp:530:38: note: Shadow variable
+            std::vector<std::thread> pThrds(nParties - 1);
+                                     ^
+experiments/xzh26/frontend/OtBinMain.cpp:1010:39: style: Local variable 'pThrds' shadows outer variable [shadowVariable]
+            std::vector<std::thread>  pThrds(nParties - 1);
+                                      ^
+experiments/xzh26/frontend/OtBinMain.cpp:274:35: note: Shadowed declaration
+        std::vector<std::thread>  pThrds(num_threads);
+                                  ^
+experiments/xzh26/frontend/OtBinMain.cpp:1010:39: note: Shadow variable
+            std::vector<std::thread>  pThrds(nParties - 1);
+                                      ^
+experiments/xzh26/frontend/OtBinMain.cpp:1066:21: style: Local variable 'start' shadows outer variable [shadowVariable]
+                int start = i * elements_per_thread;
+                    ^
+experiments/xzh26/frontend/OtBinMain.cpp:285:14: note: Shadowed declaration
+        auto start = std::chrono::high_resolution_clock::now();
+             ^
+experiments/xzh26/frontend/OtBinMain.cpp:1066:21: note: Shadow variable
+                int start = i * elements_per_thread;
+                    ^
+experiments/xzh26/frontend/OtBinMain.cpp:1106:39: style: Local variable 'pThrds' shadows outer variable [shadowVariable]
+            std::vector<std::thread>  pThrds(nParties - 1);
+                                      ^
+experiments/xzh26/frontend/OtBinMain.cpp:274:35: note: Shadowed declaration
+        std::vector<std::thread>  pThrds(num_threads);
+                                  ^
+experiments/xzh26/frontend/OtBinMain.cpp:1106:39: note: Shadow variable
+            std::vector<std::thread>  pThrds(nParties - 1);
+                                      ^
+experiments/xzh26/frontend/OtBinMain.cpp:1175:39: style: Local variable 'pThrds' shadows outer variable [shadowVariable]
+            std::vector<std::thread>  pThrds(thread_num);
+                                      ^
+experiments/xzh26/frontend/OtBinMain.cpp:274:35: note: Shadowed declaration
+        std::vector<std::thread>  pThrds(num_threads);
+                                  ^
+experiments/xzh26/frontend/OtBinMain.cpp:1175:39: note: Shadow variable
+            std::vector<std::thread>  pThrds(thread_num);
+                                      ^
+experiments/xzh26/frontend/OtBinMain.cpp:1182:21: style: Local variable 'start' shadows outer variable [shadowVariable]
+                int start = i * elements_per_thread;
+                    ^
+experiments/xzh26/frontend/OtBinMain.cpp:285:14: note: Shadowed declaration
+        auto start = std::chrono::high_resolution_clock::now();
+             ^
+experiments/xzh26/frontend/OtBinMain.cpp:1182:21: note: Shadow variable
+                int start = i * elements_per_thread;
+                    ^
+experiments/xzh26/frontend/main.cpp:3:0: information: Include file: "Network/BtChannel.h" not found. [missingInclude]
+#include "Network/BtChannel.h"
+^
+experiments/xzh26/frontend/main.cpp:4:0: information: Include file: "Network/BtEndpoint.h" not found. [missingInclude]
+#include "Network/BtEndpoint.h"
+^
+experiments/xzh26/frontend/main.cpp:7:0: information: Include file: "Common/Defines.h" not found. [missingInclude]
+#include "Common/Defines.h"
+^
+experiments/xzh26/frontend/main.cpp:12:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:97:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * data = (const uint8_t*)key;
+                          ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:108:30: style: C-style pointer casting [cstyleCast]
+  const uint32_t * blocks = (const uint32_t *)(data + nblocks*4);
+                             ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:126:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*4);
+                          ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:145:4: style: C-style pointer casting [cstyleCast]
+  *(uint32_t*)out = h1;
+   ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:153:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * data = (const uint8_t*)key;
+                          ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:169:30: style: C-style pointer casting [cstyleCast]
+  const uint32_t * blocks = (const uint32_t *)(data + nblocks*16);
+                             ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:198:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*16);
+                          ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:247:4: style: C-style pointer casting [cstyleCast]
+  ((uint32_t*)out)[0] = h1;
+   ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:248:4: style: C-style pointer casting [cstyleCast]
+  ((uint32_t*)out)[1] = h2;
+   ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:249:4: style: C-style pointer casting [cstyleCast]
+  ((uint32_t*)out)[2] = h3;
+   ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:250:4: style: C-style pointer casting [cstyleCast]
+  ((uint32_t*)out)[3] = h4;
+   ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:258:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * data = (const uint8_t*)key;
+                          ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:270:30: style: C-style pointer casting [cstyleCast]
+  const uint64_t * blocks = (const uint64_t *)(data);
+                             ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:289:27: style: C-style pointer casting [cstyleCast]
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*16);
+                          ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:330:4: style: C-style pointer casting [cstyleCast]
+  ((uint64_t*)out)[0] = h1;
+   ^
+experiments/xzh26/frontend/third_party/smhasher/MurmurHash3.cpp:331:4: style: C-style pointer casting [cstyleCast]
+  ((uint64_t*)out)[1] = h2;
+   ^
+experiments/xzh26/frontend/util.cpp:4:0: information: Include file: "Common/Log.h" not found. [missingInclude]
+#include "Common/Log.h"
+^
+experiments/xzh26/frontend/util.cpp:5:0: information: Include file: "Common/ByteStream.h" not found. [missingInclude]
+#include "Common/ByteStream.h"
+^
+experiments/xzh26/frontend/utils/bloom_filter.cpp:3:0: information: Include file: "third_party/smhasher/MurmurHash3.h" not found. [missingInclude]
+#include "third_party/smhasher/MurmurHash3.h"
+^
+experiments/xzh26/frontend/utils/bloom_filter.cpp:15:14: style: Variable 'pos' can be declared as reference to const [constVariableReference]
+  for (auto &pos : GetPositions(e)) {
+             ^
+experiments/xzh26/frontend/utils/bloom_filter.cpp:15:3: style: Consider using std::all_of or std::none_of algorithm instead of a raw loop. [useStlAlgorithm]
+  for (auto &pos : GetPositions(e)) {
+  ^
+nofile:0:0: information: Active checkers: 162/592 (use --checkers-report=<filename> to see details) [checkersReport]
+

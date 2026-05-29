@@ -86,7 +86,7 @@ for i in $(seq 0 $((NUM_PARTIES - 1))); do
     INTER_PORT=$((53000 + i))
     CLIENT_PORT=$((53100 + i))
     INTER_PARTY_ADDRS+=("127.0.0.1:${INTER_PORT}")
-    CLIENT_PORTS+=($CLIENT_PORT)
+    CLIENT_PORTS+=("$CLIENT_PORT")
 done
 LEADER_ADDR="${INTER_PARTY_ADDRS[$((NUM_PARTIES - 1))]}"
 

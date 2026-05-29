@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
-#include <cstring>
+#include <algorithm>
 #include "protocols/beh21/crypto/bloom_filter.h"
 
 using namespace mpsi::beh21;
 
 static Element makeElement(uint64_t val) {
     Element e{};
-    std::memcpy(e.data(), &val, sizeof(val));
+    std::copy_n(reinterpret_cast<const unsigned char*>(&val), sizeof(val), e.data());
     return e;
 }
 

@@ -3,8 +3,9 @@
 #include "Network/Channel.h"
 #include "Common/ByteStream.h"
 #include "core/transport/channel.h"
-#include <stdexcept>
+#include <algorithm>
 #include <cstring>
+#include <stdexcept>
 
 namespace mpsi::xzh26 {
 
@@ -64,7 +65,7 @@ public:
             throw std::runtime_error("ChannelAdapter::recv size mismatch: expected "
                 + std::to_string(length) + " got " + std::to_string(data.size()));
         }
-        std::memcpy(dest, data.data(), length);
+        std::copy_n(data.data(), data.size(), static_cast<char*>(dest));
         recv_ += length;
     }
 
@@ -74,7 +75,7 @@ public:
         auto* bs = dynamic_cast<osuCrypto::ByteStream*>(&mH);
         if (bs) {
             bs->resize(data.size());
-            std::memcpy(bs->data(), data.data(), data.size());
+            std::copy_n(data.data(), data.size(), bs->data());
         } else {
             throw std::runtime_error("ChannelAdapter: unsupported ChannelBuffer type for recv");
         }

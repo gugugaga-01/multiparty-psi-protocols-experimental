@@ -9,6 +9,7 @@
 #include <condition_variable>
 #include <atomic>
 #include <vector>
+#include <array>
 #include <fstream>
 #include <iostream>
 
@@ -140,12 +141,14 @@ public:
 private:
     void generateKeys(uint64_t n) {
         // Seed NTL's PRNG from /dev/urandom
-        unsigned char entropy[32];
+        std::array<unsigned char, 32> entropy{};
         std::ifstream urandom("/dev/urandom", std::ios::binary);
         if (!urandom.good())
             throw std::runtime_error("Cannot open /dev/urandom");
-        urandom.read(reinterpret_cast<char*>(entropy), sizeof(entropy));
-        NTL::SetSeed(NTL::ZZFromBytes(entropy, sizeof(entropy)));
+        urandom.read(reinterpret_cast<char*>(entropy.data()), entropy.size());
+        if (urandom.gcount() != static_cast<std::streamsize>(entropy.size()))
+            throw std::runtime_error("Short read from /dev/urandom");
+        NTL::SetSeed(NTL::ZZFromBytes(entropy.data(), entropy.size()));
 
         ks05::distributedKeyGen(ks05::PAILLIER_KEY_BITS, n,
                                 pub_key_, secret_keys_);

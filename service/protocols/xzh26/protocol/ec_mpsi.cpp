@@ -13,7 +13,10 @@
 
 #include <sodium.h>
 #include <cmath>
+#include <algorithm>
+#include <array>
 #include <cstring>
+#include <stdexcept>
 #include <thread>
 #include <iostream>
 #include <vector>
@@ -30,16 +33,18 @@ static void sendPoint(mpsi::Channel* ch, const ECpoint& pt) {
 
 static void recvPoint(mpsi::Channel* ch, ECpoint& pt) {
     std::string data = ch->recvBytes();
-    std::memcpy(pt.data(), data.data(), crypto_core_ristretto255_BYTES);
+    if (data.size() != crypto_core_ristretto255_BYTES)
+        throw std::runtime_error("Invalid EC point frame size");
+    std::copy_n(data.data(), data.size(), pt.data());
 }
 
 static ECpoint block_to_point(const block& input) {
-    unsigned char block_bytes[16];
-    std::memcpy(block_bytes, &input, 16);
-    unsigned char hash_64bytes[crypto_hash_sha512_BYTES];
-    crypto_hash_sha512(hash_64bytes, block_bytes, 16);
+    std::array<unsigned char, 16> block_bytes{};
+    std::copy_n(reinterpret_cast<const unsigned char*>(&input), block_bytes.size(), block_bytes.begin());
+    std::array<unsigned char, crypto_hash_sha512_BYTES> hash_64bytes{};
+    crypto_hash_sha512(hash_64bytes.data(), block_bytes.data(), block_bytes.size());
     ECpoint result_point;
-    crypto_core_ristretto255_from_hash(result_point.data(), hash_64bytes);
+    crypto_core_ristretto255_from_hash(result_point.data(), hash_64bytes.data());
     return result_point;
 }
 

@@ -7,7 +7,7 @@
 #include <atomic>
 #include <mutex>
 #include <condition_variable>
-#include <cstring>
+#include <algorithm>
 
 #include "core/transport/grpc_channel.h"
 #include "core/transport/party_server.h"
@@ -29,7 +29,7 @@ static std::string readFileStr(const std::string& path) {
 
 static Element makeElement(uint64_t val) {
     Element e{};
-    std::memcpy(e.data(), &val, sizeof(val));
+    std::copy_n(reinterpret_cast<const unsigned char*>(&val), sizeof(val), e.data());
     return e;
 }
 
@@ -242,7 +242,7 @@ int main(int argc, char** argv) {
     std::set<uint64_t> result_set;
     for (const auto& elem : intersection_result) {
         uint64_t val = 0;
-        std::memcpy(&val, elem.data(), sizeof(val));
+        std::copy_n(elem.data(), sizeof(val), reinterpret_cast<unsigned char*>(&val));
         result_set.insert(val);
         std::cout << "  Element: " << val << std::endl;
     }

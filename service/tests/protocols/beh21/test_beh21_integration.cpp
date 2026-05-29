@@ -3,7 +3,7 @@
 #include <thread>
 #include <cassert>
 #include <set>
-#include <cstring>
+#include <algorithm>
 
 #include "core/transport/in_process_channel.h"
 #include "protocols/beh21/protocol/ot_mpsi.h"
@@ -18,7 +18,7 @@ using namespace mpsi::beh21;
 // Helper: create an Element from a uint64_t (zero-padded to 16 bytes)
 static Element makeElement(uint64_t val) {
     Element e{};
-    std::memcpy(e.data(), &val, sizeof(val));
+    std::copy_n(reinterpret_cast<const unsigned char*>(&val), sizeof(val), e.data());
     return e;
 }
 
@@ -88,7 +88,7 @@ static std::set<uint64_t> runProtocol(
     std::set<uint64_t> result;
     for (const auto& elem : intersection_result) {
         uint64_t val = 0;
-        std::memcpy(&val, elem.data(), sizeof(val));
+        std::copy_n(elem.data(), sizeof(val), reinterpret_cast<unsigned char*>(&val));
         result.insert(val);
     }
     return result;
