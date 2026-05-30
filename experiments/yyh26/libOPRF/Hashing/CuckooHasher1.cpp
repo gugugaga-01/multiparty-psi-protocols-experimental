@@ -31,6 +31,12 @@ namespace osuCrypto
 
     CuckooHasher1::CuckooHasher1()
         : mTotalTries(0)
+        , mParams{}
+        , mHashSeed(ZeroBlock)
+        , mRepSize(0)
+        , mInputBitSize(0)
+        , mN(0)
+        , mBinCount{0, 0}
     {
     }
 

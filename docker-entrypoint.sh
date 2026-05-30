@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e
 
+if [ "$#" -eq 0 ]; then
+    exec python3 /app/webapp/server.py
+fi
+
+cmd="$(basename "$1")"
+if [ "$cmd" != "psi_party" ] && [ "$cmd" != "psi_dealer" ]; then
+    exec "$@"
+fi
+
 CERTS_DIR="/app/certs"
 
 # Check if user mounted certs

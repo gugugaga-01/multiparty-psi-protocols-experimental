@@ -21,6 +21,16 @@ namespace osuCrypto
 	SimpleParam1 k2n07s40SimpleParam1{{1.5, 0.17}, {3, 2}, {27, 64}, {5, 6}};
 
 	SimpleHasher1::SimpleHasher1()
+		: mRepSize(0)
+		, mInputBitSize(0)
+		, mN(0)
+		, mBinCount{0, 0}
+		, mMaxBinSize{0, 0}
+		, mNumHashes{0, 0}
+		, mNumBits{0, 0}
+		, testMaxBinSize(0)
+		, mHashSeed(ZeroBlock)
+		, mParams{}
 	{
 	}
 

@@ -33,6 +33,14 @@ LOG_DIR = ROOT / "logs"
 sys.path.insert(0, str(PY_CLIENT))
 os.environ.setdefault("no_proxy", "127.0.0.1,localhost")
 
+MAX_BODY_BYTES = int(os.environ.get("PSINSIEME_WEB_MAX_BODY_BYTES", str(1024 * 1024)))
+MAX_PARTIES = int(os.environ.get("PSINSIEME_WEB_MAX_PARTIES", "32"))
+MAX_ELEMENTS = int(os.environ.get("PSINSIEME_WEB_MAX_ELEMENTS", "1000"))
+MAX_ELEMENT_LENGTH = int(os.environ.get("PSINSIEME_WEB_MAX_ELEMENT_LENGTH", "1024"))
+MAX_TIMEOUT_SECONDS = float(os.environ.get("PSINSIEME_WEB_MAX_TIMEOUT_SECONDS", "600"))
+WEB_TOKEN = os.environ.get("PSINSIEME_WEB_TOKEN")
+
+
 # ---------------------------------------------------------------------------
 # Logging
 # ---------------------------------------------------------------------------
@@ -191,24 +199,67 @@ def expected_intersection(inputs: list[list[str]], t: int) -> set[str]:
     return {e for e in leader_set if counter[e] >= t}
 
 
+def _bounded_int(value: Any, name: str, low: int, high: int) -> int:
+    try:
+        n = int(value)
+    except (TypeError, ValueError):
+        raise ValueError(f"{name} must be an integer") from None
+    if n < low or n > high:
+        raise ValueError(f"{name} must be in [{low}, {high}]")
+    return n
+
+
+def _bounded_timeout(value: Any) -> float:
+    try:
+        timeout = float(value)
+    except (TypeError, ValueError):
+        raise ValueError("timeout must be a number") from None
+    if timeout <= 0 or timeout > MAX_TIMEOUT_SECONDS:
+        raise ValueError(f"timeout must be in (0, {MAX_TIMEOUT_SECONDS}]")
+    return timeout
+
+
+def _clean_elements(raw: Any, name: str = "elements") -> list[str]:
+    if not isinstance(raw, list) or not raw:
+        raise ValueError(f"{name} must be a non-empty list of strings")
+    if len(raw) > MAX_ELEMENTS:
+        raise ValueError(f"{name} must contain at most {MAX_ELEMENTS} elements")
+    cleaned: list[str] = []
+    for i, item in enumerate(raw):
+        element = str(item).strip()
+        if not element:
+            continue
+        if len(element) > MAX_ELEMENT_LENGTH:
+            raise ValueError(
+                f"{name}[{i}] exceeds {MAX_ELEMENT_LENGTH} characters"
+            )
+        cleaned.append(element)
+    if not cleaned:
+        raise ValueError(f"{name} must contain at least one non-empty element")
+    return cleaned
+
+
+def _validate_inputs(inputs: list[list[str]]) -> None:
+    if len(inputs) > MAX_PARTIES:
+        raise ValueError(f"num_parties must be <= {MAX_PARTIES}")
+    for i, elements in enumerate(inputs):
+        _clean_elements(elements, f"inputs[{i}]")
+
+
 # ---------------------------------------------------------------------------
 # API handlers
 # ---------------------------------------------------------------------------
 
 
 def handle_demo(req: dict[str, Any]) -> dict[str, Any]:
-    n = int(req.get("num_parties", 3))
-    if n < 2:
-        raise ValueError("num_parties must be >= 2")
+    n = _bounded_int(req.get("num_parties", 3), "num_parties", 2, MAX_PARTIES)
     auto_cluster = bool(req.get("auto_cluster", True))
     t_raw = req.get("threshold")
-    t = int(t_raw) if t_raw is not None else n
-    if t < 2 or t > n:
-        raise ValueError(f"threshold must be in [2, {n}]")
+    t = _bounded_int(t_raw if t_raw is not None else n, "threshold", 2, n)
     protocol = str(req.get("protocol", "ks05_t_mpsi"))
     client_port_base = int(req.get("client_port_base", 53100))
     inter_port_base = int(req.get("inter_port_base", 53000))
-    timeout = float(req.get("timeout", 300))
+    timeout = _bounded_timeout(req.get("timeout", 300))
 
     raw_inputs = req.get("inputs")
     raw_sizes = req.get("sizes")
@@ -217,20 +268,15 @@ def handle_demo(req: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(raw_sizes, list) or len(raw_sizes) != n:
             raise ValueError(f"sizes must be a list of {n} integers")
         try:
-            sizes = [int(x) for x in raw_sizes]
+            sizes = [_bounded_int(x, f"sizes[{i}]", MIN_PARTY_SIZE, MAX_ELEMENTS)
+                     for i, x in enumerate(raw_sizes)]
         except (TypeError, ValueError):
             raise ValueError("sizes entries must be integers") from None
     if raw_inputs is not None:
         if not isinstance(raw_inputs, list) or len(raw_inputs) != n:
             raise ValueError(f"inputs must be a list of {n} lists (one per party)")
-        inputs: list[list[str]] = []
-        for i, s in enumerate(raw_inputs):
-            if not isinstance(s, list):
-                raise ValueError(f"inputs[{i}] must be a list of strings")
-            cleaned = [str(x).strip() for x in s if str(x).strip()]
-            if not cleaned:
-                raise ValueError(f"inputs[{i}] is empty (party {i} needs at least one element)")
-            inputs.append(cleaned)
+        inputs = [_clean_elements(s, f"inputs[{i}]")
+                  for i, s in enumerate(raw_inputs)]
         log.info("demo: using custom inputs (sizes=%s)", [len(s) for s in inputs])
     else:
         if sizes is None and protocol in EQUAL_SIZE_PROTOCOLS:
@@ -238,6 +284,7 @@ def handle_demo(req: dict[str, Any]) -> dict[str, Any]:
             log.info("demo: %s requires equal sizes — generating %d per party",
                      protocol, EQUAL_SIZE_DEFAULT)
         inputs = build_demo_inputs(n, sizes=sizes)
+        _validate_inputs(inputs)
         if sizes is not None:
             log.info("demo: using generated inputs with custom sizes=%s", sizes)
 
@@ -382,18 +429,16 @@ def handle_submit(req: dict[str, Any]) -> dict[str, Any]:
     target = str(req.get("target", "")).strip()
     leader_address = str(req.get("leader_address", "")).strip()
     role = str(req.get("role", "member"))
-    elements = req.get("elements") or []
+    elements = _clean_elements(req.get("elements") or [])
     if not target or not leader_address:
         raise ValueError("target and leader_address are required")
     if role not in ("leader", "member"):
         raise ValueError("role must be 'leader' or 'member'")
-    if not isinstance(elements, list) or not elements:
-        raise ValueError("elements must be a non-empty list of strings")
 
     protocol = str(req.get("protocol", "ks05_t_mpsi"))
-    num_parties = int(req.get("num_parties", 3))
-    threshold = int(req.get("threshold", 3))
-    timeout = float(req.get("timeout", 300))
+    num_parties = _bounded_int(req.get("num_parties", 3), "num_parties", 2, MAX_PARTIES)
+    threshold = _bounded_int(req.get("threshold", 3), "threshold", 2, num_parties)
+    timeout = _bounded_timeout(req.get("timeout", 300))
     tls = bool(req.get("tls", False))
 
     kwargs: dict[str, Any] = {"tls": tls}
@@ -509,11 +554,29 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def _read_json(self) -> dict[str, Any]:
-        length = int(self.headers.get("Content-Length") or 0)
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            raise ValueError("Content-Length must be an integer") from None
         if length <= 0:
             return {}
+        if length > MAX_BODY_BYTES:
+            raise ValueError(f"request body exceeds {MAX_BODY_BYTES} bytes")
         raw = self.rfile.read(length)
         return json.loads(raw.decode("utf-8"))
+
+    def _check_unsafe_request(self) -> bool:
+        if WEB_TOKEN and self.headers.get("X-PSINSIEME-Token") != WEB_TOKEN:
+            self._send_json(401, {"detail": "missing or invalid API token"})
+            return False
+        origin = self.headers.get("Origin")
+        if origin:
+            from urllib.parse import urlparse
+            origin_host = urlparse(origin).netloc
+            if origin_host and origin_host != self.headers.get("Host"):
+                self._send_json(403, {"detail": "cross-origin POST rejected"})
+                return False
+        return True
 
     # ----- routing ------------------------------------------------------
 
@@ -602,11 +665,16 @@ class Handler(BaseHTTPRequestHandler):
         self.send_error(404, "Not found")
 
     def do_POST(self) -> None:
+        if not self._check_unsafe_request():
+            return
         path = self.path.split("?", 1)[0]
         try:
             req = self._read_json()
         except json.JSONDecodeError as e:
             self._send_json(400, {"detail": f"invalid json: {e}"})
+            return
+        except ValueError as e:
+            self._send_json(400, {"detail": str(e)})
             return
 
         try:
@@ -617,7 +685,7 @@ class Handler(BaseHTTPRequestHandler):
                 self._send_json(200, handle_submit(req))
                 return
             if path == "/api/cluster/start":
-                n = int(req.get("num_parties", 3))
+                n = _bounded_int(req.get("num_parties", 3), "num_parties", 2, MAX_PARTIES)
                 use_tls = bool(req.get("tls", False))
                 proto = str(req.get("protocol") or "ks05_t_mpsi")
                 build_dir = req.get("build_dir") or None
@@ -640,8 +708,16 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main() -> None:
-    host = os.environ.get("PSINSIEME_WEB_HOST", "0.0.0.0")
+    host = os.environ.get("PSINSIEME_WEB_HOST", "127.0.0.1")
     port = int(os.environ.get("PSINSIEME_WEB_PORT", "38888"))
+    public_hosts = {"0.0.0.0", "::", ""}
+    if host in public_hosts and not os.environ.get("PSINSIEME_WEB_PUBLIC_BIND"):
+        raise RuntimeError(
+            "Refusing public web bind without PSINSIEME_WEB_PUBLIC_BIND=1; "
+            "set PSINSIEME_WEB_TOKEN to protect POST APIs before exposing it."
+        )
+    if host in public_hosts and not WEB_TOKEN:
+        log.warning("public web bind has no PSINSIEME_WEB_TOKEN; POST APIs are unauthenticated")
     server = ThreadingHTTPServer((host, port), Handler)
     log.info("listening on http://%s:%d  (level=%s, log_dir=%s)",
              host, port, LOG_LEVEL, LOG_DIR)

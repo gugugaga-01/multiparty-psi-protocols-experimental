@@ -3,8 +3,10 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/security/tls_certificate_verifier.h>
 #include <grpcpp/security/tls_credentials_options.h>
+#include <cstdlib>
 #include <fstream>
 #include <memory>
+#include <stdexcept>
 #include <string>
 
 namespace mpsi {
@@ -43,9 +45,12 @@ inline std::shared_ptr<grpc::ChannelCredentials> makeClientCredentials(const Tls
         return grpc::InsecureChannelCredentials();
 
     if (tls.mode == TlsMode::TLS) {
-        // Encrypt-only: use NoOpCertificateVerifier so we don't need to
-        // distribute a shared CA.  The channel is encrypted but neither
-        // side's identity is verified.
+        // Encrypt-only mode deliberately skips peer identity verification.
+        // Keep it unavailable unless a local demo opts in explicitly.
+        if (std::getenv("MPSI_ALLOW_INSECURE_TLS") == nullptr)
+            throw std::runtime_error(
+                "tls mode disables certificate verification; use mtls or set "
+                "MPSI_ALLOW_INSECURE_TLS=1 for a local demo");
         auto opts = std::make_shared<grpc::experimental::TlsChannelCredentialsOptions>();
         opts->set_certificate_verifier(
             std::make_shared<grpc::experimental::NoOpCertificateVerifier>());

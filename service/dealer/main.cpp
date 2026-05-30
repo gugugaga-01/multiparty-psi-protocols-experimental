@@ -1,8 +1,8 @@
 // psi_dealer: Trusted key dealer for Paillier-based PSI protocols.
 //
 // Generates threshold Paillier keys and distributes individual secret
-// key shares to each party.  After all parties have collected their
-// shares, the dealer securely wipes all key material and exits.
+// key shares to each party.  Key material is retained during the
+// late-fetch grace period, then explicitly cleared before exit.
 //
 // SECURITY-CRITICAL: The dealer temporarily holds ALL secret key shares
 // and the factorization of N.  It must run in a trusted environment.
@@ -168,6 +168,7 @@ int main(int argc, char** argv) {
 
     std::cerr << "[Dealer] Shutting down." << std::endl;
     g_server->Shutdown();
+    dealer.clearSecrets();
 
     return 0;
 }

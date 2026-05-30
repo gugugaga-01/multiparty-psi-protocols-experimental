@@ -117,9 +117,9 @@ public:
                   << " unique parties)" << std::endl;
 
         // Signal completion once every party has fetched at least once.
-        // Note: secrets are NOT wiped here because other protocol plugins
-        // on the same party may still need to fetch.  The dealer process
-        // exits after the demo/test completes, which cleans up.
+        // Secrets stay available until shutdown because other protocol plugins
+        // on the same party may still need to fetch; main() clears them after
+        // the late-fetch grace period.
         if (first_fetch && collected_.size() == expected_parties_) {
             all_collected_ = true;
             all_collected_cv_.notify_all();
@@ -137,6 +137,20 @@ public:
     }
 
     bool allCollected() const { return all_collected_; }
+
+    void clearSecrets() {
+        std::unique_lock<std::mutex> lock(mu_);
+        pub_key_.n = 0;
+        pub_key_.n2 = 0;
+        pub_key_.g = 0;
+        pub_key_.theta = 0;
+        pub_key_.delta = 0;
+        for (auto& sk : secret_keys_)
+            sk.s = 0;
+        secret_keys_.clear();
+        secret_keys_.shrink_to_fit();
+        keys_generated_ = false;
+    }
 
 private:
     void generateKeys(uint64_t n) {
