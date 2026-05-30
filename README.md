@@ -17,6 +17,48 @@ The repository has two layers:
 - **`service/`** — A gRPC-based production framework with mTLS, threshold key distribution, per-request protocol selection, and a Python client SDK. See [service/README.md](service/README.md) for the full usage guide.
 - **`webapp/`** — A browser console over the service: run protocols, auto-start a local cluster, and view intersections without the shell. See [webapp/README.md](webapp/README.md).
 
+## Installation
+
+There are two supported install paths. Use Docker for the fastest web-console setup, or build from source when you need local development, custom compiler flags, or optional YYH26 builds.
+
+### Option 1: Docker Hub image
+
+The published image includes the web console, Python client runtime, frontend assets, and prebuilt `psi_party` / `psi_dealer` binaries with KS05, BEH21, and XZH26 enabled.
+
+```bash
+docker pull gugugaga001/psinsieme:latest
+
+docker run --rm \
+  -p 127.0.0.1:38888:38888 \
+  -e PSINSIEME_WEB_HOST=0.0.0.0 \
+  -e PSINSIEME_WEB_PUBLIC_BIND=1 \
+  gugugaga001/psinsieme:latest
+```
+
+Open <http://127.0.0.1:38888>. For a pinned build, use `gugugaga001/psinsieme:slim-20260530` (`sha256:81453a39cfa76e8794426cef399db69726c598e2272cf36b910d6c221f11005a`).
+
+For non-local exposure, set `PSINSIEME_WEB_TOKEN` and send it as `X-PSINSIEME-Token` on POST APIs. The command above publishes the container only on host loopback.
+
+### Option 2: Build from source
+
+Install the prerequisites below, then build the service and frontend locally:
+
+```bash
+mkdir -p build && cd build
+cmake ..
+make -j$(nproc)
+cd ..
+
+cd webapp/frontend
+npm install
+npm run build
+cd ..
+pip install -r requirements.txt
+bash run.sh
+```
+
+Open <http://127.0.0.1:38888>.
+
 ## Architecture
 
 ```mermaid

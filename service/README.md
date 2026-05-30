@@ -89,11 +89,25 @@ bash service/demos/yyh26/demo.sh
 
 ## Docker Quick-Start
 
-Pull the pre-built image:
+The Docker Hub image is the quickest install path. It contains the web console, Python client runtime, frontend assets, and prebuilt `psi_party` / `psi_dealer` binaries with KS05, BEH21, and XZH26 enabled.
 
 ```bash
 docker pull gugugaga001/psinsieme:latest
 ```
+
+For a pinned build, use `gugugaga001/psinsieme:slim-20260530` (`sha256:81453a39cfa76e8794426cef399db69726c598e2272cf36b910d6c221f11005a`).
+
+### Web console
+
+```bash
+docker run --rm \
+  -p 127.0.0.1:38888:38888 \
+  -e PSINSIEME_WEB_HOST=0.0.0.0 \
+  -e PSINSIEME_WEB_PUBLIC_BIND=1 \
+  gugugaga001/psinsieme:latest
+```
+
+Open <http://127.0.0.1:38888>. For non-local exposure, set `PSINSIEME_WEB_TOKEN` and send it as `X-PSINSIEME-Token` on POST APIs. The command above publishes the container only on host loopback.
 
 ### Local 3-party demo (auto-generated TLS certs)
 

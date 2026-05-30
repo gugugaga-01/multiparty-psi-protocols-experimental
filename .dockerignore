@@ -1,11 +1,37 @@
 .git
-build/
+.claude/
+.github/
+
+# Keep only the prebuilt service binaries required by the runtime image.
+build/*
+!build/service/
+build/service/*
+!build/service/psi_party
+!build/service/psi_dealer
+
+# Native build leftovers.
 *.o
 *.a
 *.so
-docs/
-.claude/
-.github/
-*.md
 CMakeCache.txt
 CMakeFiles/
+cmake_install.cmake
+
+# Frontend source/dependency weight; the image only needs frontend/dist.
+webapp/frontend/node_modules/
+webapp/frontend/src/
+webapp/frontend/*.json
+webapp/frontend/*.ts
+webapp/frontend/*.js
+webapp/frontend/.gitignore
+webapp/frontend/index.html
+!webapp/frontend/dist/
+
+# Runtime/generated local noise.
+webapp/logs/
+**/__pycache__/
+*.pyc
+
+# Repository metadata/docs not needed in the image.
+docs/
+*.md

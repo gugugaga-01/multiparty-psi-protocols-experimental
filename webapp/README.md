@@ -14,6 +14,30 @@ Two modes:
   point it at your party endpoint plus the leader's inter-party address and
   submit your private set.
 
+## Install and Run
+
+### Option 1: Docker Hub image
+
+Use the Docker image when you just want to run the browser console. It already contains the frontend build, Python runtime, and prebuilt service binaries.
+
+```bash
+docker pull gugugaga001/psinsieme:latest
+
+docker run --rm \
+  -p 127.0.0.1:38888:38888 \
+  -e PSINSIEME_WEB_HOST=0.0.0.0 \
+  -e PSINSIEME_WEB_PUBLIC_BIND=1 \
+  gugugaga001/psinsieme:latest
+```
+
+Open <http://127.0.0.1:38888>. For a pinned build, use `gugugaga001/psinsieme:slim-20260530` (`sha256:81453a39cfa76e8794426cef399db69726c598e2272cf36b910d6c221f11005a`).
+
+For non-local exposure, set `PSINSIEME_WEB_TOKEN` and send it as `X-PSINSIEME-Token` on POST APIs. The command above publishes the container only on host loopback.
+
+### Option 2: Build from source
+
+Use a source build when developing the UI/service or changing compile-time protocol flags.
+
 ## Prerequisites
 
 - The service binaries built (`psi_party`, `psi_dealer`) — see the
@@ -55,7 +79,7 @@ Environment variables read by `server.py`:
 
 | Variable             | Default   | Meaning                                  |
 |----------------------|-----------|------------------------------------------|
-| `PSINSIEME_WEB_HOST` | `0.0.0.0` | Bind address.                            |
+| `PSINSIEME_WEB_HOST` | `127.0.0.1` | Bind address.                            |
 | `PSINSIEME_WEB_PORT` | `38888`   | Listen port.                             |
 | `PSINSIEME_WEB_LOG`  | `INFO`    | Log level (`DEBUG` for verbose tracing). |
 
