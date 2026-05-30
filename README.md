@@ -143,7 +143,23 @@ For YYH26 in the service, see [service/README.md](service/README.md#yyh26-tt-mps
 
 ## Quick Start
 
-### Service (recommended)
+### Docker web console (fastest)
+
+```bash
+docker pull gugugaga001/psinsieme:latest
+
+docker run --rm \
+  -p 127.0.0.1:38888:38888 \
+  -e PSINSIEME_WEB_HOST=0.0.0.0 \
+  -e PSINSIEME_WEB_PUBLIC_BIND=1 \
+  gugugaga001/psinsieme:latest
+```
+
+Open <http://127.0.0.1:38888>. The container includes the web console and prebuilt service binaries, so no local CMake, Node, or Python setup is needed.
+
+For a pinned image, use `gugugaga001/psinsieme:slim-20260530` (`sha256:81453a39cfa76e8794426cef399db69726c598e2272cf36b910d6c221f11005a`).
+
+### Source build service
 
 ```bash
 mkdir -p build && cd build
