@@ -1,10 +1,21 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Tabs, Time, Footer, Switch } from 'animal-island-ui'
+import { Cursor, Icon, Tabs, Time, Footer, Switch, type IconName } from 'animal-island-ui'
 import { api, type ClusterStatus } from './api'
 import { ClusterCard } from './components/ClusterCard'
 import { DemoPanel } from './components/DemoPanel'
+import { GuidePage, ProjectPage, ProtocolsPage, WhyPsiPage } from './components/InfoPages'
 import { PracticalPanel } from './components/PracticalPanel'
-import { I18nProvider, useI18n, type Locale } from './i18n'
+import { I18nProvider } from './I18nProvider'
+import { useI18n, type Locale } from './i18n'
+
+const PAGES = ['console', 'why', 'guide', 'project', 'protocols'] as const
+type Page = typeof PAGES[number]
+
+function pageFromHash(): Page {
+  if (typeof window === 'undefined') return 'console'
+  const raw = window.location.hash.replace(/^#\/?/, '')
+  return PAGES.includes(raw as Page) ? (raw as Page) : 'console'
+}
 
 function LocaleSwitch() {
   const { locale, setLocale, t } = useI18n()
@@ -21,9 +32,80 @@ function LocaleSwitch() {
   )
 }
 
+function StatusDot({ tone, label, value }: { tone: 'ok' | 'warn' | 'bad'; label: string; value: string }) {
+  return (
+    <div className={'console-stat ' + tone}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  )
+}
+
+function ConsolePage({
+  status,
+  refresh,
+}: {
+  status: ClusterStatus | null
+  refresh: () => void
+}) {
+  const { t } = useI18n()
+  const runningParties = status?.parties.filter((p) => p.running).length ?? 0
+  const partyTotal = status?.num_parties ?? 0
+  const protocolCount = status?.protocols_available?.length ?? 0
+  const anyRunning = !!status && (status.dealer.running || status.parties.some((p) => p.running))
+
+  return (
+    <main className="console-page">
+      <section className="console-overview" aria-labelledby="console-overview-title">
+        <div className="console-overview-copy">
+          <span className="info-kicker">{t('console.kicker')}</span>
+          <h2 id="console-overview-title">{t('console.title')}</h2>
+          <p>{t('console.lead')}</p>
+        </div>
+        <div className="console-stat-grid" aria-label={t('console.statusSummary')}>
+          <StatusDot
+            tone={status?.built ? 'ok' : 'bad'}
+            label={t('console.stat.build')}
+            value={status?.built ? t('cluster.builtOk') : t('cluster.notBuilt')}
+          />
+          <StatusDot
+            tone={anyRunning ? 'ok' : 'warn'}
+            label={t('console.stat.cluster')}
+            value={anyRunning ? t('cluster.running') : t('cluster.stopped')}
+          />
+          <StatusDot
+            tone={runningParties === partyTotal && partyTotal > 0 ? 'ok' : runningParties > 0 ? 'warn' : 'bad'}
+            label={t('console.stat.parties')}
+            value={String(runningParties) + '/' + String(partyTotal)}
+          />
+          <StatusDot
+            tone={protocolCount > 0 ? 'ok' : 'warn'}
+            label={t('console.stat.protocols')}
+            value={protocolCount > 0 ? String(protocolCount) : t('console.stat.pending')}
+          />
+        </div>
+      </section>
+
+      <ClusterCard status={status} onChange={refresh} />
+
+      <section className="console-runner" aria-label={t('console.runner')}>
+        <Tabs
+          defaultActiveKey="demo"
+          leafAnimation
+          items={[
+            { key: 'demo',      label: t('tabs.demo'),      children: <DemoPanel onAfterRun={refresh} available={status?.protocols_available ?? null} /> },
+            { key: 'practical', label: t('tabs.practical'), children: <PracticalPanel available={status?.protocols_available ?? null} /> },
+          ]}
+        />
+      </section>
+    </main>
+  )
+}
+
 function Shell() {
   const { t } = useI18n()
   const [status, setStatus] = useState<ClusterStatus | null>(null)
+  const [page, setPageState] = useState<Page>(pageFromHash)
 
   const refresh = useCallback(async () => {
     try {
@@ -33,11 +115,36 @@ function Shell() {
     }
   }, [])
 
+  const setPage = useCallback((next: Page) => {
+    setPageState(next)
+    if (typeof window !== 'undefined') {
+      window.location.hash = next === 'console' ? '' : next
+    }
+  }, [])
+
   useEffect(() => {
+    if (page === 'protocols') {
+      refresh()
+      return
+    }
+    if (page !== 'console') return
     refresh()
     const id = setInterval(refresh, 3000)
     return () => clearInterval(id)
-  }, [refresh])
+  }, [page, refresh])
+
+  useEffect(() => {
+    const onHashChange = () => setPageState(pageFromHash())
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  const pageLabel = (icon: IconName, label: string) => (
+    <span className="page-tab-label">
+      <Icon name={icon} size={22} bounce />
+      <span>{label}</span>
+    </span>
+  )
 
   return (
     <>
@@ -62,14 +169,20 @@ function Shell() {
         </header>
         <div className="aii-guide-line" />
 
-        <ClusterCard status={status} onChange={refresh} />
-
         <Tabs
-          defaultActiveKey="demo"
+          activeKey={page}
+          onChange={(key) => setPage(key as Page)}
           leafAnimation
           items={[
-            { key: 'demo',      label: t('tabs.demo'),      children: <DemoPanel onAfterRun={refresh} available={status?.protocols_available ?? null} /> },
-            { key: 'practical', label: t('tabs.practical'), children: <PracticalPanel available={status?.protocols_available ?? null} /> },
+            {
+              key: 'console',
+              label: pageLabel('icon-miles', t('nav.console')),
+              children: <ConsolePage status={status} refresh={refresh} />,
+            },
+            { key: 'why', label: pageLabel('icon-chat', t('nav.why')), children: <WhyPsiPage /> },
+            { key: 'guide', label: pageLabel('icon-map', t('nav.guide')), children: <GuidePage /> },
+            { key: 'project', label: pageLabel('icon-helicopter', t('nav.project')), children: <ProjectPage /> },
+            { key: 'protocols', label: pageLabel('icon-critterpedia', t('nav.protocols')), children: <ProtocolsPage available={status?.protocols_available ?? null} /> },
           ]}
         />
 
@@ -92,7 +205,9 @@ function Shell() {
 export default function App() {
   return (
     <I18nProvider>
-      <Shell />
+      <Cursor>
+        <Shell />
+      </Cursor>
     </I18nProvider>
   )
 }
