@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button, Card, Input, Select, Switch, Divider, Collapse, Loading, Typewriter } from 'animal-island-ui'
+import { useEffect, useState } from 'react'
+import { Button, Card, Input, Select, Switch, Divider, Collapse, Loading, Icon } from 'animal-island-ui'
 import { api, type SubmitResult } from '../api'
 import { useI18n } from '../i18n'
 
@@ -37,20 +37,38 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
   const [err, setErr] = useState<string | null>(null)
   const [result, setResult] = useState<SubmitResult | null>(null)
 
+  const firstProtocol = protocolOptions[0]?.key
+  const selectedProtocolAvailable = protocolOptions.some((p) => p.key === protocol)
+  useEffect(() => {
+    if (firstProtocol && !selectedProtocolAvailable) setProtocol(firstProtocol)
+  }, [firstProtocol, selectedProtocolAvailable])
+
   // XZH26 is plain MPSI (intersection of all parties): threshold is always N.
   const isFullMpsi = protocol === 'xzh26_ec_mpsi'
+  const requiresEqualSizes = protocol === 'xzh26_ec_mpsi' || protocol === 'beh21_ot_mpsi'
   const effT = isFullMpsi ? n : t
+  const elementCount = elements.split(/[\n,]/).map((s) => s.trim()).filter(Boolean).length
 
   const submit = async () => {
-    setBusy(true); setErr(null); setResult(null)
+    setErr(null); setResult(null)
+    const els = elements.split(/[\n,]/).map((s) => s.trim()).filter(Boolean)
+    const numParties = parseInt(n, 10)
+    const threshold = parseInt(effT, 10)
+    if (!target.trim()) { setErr(tr('form.missingTarget')); return }
+    if (!leader.trim()) { setErr(tr('form.missingLeader')); return }
+    if (!selectedProtocolAvailable) { setErr(tr('form.protocolUnavailable')); return }
+    if (!Number.isFinite(numParties) || numParties < 2) { setErr(tr('form.invalidParties')); return }
+    if (!Number.isFinite(threshold) || threshold < 2 || threshold > numParties) { setErr(tr('form.invalidThreshold')); return }
+    if (els.length === 0) { setErr(tr('form.missingElements')); return }
+
+    setBusy(true)
     try {
-      const els = elements.split(/[\n,]/).map((s) => s.trim()).filter(Boolean)
       const body: Parameters<typeof api.submit>[0] = {
-        target, leader_address: leader, role,
+        target: target.trim(), leader_address: leader.trim(), role,
         elements: els,
         protocol,
-        num_parties: parseInt(n, 10),
-        threshold: parseInt(effT, 10),
+        num_parties: numParties,
+        threshold,
         tls,
       }
       if (tls) {
@@ -66,13 +84,26 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
   }
 
   return (
-    <Card type="default">
-      <div className="row" style={{ justifyContent: 'space-between' }}>
-        <h2 className="section-title">{tr('pr.title')}</h2>
-        <span className="pill warn">{tr('pr.oneOwner')}</span>
+    <Card type="default" className="runner-card practical-card">
+      <div className="panel-heading">
+        <div>
+          <span className="info-kicker">{tr('pr.kicker')}</span>
+          <h2 className="section-title">{tr('pr.title')}</h2>
+          <p>{tr('pr.lead')}</p>
+        </div>
+        <div className="runner-summary" aria-label={tr('pr.summary')}>
+          <span><Icon name="icon-miles" size={18} />{role === 'leader' ? tr('pr.role.leader') : tr('pr.role.member')}</span>
+          <span>{protocol}</span>
+          <span>{tr('pr.elementCount', { count: elementCount })}</span>
+        </div>
       </div>
       <Divider type="wave-yellow" />
-      <div className="row">
+      <div className="form-section">
+        <div className="form-section-head">
+          <strong>{tr('pr.endpointSection')}</strong>
+          <span>{tr('pr.oneOwner')}</span>
+        </div>
+      <div className="form-grid two-col">
         <label className="field grow">
           <span>{tr('pr.target')}</span>
           <Input value={target} disabled={busy} onChange={(e) => setTarget(e.target.value)} placeholder="host:port" />
@@ -82,8 +113,14 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
           <Input value={leader} disabled={busy} onChange={(e) => setLeader(e.target.value)} placeholder="host:port" />
         </label>
       </div>
-      <div className="row">
-        <label className="field" style={{ width: 160 }}>
+      </div>
+      <div className="form-section">
+        <div className="form-section-head">
+          <strong>{tr('pr.protocolSection')}</strong>
+          <span>{requiresEqualSizes ? tr('demo.equalSizeBadge') : tr('demo.thresholdBadge')}</span>
+        </div>
+      <div className="form-grid practical-form-grid">
+        <label className="field compact">
           <span>{tr('pr.role')}</span>
           <Select
             options={ROLES}
@@ -103,12 +140,13 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
           {missingProtocols.length > 0 && (
             <small>{tr('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
           )}
+          {requiresEqualSizes && <small>{tr('protocol.equalSizeHint')}</small>}
         </label>
-        <label className="field" style={{ width: 100 }}>
+        <label className="field compact">
           <span>N</span>
           <Input value={n} disabled={busy} onChange={(e) => setN(e.target.value.replace(/\D/g, ''))} />
         </label>
-        <label className="field" style={{ width: 100 }}>
+        <label className="field compact">
           <span>t</span>
           <Input
             value={effT}
@@ -117,8 +155,12 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
           />
         </label>
       </div>
-      <label className="field">
-        <span>{tr('pr.elements')}</span>
+      </div>
+      <label className="field element-editor">
+        <span className="field-title-row">
+          <span>{tr('pr.elements')}</span>
+          <span className="pill">{tr('pr.elementCount', { count: elementCount })}</span>
+        </span>
         <textarea
           className="aii-textarea"
           value={elements}
@@ -132,10 +174,11 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
         disabled={busy}
         answer={
           <div className="col">
-            <div className="row">
-              <label className="field" style={{ width: 160 }}>
+            <div className="form-grid tls-grid">
+              <label className="toggle-card field">
                 <span>{tr('pr.mtls.use')}</span>
                 <Switch checked={tls} onChange={setTls} disabled={busy} />
+                <small>{tls ? tr('cluster.mtlsOn') : tr('cluster.mtlsOff')}</small>
               </label>
             </div>
             {tls && (
@@ -174,7 +217,7 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
       />
 
       <Divider />
-      <div className="row">
+      <div className="action-row">
         <Button type="primary" size="large" loading={busy} onClick={submit}>
           {tr('pr.submit')}
         </Button>
@@ -198,14 +241,16 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
       {result && (
         <>
           <Divider type="line-teal" />
-          <Card color="app-green">
-            <strong>{tr('pr.status')}:</strong> {result.status || tr('demo.party.empty')}
-            <br />
-            <strong>{tr('pr.intersection')} ({result.intersection.length}):</strong>{' '}
-            <Typewriter speed={25} trigger={result.intersection.join(',')}>
+          <div className="result-overview practical-result">
+            <div>
+              <span>{tr('pr.status')}</span>
+              <strong>{result.status || tr('demo.party.empty')}</strong>
+            </div>
+            <div>
+              <span>{tr('pr.intersection')} ({result.intersection.length})</span>
               <code>{result.intersection.join(', ') || tr('demo.party.empty')}</code>
-            </Typewriter>
-          </Card>
+            </div>
+          </div>
         </>
       )}
     </Card>

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button, Card, Input, Select, Switch, Divider, Typewriter, Loading } from 'animal-island-ui'
+import { useEffect, useState } from 'react'
+import { Button, Card, Input, Select, Switch, Divider, Loading, Icon } from 'animal-island-ui'
 import { api, type DemoResult } from '../api'
 import { useI18n } from '../i18n'
 
@@ -37,10 +37,18 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
   const [err, setErr] = useState<string | null>(null)
   const [result, setResult] = useState<DemoResult | null>(null)
 
+  const firstProtocol = protocolOptions[0]?.key
+  const selectedProtocolAvailable = protocolOptions.some((p) => p.key === protocol)
+  useEffect(() => {
+    if (firstProtocol && !selectedProtocolAvailable) setProtocol(firstProtocol)
+  }, [firstProtocol, selectedProtocolAvailable])
+
   // XZH26 is plain MPSI (intersection of all parties), so the threshold is
   // always N — lock the field and feed N through instead of t.
   const isFullMpsi = protocol === 'xzh26_ec_mpsi'
+  const requiresEqualSizes = protocol === 'xzh26_ec_mpsi' || protocol === 'beh21_ot_mpsi'
   const effT = isFullMpsi ? n : t
+  const inputCount = inputs.reduce((sum, row) => sum + row.length, 0)
 
   const loadDefaults = async (overrideSizes?: number[]) => {
     const N = Math.max(2, parseInt(n, 10) || 2)
@@ -74,11 +82,18 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
   }
 
   const run = async () => {
-    setBusy(true); setErr(null); setResult(null)
+    setErr(null); setResult(null)
+    const numParties = parseInt(n, 10)
+    const threshold = parseInt(effT, 10)
+    if (!selectedProtocolAvailable) { setErr(tr('form.protocolUnavailable')); return }
+    if (!Number.isFinite(numParties) || numParties < 2) { setErr(tr('form.invalidParties')); return }
+    if (!Number.isFinite(threshold) || threshold < 2 || threshold > numParties) { setErr(tr('form.invalidThreshold')); return }
+
+    setBusy(true)
     try {
       const body: Parameters<typeof api.demo>[0] = {
-        num_parties: parseInt(n, 10),
-        threshold: parseInt(effT, 10),
+        num_parties: numParties,
+        threshold,
         protocol,
         auto_cluster: autoCluster,
       }
@@ -99,12 +114,27 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
   }
 
   return (
-    <Card type="default">
-      <div className="row" style={{ justifyContent: 'space-between' }}>
-        <h2 className="section-title">{tr('demo.title')}</h2>
+    <Card type="default" className="runner-card demo-card">
+      <div className="panel-heading">
+        <div>
+          <span className="info-kicker">{tr('demo.kicker')}</span>
+          <h2 className="section-title">{tr('demo.title')}</h2>
+          <p>{tr('demo.lead')}</p>
+        </div>
+        <div className="runner-summary" aria-label={tr('demo.summary')}>
+          <span><Icon name="icon-variant" size={18} />{protocol}</span>
+          <span>N={n}</span>
+          <span>t={effT}</span>
+          <span>{autoCluster ? tr('demo.autoCluster.on') : tr('demo.autoCluster.off')}</span>
+        </div>
       </div>
       <Divider type="wave-yellow" />
-      <div className="row">
+      <div className="form-section">
+        <div className="form-section-head">
+          <strong>{tr('demo.setup')}</strong>
+          <span>{requiresEqualSizes ? tr('demo.equalSizeBadge') : tr('demo.thresholdBadge')}</span>
+        </div>
+      <div className="form-grid demo-form-grid">
         <label className="field grow">
           <span>{tr('demo.protocol')}</span>
           <Select
@@ -116,15 +146,16 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
           {missingProtocols.length > 0 && (
             <small>{tr('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
           )}
+          {requiresEqualSizes && <small>{tr('protocol.equalSizeHint')}</small>}
         </label>
-        <label className="field" style={{ width: 110 }}>
+        <label className="field compact">
           <span>{tr('demo.n')}</span>
           <Input value={n} disabled={busy} onChange={(e) => {
             const x = e.target.value.replace(/\D/g, '')
             setN(x); if (parseInt(t, 10) > (parseInt(x, 10) || 0)) setT(x)
           }} />
         </label>
-        <label className="field" style={{ width: 130 }}>
+        <label className="field compact">
           <span>{tr('demo.t')}</span>
           <Input
             value={effT}
@@ -134,13 +165,14 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
           {isFullMpsi && <small>{tr('demo.t.lockedMpsi')}</small>}
         </label>
       </div>
-      <div className="row" style={{ marginTop: 8 }}>
-        <label className="field" style={{ width: 220 }}>
+      </div>
+      <div className="toggle-grid">
+        <label className="toggle-card field">
           <span>{tr('demo.autoCluster')}</span>
           <Switch checked={autoCluster} onChange={setAutoCluster} disabled={busy} />
           <small>{tr('demo.autoCluster.hint')}</small>
         </label>
-        <label className="field" style={{ width: 220 }}>
+        <label className="toggle-card field">
           <span>{tr('demo.customize')}</span>
           <Switch checked={customize} onChange={toggleCustomize} disabled={busy} />
           <small>{tr('demo.customize.hint')}</small>
@@ -151,16 +183,21 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
         <>
           <Divider type="line-yellow" />
           <div className="col">
-            <p className="section-title" style={{ fontSize: 14 }}>
-              {tr('demo.perParty')}
-            </p>
+            <div className="editor-heading">
+              <div>
+                <strong>{tr('demo.inputEditor')}</strong>
+                <p>{tr('demo.perParty')}</p>
+              </div>
+              <span className="pill">{tr('demo.inputCount', { count: inputCount })}</span>
+            </div>
+            <div className="input-editor-grid">
             {inputs.map((row, i) => (
-              <div key={i} className="col" style={{ gap: 6 }}>
+              <div key={i} className="party-input-card">
                 <div className="row tight" style={{ justifyContent: 'space-between' }}>
-                  <strong style={{ fontSize: 13 }}>{tr('demo.party')} {i}</strong>
-                  <label className="row tight" style={{ alignItems: 'center', fontSize: 13 }}>
+                  <strong>{tr('demo.party')} {i}</strong>
+                  <label className="row tight inline-size-field">
                     <span>{tr('demo.size')}</span>
-                    <span style={{ width: 90 }}>
+                    <span>
                       <Input
                         value={String(row.length)}
                         disabled={busy}
@@ -187,6 +224,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
                 />
               </div>
             ))}
+            </div>
             <Button type="dashed" size="small" disabled={busy} onClick={() => loadDefaults()}>
               {tr('demo.reset')}
             </Button>
@@ -195,7 +233,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
       )}
 
       <Divider />
-      <div className="row">
+      <div className="action-row">
         <Button type="primary" size="large" loading={busy} onClick={run}>
           {tr('demo.run')}
         </Button>
@@ -230,12 +268,16 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
               <span className="pill">N={result.num_parties} t={result.threshold}</span>
               <span className="pill ok">{tr('demo.leader')}: {result.leader_address}</span>
             </div>
-            <Card color="app-yellow">
-              <strong>{tr('demo.expected')}</strong> ({result.expected.length}):{' '}
-              <Typewriter speed={20} trigger={result.expected.join(',')}>
+            <div className="result-overview">
+              <div>
+                <span>{tr('demo.resultStatus')}</span>
+                <strong>{result.success ? tr('demo.success') : tr('demo.failed')}</strong>
+              </div>
+              <div>
+                <span>{tr('demo.expected')} ({result.expected.length})</span>
                 <code>{result.expected.join(', ') || tr('demo.party.empty')}</code>
-              </Typewriter>
-            </Card>
+              </div>
+            </div>
             <div className="party-grid">
               {result.parties.map((p, i) => (
                 <Card
@@ -261,9 +303,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
                         </div>
                         <div style={{ marginTop: 6 }}>
                           {tr('demo.party.intersection')} ({p.intersection.length}):
-                          <Typewriter speed={25} trigger={p.intersection.join(',')}>
-                            <code>{p.intersection.join(', ') || tr('demo.party.empty')}</code>
-                          </Typewriter>
+                          <code>{p.intersection.join(', ') || tr('demo.party.empty')}</code>
                         </div>
                       </>
                     )}
