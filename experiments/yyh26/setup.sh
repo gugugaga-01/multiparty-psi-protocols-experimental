@@ -19,32 +19,33 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR"
+PATCH_DIR="$SCRIPT_DIR/patches"
+
+apply_submodule_patch() {
+    local submodule="$1"
+    local patch_file="$2"
+    local label="$3"
+    local patch_path="$PATCH_DIR/$patch_file"
+
+    if git -C "$submodule" apply --reverse --check --whitespace=nowarn "$patch_path" >/dev/null 2>&1; then
+        echo "  $label already applied"
+    elif git -C "$submodule" apply --check --whitespace=nowarn "$patch_path" >/dev/null 2>&1; then
+        git -C "$submodule" apply --whitespace=nowarn "$patch_path"
+        echo "  Applied $label"
+    else
+        echo "  ERROR: $label patch does not apply cleanly" >&2
+        echo "  Check $patch_path and the state of $submodule" >&2
+        exit 1
+    fi
+}
 
 echo "=== Step 1: Initialise submodules ==="
 git submodule update --init --recursive
 
 echo ""
 echo "=== Step 2: Patch upstream for modern compilers ==="
-
-# Patch 1: boost::asio::strand became a class template in Boost 1.70.
-# Replace with boost::asio::io_service::strand which works across all versions.
-SOCKET_H="upstream/cryptoTools/Network/BtSocket.h"
-if grep -q 'boost::asio::strand mSendStrand' "$SOCKET_H"; then
-    sed -i 's/boost::asio::strand mSendStrand/boost::asio::io_service::strand mSendStrand/' "$SOCKET_H"
-    echo "  Patched $SOCKET_H (Boost strand)"
-else
-    echo "  $SOCKET_H already patched"
-fi
-
-# Patch 2: std::random_shuffle was removed in GCC 13+ / C++17.
-# These calls shuffle begin-to-begin (no-op), so comment them out.
-AKN_FILE="upstream/libOTe/NChooseK/AknOtReceiver.cpp"
-if grep -q 'std::random_shuffle' "$AKN_FILE"; then
-    sed -i 's/std::random_shuffle/\/\/std::random_shuffle/' "$AKN_FILE"
-    echo "  Patched $AKN_FILE (random_shuffle)"
-else
-    echo "  $AKN_FILE already patched"
-fi
+apply_submodule_patch "upstream" "upstream-modern-build.patch" \
+    "upstream modern compiler compatibility"
 
 echo ""
 echo "=== Step 3: Build miracl ==="
@@ -72,53 +73,11 @@ echo "=== Step 4: Build upstream (cryptoTools + libOTe) ==="
 
 echo ""
 echo "=== Step 5: Patch and build libOLE ==="
+apply_submodule_patch "libOLE" "libOLE-modern-build.patch" \
+    "libOLE namespace and build compatibility"
+chmod +x libOLE/src/lib/bigint/run-testsuite
 
-# Patch 3: Rename osuCrypto -> osuCryptoNew in libOLE's cryptoTools and source.
-# This avoids namespace collisions with the OPPRF cryptoTools (upstream).
-if grep -qP 'namespace osuCrypto\r?$' libOLE/third_party/cryptoTools/cryptoTools/Common/Timer.h 2>/dev/null; then
-    echo "  Renaming osuCrypto -> osuCryptoNew in libOLE..."
-    find libOLE/third_party/cryptoTools/cryptoTools/ libOLE/src/lib/ libOLE/src/demo/ \
-        -type f \( -name "*.h" -o -name "*.cpp" -o -name "*.c" \) \
-        -exec sed -i 's/osuCrypto/osuCryptoNew/g' {} +
-    echo "  Namespace rename done"
-else
-    echo "  Namespace already renamed"
-fi
-
-# Patch 4: Add missing #include <stdexcept> to libOLE's Timer.h (GCC 13+).
-TIMER_H="libOLE/third_party/cryptoTools/cryptoTools/Common/Timer.h"
-if ! grep -q '<stdexcept>' "$TIMER_H" 2>/dev/null; then
-    sed -i '/<string>/a #include <stdexcept>' "$TIMER_H"
-    echo "  Patched $TIMER_H (stdexcept)"
-else
-    echo "  $TIMER_H already patched"
-fi
-
-# Patch 5: Fix #include paths in libOLE source files to use relative paths
-# to libOLE's own cryptoTools (not the OPPRF one via include path).
-for f in libOLE/src/lib/pke/gazelle-network.h libOLE/src/lib/pke/ole.h \
-         libOLE/src/lib/math/distributiongenerator.h libOLE/src/lib/math/distributiongenerator.cpp; do
-    if grep -q '#include <cryptoTools/' "$f" 2>/dev/null; then
-        sed -i 's|#include <cryptoTools/\(.*\)>|#include "../../../third_party/cryptoTools/cryptoTools/\1"|' "$f"
-        echo "  Patched $f (include paths)"
-    fi
-done
-
-# Patch 6: Qualify Channel& as osuCryptoNew::Channel& in libOLE headers
-# to avoid ambiguity with osuCrypto::Channel from OPPRF.
-for f in libOLE/src/lib/pke/gazelle-network.h libOLE/src/lib/pke/ole.h; do
-    if grep -qP '(?<!:)(?<!New::)Channel& chl' "$f" 2>/dev/null; then
-        # Only replace unqualified Channel& (not already prefixed with ::)
-        sed -i 's/\([^:]\)Channel& chl/\1osuCryptoNew::Channel\& chl/g' "$f"
-        # Handle line-start case
-        sed -i 's/^Channel& chl/osuCryptoNew::Channel\& chl/g' "$f"
-        echo "  Patched $f (qualified Channel)"
-    else
-        echo "  $f already patched (Channel)"
-    fi
-done
-
-# Patch 7: Symlink upstream miracl for libOLE's linker.
+# Symlink upstream miracl for libOLE's linker.
 MIRACL_TARGET="libOLE/third_party/cryptoTools/thirdparty/linux/miracl/miracl/source"
 if [ ! -f "$MIRACL_TARGET/libmiracl.a" ]; then
     mkdir -p "$MIRACL_TARGET"

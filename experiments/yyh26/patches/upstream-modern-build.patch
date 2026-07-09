@@ -1,0 +1,35 @@
+diff --git a/cryptoTools/Network/BtSocket.h b/cryptoTools/Network/BtSocket.h
+index 6487d66269b48ac74d22d039825fe266b9566a40..a8cd299a725c3e47c052eece44c1ae92ffd58be3 100644
+--- a/cryptoTools/Network/BtSocket.h
++++ b/cryptoTools/Network/BtSocket.h
+@@ -71,7 +71,7 @@ namespace osuCrypto {
+         BtSocket(BtIOService& ios);
+ 
+         boost::asio::ip::tcp::socket mHandle;
+-        boost::asio::strand mSendStrand, mRecvStrand;
++        boost::asio::io_service::strand mSendStrand, mRecvStrand;
+ 
+         std::deque<BoostIOOperation> mSendQueue, mRecvQueue;
+         bool mStopped;
+diff --git a/libOTe/NChooseK/AknOtReceiver.cpp b/libOTe/NChooseK/AknOtReceiver.cpp
+index 74d405cd18c015be32689912b46fc9248d2b436a..21ba06fac53f2282b2ad898ec755ea7ea510554c 100644
+--- a/libOTe/NChooseK/AknOtReceiver.cpp
++++ b/libOTe/NChooseK/AknOtReceiver.cpp
+@@ -245,7 +245,7 @@ namespace osuCrypto
+                     //memcpy(iter, threadsZeroOnesList[i][1].data(), threadsZeroOnesList[i][1].size() * sizeof(u64));
+                     iter += threadsZeroOnesList[i][1].size();
+                 }
+-                std::random_shuffle(mOnes.begin(), mOnes.begin(), prng);
++                //////////std::random_shuffle(mOnes.begin(), mOnes.begin(), prng);
+ 
+             }
+             
+@@ -272,7 +272,7 @@ namespace osuCrypto
+                     iter += threadsZeroOnesList[i][0].size();
+                 }
+ 
+-                std::random_shuffle(mZeros.begin(), mZeros.begin(), prng);
++                //////////std::random_shuffle(mZeros.begin(), mZeros.begin(), prng);
+             }
+         };
+ 
