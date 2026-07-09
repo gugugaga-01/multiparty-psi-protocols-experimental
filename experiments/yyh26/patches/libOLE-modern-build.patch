@@ -1,0 +1,1954 @@
+diff --git a/README.md b/README.md
+index 7757f1eceec51c900cc4bd53f9d14a4e8fb07086..6dfaf52e903471677667473f5395da292f2ec22b 100644
+--- a/README.md
++++ b/README.md
+@@ -1,3 +1,5 @@
+ # WAHC VOLE and BOLE
+ 
+-TODO: write instructions to build the library.
++Git submodule pointing to [leodec/ole_wahc](https://github.com/leodec/ole_wahc). Provides the Gazelle-based OLE implementation used by YYH26's BFV BOLE phase.
++
++Building is handled automatically by `experiments/yyh26/setup.sh`. See [the YYH26 README](../README.md) for details.
+diff --git a/src/demo/ole/bole-class.cpp b/src/demo/ole/bole-class.cpp
+index 7ba30e8afb1615446d1eaeb3add30c17623ce183..7d7ddcc3500705d3d24f94a5a137e747e33fc9bd 100644
+--- a/src/demo/ole/bole-class.cpp
++++ b/src/demo/ole/bole-class.cpp
+@@ -23,7 +23,7 @@
+ #include "utils/debug.h"
+ 
+ using namespace lbcrypto;
+-using namespace osuCrypto;
++using namespace osuCryptoNew;
+ 
+ string addr = "localhost";
+ uint32_t port = 9090;
+diff --git a/src/demo/ole/vole-class.cpp b/src/demo/ole/vole-class.cpp
+index 10be198dc21679f124970c87204928bbab630ef4..b04ee6b7e49d987cccf9bbc72cbf8d36f81c290f 100644
+--- a/src/demo/ole/vole-class.cpp
++++ b/src/demo/ole/vole-class.cpp
+@@ -23,7 +23,7 @@
+ #include "utils/debug.h"
+ 
+ using namespace lbcrypto;
+-using namespace osuCrypto;
++using namespace osuCryptoNew;
+ 
+ std::string addr = "localhost";
+ uint32_t port = 9090;
+diff --git a/src/demo/test/test-network.cpp b/src/demo/test/test-network.cpp
+index 695a8da6023a3b23bbeb1032d467c8e38c51e775..113183b583b45ee5c514687d863e99e660ba7aca 100644
+--- a/src/demo/test/test-network.cpp
++++ b/src/demo/test/test-network.cpp
+@@ -21,7 +21,7 @@
+ #include "utils/debug.h"
+ 
+ using namespace lbcrypto;
+-using namespace osuCrypto;
++using namespace osuCryptoNew;
+ 
+ const std::string addr = "localhost";
+ // const std::string addr = "18.204.1.19";
+diff --git a/src/demo/test/test_bfv.cpp b/src/demo/test/test_bfv.cpp
+index 7aa54b4dfb5c6d7a0b885c5e6ff1c4044a6fc4f2..62dfe3f0ec91fef5b22db0e9c9026005e951a1c1 100644
+--- a/src/demo/test/test_bfv.cpp
++++ b/src/demo/test/test_bfv.cpp
+@@ -11,7 +11,7 @@
+ 
+ using namespace std;
+ using namespace lbcrypto;
+-using namespace osuCrypto;
++using namespace osuCryptoNew;
+ 
+ template <typename BFV_Scheme_Type>
+ void test_sk_enc_dec(const BFV_Scheme_Type& scheme, const bool verbose = false, const ui32 trials = 100) {
+diff --git a/src/lib/math/discretegaussiangenerator.h b/src/lib/math/discretegaussiangenerator.h
+index fade0046865630b976924d5a883d93777170c5ef..732d52d8838ecd8bedadb56c8b38b42a06220451 100644
+--- a/src/lib/math/discretegaussiangenerator.h
++++ b/src/lib/math/discretegaussiangenerator.h
+@@ -72,7 +72,7 @@ namespace lbcrypto {
+             constexpr ui32 phim = RingType::phim;
+             std::uniform_real_distribution<double> distribution(0.0, 1.0);
+             auto& prng = get_prng();
+-            // osuCrypto::PRNG prng(osuCrypto::sysRandomSeed(), 256);
++            // osuCryptoNew::PRNG prng(osuCryptoNew::sysRandomSeed(), 256);
+             for (ui32 i = 0; i < phim; i++) {
+                 double seed = distribution(prng) - 0.5;
+                 if (std::abs(seed) <= m_a / 2) {
+@@ -100,7 +100,7 @@ namespace lbcrypto {
+             constexpr ui32 phim = RingType::phim;
+             std::uniform_real_distribution<double> distribution(0.0, 1.0);
+             auto& prng = get_prng();
+-            // osuCrypto::PRNG prng(osuCrypto::sysRandomSeed(), 256);
++            // osuCryptoNew::PRNG prng(osuCryptoNew::sysRandomSeed(), 256);
+             for (ui32 i = 0; i < phim; i++) {
+                 double seed = distribution(prng) - 0.5;
+                 if (std::abs(seed) <= m_a / 2) {
+diff --git a/src/lib/math/distributiongenerator.cpp b/src/lib/math/distributiongenerator.cpp
+index 39612d15aff48ec436b4394af94d53f41213793b..126dd2b70e1198e3c42f22bf6f06c13cdc128ecb 100644
+--- a/src/lib/math/distributiongenerator.cpp
++++ b/src/lib/math/distributiongenerator.cpp
+@@ -7,15 +7,15 @@
+  */
+ 
+ #include "distributiongenerator.h"
+-#include <cryptoTools/Crypto/PRNG.h>
++#include "../../../third_party/cryptoTools/cryptoTools/Crypto/PRNG.h"
+ #include <random>
+ 
+ namespace lbcrypto {
+ 
+-    // thread_local osuCrypto::PRNG aes128_engine::m_prng(_mm_setzero_si128(), 256);
+-    thread_local osuCrypto::PRNG aes128_engine::m_prng(osuCrypto::sysRandomSeed(), 256);
++    // thread_local osuCryptoNew::PRNG aes128_engine::m_prng(_mm_setzero_si128(), 256);
++    thread_local osuCryptoNew::PRNG aes128_engine::m_prng(osuCryptoNew::sysRandomSeed(), 256);
+ 
+-    osuCrypto::PRNG aes128_zero_engine::m_prng(osuCrypto::ZeroBlock, 256);
++    osuCryptoNew::PRNG aes128_zero_engine::m_prng(osuCryptoNew::ZeroBlock, 256);
+ 
+     aes128_engine& get_prng(){
+         // C++11 thread-safe static initialization
+@@ -37,7 +37,7 @@ namespace lbcrypto {
+ 
+     uv64 get_bug_vector (const ui32 size) {
+         auto& prng = get_prng();
+-        // osuCrypto::PRNG prng(osuCrypto::sysRandomSeed(), 256);
++        // osuCryptoNew::PRNG prng(osuCryptoNew::sysRandomSeed(), 256);
+         auto distribution = std::uniform_int_distribution<ui64>(0, 1);
+ 
+         uv64 v(size);
+@@ -49,7 +49,7 @@ namespace lbcrypto {
+ 
+     uv64 get_tug_vector (const ui32 size, const ui64 modulus) {
+         auto& prng = get_prng();
+-        // osuCrypto::PRNG prng(osuCrypto::sysRandomSeed(), 256);
++        // osuCryptoNew::PRNG prng(osuCryptoNew::sysRandomSeed(), 256);
+         auto distribution = std::uniform_int_distribution<si32>(-1,1);
+         ui64 minus1 = modulus - 1;
+         uv64 v(size);
+@@ -121,43 +121,43 @@ namespace lbcrypto {
+     }
+ 
+ 
+-    template void get_dug_array_from_seed(ui64 * x, const ui32 size, const osuCrypto::block seed, const ui64 modulus);
+-    template void get_dug_array_from_seed(ui32 * x, const ui32 size, const osuCrypto::block seed, const ui32 modulus);
++    template void get_dug_array_from_seed(ui64 * x, const ui32 size, const osuCryptoNew::block seed, const ui64 modulus);
++    template void get_dug_array_from_seed(ui32 * x, const ui32 size, const osuCryptoNew::block seed, const ui32 modulus);
+ 
+     template <typename T>
+-    void get_dug_array_from_seed(T * x, const ui32 size, const osuCrypto::block seed, const T modulus) {
+-        osuCrypto::PRNG prng(seed);
++    void get_dug_array_from_seed(T * x, const ui32 size, const osuCryptoNew::block seed, const T modulus) {
++        osuCryptoNew::PRNG prng(seed);
+         auto distribution = std::uniform_int_distribution<T>(0, modulus-1);
+ 
+         for (ui32 i = 0; i < size; i++)
+             x[i] = distribution(prng);
+     }
+ 
+-    // template void get_dug_array_from_prng(ui64 * x, const ui32 size, const osuCrypto::PRNG prng, const ui64 modulus);
+-    // template void get_dug_array_from_prng(ui32 * x, const ui32 size, const osuCrypto::PRNG prng, const ui32 modulus);
++    // template void get_dug_array_from_prng(ui64 * x, const ui32 size, const osuCryptoNew::PRNG prng, const ui64 modulus);
++    // template void get_dug_array_from_prng(ui32 * x, const ui32 size, const osuCryptoNew::PRNG prng, const ui32 modulus);
+ 
+     // template <typename T>
+-    // void get_dug_array_from_prng(T * x, const ui32 size, const osuCrypto::PRNG prng, const T modulus) {
++    // void get_dug_array_from_prng(T * x, const ui32 size, const osuCryptoNew::PRNG prng, const T modulus) {
+     //     auto distribution = std::uniform_int_distribution<T>(0, modulus-1);
+     //     for (ui32 i = 0; i < size; i++)
+     //         x[i] = distribution(prng);
+     // }
+ 
+ 
+-    template void get_dug_array_from_seed_parallel(ui64 * x, const ui32 size, const osuCrypto::block seed, const ui64 modulus);
+-    template void get_dug_array_from_seed_parallel(ui32 * x, const ui32 size, const osuCrypto::block seed, const ui32 modulus);
++    template void get_dug_array_from_seed_parallel(ui64 * x, const ui32 size, const osuCryptoNew::block seed, const ui64 modulus);
++    template void get_dug_array_from_seed_parallel(ui32 * x, const ui32 size, const osuCryptoNew::block seed, const ui32 modulus);
+ 
+     template <typename T>
+-    void get_dug_array_from_seed_parallel(T * x, const ui32 size, const osuCrypto::block seed, const T modulus) {
++    void get_dug_array_from_seed_parallel(T * x, const ui32 size, const osuCryptoNew::block seed, const T modulus) {
+         constexpr ui32 numGens = 8;
+         ASSERT_DEBUG(size >= numGens);
+         ASSERT_DEBUG(size % numGens == 0);
+-        // osuCrypto::PRNG prng(seed);
++        // osuCryptoNew::PRNG prng(seed);
+         // auto distribution = std::uniform_int_distribution<T>(0, modulus-1);
+-        std::vector<osuCrypto::PRNG> prngs; prngs.reserve(numGens);
++        std::vector<osuCryptoNew::PRNG> prngs; prngs.reserve(numGens);
+         std::vector<std::uniform_int_distribution<T>> dists; dists.reserve(numGens);
+         for (ui32 i = 0; i < numGens; i++) {
+-            prngs.push_back(osuCrypto::PRNG(seed+osuCrypto::toBlock(i)));
++            prngs.push_back(osuCryptoNew::PRNG(seed+osuCryptoNew::toBlock(i)));
+             dists.push_back(std::uniform_int_distribution<T>(0, modulus-1));
+         }
+ 
+diff --git a/src/lib/math/distributiongenerator.h b/src/lib/math/distributiongenerator.h
+index f98a5f2b16ec6c3fd98604b9908ec85ccad8da31..a20143754928400ca795280b3686cd40df4997d1 100644
+--- a/src/lib/math/distributiongenerator.h
++++ b/src/lib/math/distributiongenerator.h
+@@ -18,15 +18,15 @@
+ 
+ #include "utils/backend.h"
+ #include <random>
+-#include <cryptoTools/Common/Defines.h>
+-#include <cryptoTools/Crypto/PRNG.h>
++#include "../../../third_party/cryptoTools/cryptoTools/Common/Defines.h"
++#include "../../../third_party/cryptoTools/cryptoTools/Crypto/PRNG.h"
+ 
+ namespace lbcrypto {
+ 
+     // AES Engine
+     struct aes128_engine {
+     private:
+-        static thread_local osuCrypto::PRNG m_prng;
++        static thread_local osuCryptoNew::PRNG m_prng;
+ 
+     public:
+         aes128_engine(){};
+@@ -41,7 +41,7 @@ namespace lbcrypto {
+     // AES Engine
+     struct aes128_zero_engine {
+     private:
+-        static osuCrypto::PRNG m_prng;
++        static osuCryptoNew::PRNG m_prng;
+ 
+     public:
+         aes128_zero_engine(){};
+@@ -53,7 +53,7 @@ namespace lbcrypto {
+         result_type operator()();
+ 
+         static void reset_prng() {
+-            m_prng.SetSeed(osuCrypto::ZeroBlock, 256);
++            m_prng.SetSeed(osuCryptoNew::ZeroBlock, 256);
+         };
+     };
+ 
+@@ -83,13 +83,13 @@ namespace lbcrypto {
+     void get_dug_array_128(ui128 * x, const ui32 size, const ui128 modulus);
+ 
+     template <typename T>
+-    void get_dug_array_from_seed(T * x, const ui32 size, const osuCrypto::block seed, const T modulus);
++    void get_dug_array_from_seed(T * x, const ui32 size, const osuCryptoNew::block seed, const T modulus);
+ 
+     // template <typename T>
+-    // void get_dug_array_from_prng(T * x, const ui32 size, const osuCrypto::PRNG prng, const T modulus);
++    // void get_dug_array_from_prng(T * x, const ui32 size, const osuCryptoNew::PRNG prng, const T modulus);
+ 
+     template <typename T>
+-    void get_dug_array_from_seed_parallel(T * x, const ui32 size, const osuCrypto::block seed, const T modulus);
++    void get_dug_array_from_seed_parallel(T * x, const ui32 size, const osuCryptoNew::block seed, const T modulus);
+ 
+     template <typename T>
+     std::vector<T> get_dgg_testvector(ui32 size, T p, float std_dev = 40.0);
+diff --git a/src/lib/math/poly.h b/src/lib/math/poly.h
+index c8f7d4b272be41d4e727da6acd77a70ac797481b..19ef5c249f61115523b4cc611a1d5866668fd59e 100644
+--- a/src/lib/math/poly.h
++++ b/src/lib/math/poly.h
+@@ -535,7 +535,7 @@ namespace lbcrypto {
+                 std::copy(a, a+phim, vals[i]);
+         };
+ 
+-        DCRTPoly(const osuCrypto::block seed) {
++        DCRTPoly(const osuCryptoNew::block seed) {
+             // if (phim < 8)
+                 for (ui32 i = 0; i < numLimbs; i++)
+                     get_dug_array_from_seed(vals[i], phim, seed, RingType::getModulus(i));
+@@ -544,7 +544,7 @@ namespace lbcrypto {
+                     // get_dug_array_from_seed_parallel(vals[i], phim, seed, RingType::getModulus(i));
+         };
+ 
+-        DCRTPoly(const osuCrypto::PRNG prng) {
++        DCRTPoly(const osuCryptoNew::PRNG prng) {
+             for (ui32 i = 0; i < numLimbs; i++)
+                 get_dug_array_from_prng(vals[i], phim, prng, RingType::getModulus(i));
+         };
+diff --git a/src/lib/pke/bfv.h b/src/lib/pke/bfv.h
+index e94dc47e689fe468b006cc73342bb90cf7224317..3fe734d5e7aca51211bf01708947149dd4e47e11 100644
+--- a/src/lib/pke/bfv.h
++++ b/src/lib/pke/bfv.h
+@@ -197,7 +197,7 @@ namespace lbcrypto {
+             return result;
+         };
+ 
+-        KeyPairSeeded KeyGenSeeded(const bool useSeed = false, const osuCrypto::block& seed = osuCrypto::ZeroBlock) const {
++        KeyPairSeeded KeyGenSeeded(const bool useSeed = false, const osuCryptoNew::block& seed = osuCryptoNew::ZeroBlock) const {
+             KeyPairSeeded result;
+ 
+             SecretKey& sk = result.sk;
+@@ -209,7 +209,7 @@ namespace lbcrypto {
+             PublicKeySeeded& pk = result.pkSeeded;
+             
+             if (useSeed) pk.seed = seed;
+-            else pk.seed = osuCrypto::sysRandomSeed();
++            else pk.seed = osuCryptoNew::sysRandomSeed();
+ 
+             DCRTPoly a = DCRTPoly(pk.seed);
+             sample_error(pk.b);
+@@ -330,7 +330,7 @@ namespace lbcrypto {
+ 
+         SeededCiphertext EncryptSeeded(const SecretKey& sk, const DCRTPoly& pt) const {
+             SeededCiphertext result;
+-            result.seed = osuCrypto::sysRandomSeed();
++            result.seed = osuCryptoNew::sysRandomSeed();
+             // DCRTPoly a(result.seed);
+             DCRTPoly a;
+             // #pragma omp task default(shared)
+diff --git a/src/lib/pke/gazelle-network.h b/src/lib/pke/gazelle-network.h
+index 7a82edde46271628dfd76768272d888a815f9c7a..2e3099f89862709338521490773ba3e3366cfafc 100644
+--- a/src/lib/pke/gazelle-network.h
++++ b/src/lib/pke/gazelle-network.h
+@@ -5,12 +5,12 @@
+ #ifndef LBCRYPTO_GAZELLE_NETWORK_H
+ #define LBCRYPTO_GAZELLE_NETWORK_H
+ 
+-#include <cryptoTools/Common/Defines.h>
+-#include <cryptoTools/Common/Log.h>
++#include "../../../third_party/cryptoTools/cryptoTools/Common/Defines.h"
++#include "../../../third_party/cryptoTools/cryptoTools/Common/Log.h"
+ 
+-#include <cryptoTools/Network/Channel.h>
+-#include <cryptoTools/Network/Session.h>
+-#include <cryptoTools/Network/IOService.h>
++#include "../../../third_party/cryptoTools/cryptoTools/Network/Channel.h"
++#include "../../../third_party/cryptoTools/cryptoTools/Network/Session.h"
++#include "../../../third_party/cryptoTools/cryptoTools/Network/IOService.h"
+ 
+ #include <iostream>
+ #include <fstream>
+@@ -21,7 +21,7 @@
+ // #include "stringbuffer.h"
+ // #include "writer.h"
+ 
+-using namespace osuCrypto;
++using namespace osuCryptoNew;
+ 
+ namespace lbcrypto {
+ 
+@@ -29,7 +29,7 @@ namespace lbcrypto {
+ 
+     // WARNING: will block until the other party calls receiveCiphertext
+     template<typename DCRTPoly>
+-    void sendCiphertext(const DCRT_Ciphertext<DCRTPoly>& ct, Channel& chl) {
++    void sendCiphertext(const DCRT_Ciphertext<DCRTPoly>& ct, osuCryptoNew::Channel& chl) {
+         constexpr ui32 phim = DCRT_Ciphertext<DCRTPoly>::phim;
+         constexpr ui32 numLimbs = DCRT_Ciphertext<DCRTPoly>::numLimbs;
+         for (ui32 i = 0; i < numLimbs; i++) {
+@@ -40,7 +40,7 @@ namespace lbcrypto {
+ 
+     // WARNING: Must ensure input ct life extends until data is sent
+     template<typename DCRTPoly>
+-    void asyncSendCiphertext(const DCRT_Ciphertext<DCRTPoly>& ct, Channel& chl) {
++    void asyncSendCiphertext(const DCRT_Ciphertext<DCRTPoly>& ct, osuCryptoNew::Channel& chl) {
+         const ui32 phim = DCRT_Ciphertext<DCRTPoly>::phim;
+         const ui32 numLimbs = DCRT_Ciphertext<DCRTPoly>::numLimbs;
+         for (ui32 i = 0; i < numLimbs; i++) {
+@@ -52,7 +52,7 @@ namespace lbcrypto {
+ 
+     // WARNING: will block until the other party calls sendCiphertext
+     template<typename DCRTPoly>
+-    void receiveCiphertext(DCRT_Ciphertext<DCRTPoly>& ct, Channel& chl) {
++    void receiveCiphertext(DCRT_Ciphertext<DCRTPoly>& ct, osuCryptoNew::Channel& chl) {
+         constexpr ui32 phim = DCRT_Ciphertext<DCRTPoly>::phim;
+         constexpr ui32 numLimbs = DCRT_Ciphertext<DCRTPoly>::numLimbs;
+         // ct.a.zeros(); ct.b.zeros();
+@@ -64,14 +64,14 @@ namespace lbcrypto {
+ 
+     // WARNING: will block until the other party calls receiveCiphertext
+     template<typename poly>
+-    void sendCiphertext(const Single_Limb_Ciphertext<poly>& ct, Channel& chl) {
++    void sendCiphertext(const Single_Limb_Ciphertext<poly>& ct, osuCryptoNew::Channel& chl) {
+         constexpr ui32 phim = Single_Limb_Ciphertext<poly>::phim;
+         chl.send(ct.a.vals, phim);
+         chl.send(ct.b.vals, phim);
+     }
+ 
+     template<typename poly>
+-    void asyncSendCiphertextCopy(const Single_Limb_Ciphertext<poly>& ct, Channel& chl) {
++    void asyncSendCiphertextCopy(const Single_Limb_Ciphertext<poly>& ct, osuCryptoNew::Channel& chl) {
+         constexpr ui32 phim = Single_Limb_Ciphertext<poly>::phim;
+         chl.asyncSendCopy(ct.a.vals, phim);
+         chl.asyncSendCopy(ct.b.vals, phim);
+@@ -79,7 +79,7 @@ namespace lbcrypto {
+ 
+     // WARNING: Must ensure input ct life extends until data is sent
+     template<typename poly>
+-    void asyncSendCiphertext(const Single_Limb_Ciphertext<poly>& ct, Channel& chl) {
++    void asyncSendCiphertext(const Single_Limb_Ciphertext<poly>& ct, osuCryptoNew::Channel& chl) {
+         constexpr ui32 phim = Single_Limb_Ciphertext<poly>::phim;
+         chl.asyncSend(ct.a.vals, phim);
+         chl.asyncSend(ct.b.vals, phim);
+@@ -87,7 +87,7 @@ namespace lbcrypto {
+ 
+     // WARNING: will block until the other party calls sendCiphertext
+     template<typename poly>
+-    void receiveCiphertext(Single_Limb_Ciphertext<poly>& ct, Channel& chl) {
++    void receiveCiphertext(Single_Limb_Ciphertext<poly>& ct, osuCryptoNew::Channel& chl) {
+         constexpr ui32 phim = Single_Limb_Ciphertext<poly>::phim;
+         ct.a.zeros(); ct.b.zeros();
+         chl.recv(ct.a.vals, phim);
+@@ -97,7 +97,7 @@ namespace lbcrypto {
+ 
+     // WARNING: will block until the other party calls receiveCiphertext
+     template<typename DCRTPoly>
+-    void sendCiphertext(const DCRT_Seeded_Ciphertext<DCRTPoly>& ct, Channel& chl) {
++    void sendCiphertext(const DCRT_Seeded_Ciphertext<DCRTPoly>& ct, osuCryptoNew::Channel& chl) {
+         const ui32 phim = DCRT_Seeded_Ciphertext<DCRTPoly>::phim;
+         const ui32 numLimbs = DCRT_Seeded_Ciphertext<DCRTPoly>::numLimbs;
+         chl.send(ct.seed);
+@@ -106,7 +106,7 @@ namespace lbcrypto {
+     }
+ 
+     template<typename DCRTPoly>
+-    void asyncSendCiphertextCopy(const DCRT_Seeded_Ciphertext<DCRTPoly>& ct, Channel& chl) {
++    void asyncSendCiphertextCopy(const DCRT_Seeded_Ciphertext<DCRTPoly>& ct, osuCryptoNew::Channel& chl) {
+         const ui32 phim = DCRT_Seeded_Ciphertext<DCRTPoly>::phim;
+         const ui32 numLimbs = DCRT_Seeded_Ciphertext<DCRTPoly>::numLimbs;
+         chl.asyncSendCopy(ct.seed);
+@@ -116,7 +116,7 @@ namespace lbcrypto {
+ 
+     // WARNING: Must ensure input ct life extends until data is sent
+     template<typename DCRTPoly>
+-    void asyncSendCiphertext(const DCRT_Seeded_Ciphertext<DCRTPoly>& ct, Channel& chl) {
++    void asyncSendCiphertext(const DCRT_Seeded_Ciphertext<DCRTPoly>& ct, osuCryptoNew::Channel& chl) {
+         const ui32 phim = DCRT_Seeded_Ciphertext<DCRTPoly>::phim;
+         const ui32 numLimbs = DCRT_Seeded_Ciphertext<DCRTPoly>::numLimbs;
+         chl.asyncSend(ct.seed);
+@@ -127,7 +127,7 @@ namespace lbcrypto {
+ 
+     // WARNING: will block until the other party calls sendCiphertext
+     template<typename DCRTPoly>
+-    void receiveCiphertext(DCRT_Seeded_Ciphertext<DCRTPoly>& ct, Channel& chl) {
++    void receiveCiphertext(DCRT_Seeded_Ciphertext<DCRTPoly>& ct, osuCryptoNew::Channel& chl) {
+         constexpr ui32 phim = DCRT_Seeded_Ciphertext<DCRTPoly>::phim;
+         constexpr ui32 numLimbs = DCRT_Seeded_Ciphertext<DCRTPoly>::numLimbs;
+         // ct.b.zeros();
+@@ -138,14 +138,14 @@ namespace lbcrypto {
+ 
+ 
+     template<typename CiphertextType>
+-    void sendCiphertextVector(const std::vector<CiphertextType>& toSend, Channel& chl) {
++    void sendCiphertextVector(const std::vector<CiphertextType>& toSend, osuCryptoNew::Channel& chl) {
+         chl.send(toSend.size());
+         for (ui32 i = 0; i < toSend.size(); i++)
+             sendCiphertext(toSend[i], chl);
+     }
+ 
+     template<typename CiphertextType>
+-    void receiveCiphertextVector(std::vector<CiphertextType>& toLoad, Channel& chl, const bool verbose = false) {
++    void receiveCiphertextVector(std::vector<CiphertextType>& toLoad, osuCryptoNew::Channel& chl, const bool verbose = false) {
+         size_t h; chl.recv(h);
+         if (verbose) 
+             std::cout << "Receiving ciphertext vector of size " << h << std::endl;
+@@ -156,7 +156,7 @@ namespace lbcrypto {
+ 
+ 
+     template<typename CiphertextType>
+-    void sendCiphertextMatrix(const std::vector<std::vector<CiphertextType>>& toSend, Channel& chl) {
++    void sendCiphertextMatrix(const std::vector<std::vector<CiphertextType>>& toSend, osuCryptoNew::Channel& chl) {
+         chl.send(toSend.size());
+         chl.send(toSend[0].size());
+         for (ui32 i = 0; i < toSend.size(); i++)
+@@ -165,7 +165,7 @@ namespace lbcrypto {
+     }
+ 
+     template<typename CiphertextType>
+-    void receiveCiphertextMatrix(std::vector<std::vector<CiphertextType>>& toLoad, Channel& chl) {
++    void receiveCiphertextMatrix(std::vector<std::vector<CiphertextType>>& toLoad, osuCryptoNew::Channel& chl) {
+         size_t h; chl.recv(h);
+         size_t w; chl.recv(w);
+         toLoad = std::vector<std::vector<CiphertextType>>(h, std::vector<CiphertextType>(w));
+@@ -175,7 +175,7 @@ namespace lbcrypto {
+     }
+ 
+     // template<typename CiphertextType>
+-    // void sendCiphertext4dData(const std::vector<std::vector<std::vector<CiphertextType>>>& toSend, Channel& chl) {
++    // void sendCiphertext4dData(const std::vector<std::vector<std::vector<CiphertextType>>>& toSend, osuCryptoNew::Channel& chl) {
+     //     chl.send(toSend.size());
+     //     chl.send(toSend[0].size());
+     //     chl.send(toSend[0][0].size());
+@@ -186,7 +186,7 @@ namespace lbcrypto {
+     // }
+ 
+     // template<typename CiphertextType>
+-    // void receiveCiphertext4dData(std::vector<std::vector<std::vector<CiphertextType>>>& toLoad, Channel& chl) {
++    // void receiveCiphertext4dData(std::vector<std::vector<std::vector<CiphertextType>>>& toLoad, osuCryptoNew::Channel& chl) {
+     //     size_t h; chl.recv(h);
+     //     size_t w; chl.recv(w);
+     //     size_t d; chl.recv(d);
+@@ -203,7 +203,7 @@ namespace lbcrypto {
+ 
+     // WARNING: will block until the other party calls receiveCiphertext
+     template<typename DCRTPoly>
+-    void sendDCRTPoly(const DCRTPoly& input, Channel& chl) {
++    void sendDCRTPoly(const DCRTPoly& input, osuCryptoNew::Channel& chl) {
+         constexpr ui32 phim = DCRTPoly::phim;
+         constexpr ui32 numLimbs = DCRTPoly::numLimbs;
+         for (ui32 i = 0; i < numLimbs; i++)
+@@ -213,7 +213,7 @@ namespace lbcrypto {
+ 
+     // WARNING: will block until the other party calls sendCiphertext
+     template<typename DCRTPoly>
+-    void receiveDCRTPoly(const DCRTPoly& input, Channel& chl) {
++    void receiveDCRTPoly(const DCRTPoly& input, osuCryptoNew::Channel& chl) {
+         constexpr ui32 phim = DCRTPoly::phim;
+         constexpr ui32 numLimbs = DCRTPoly::numLimbs;
+         for (ui32 i = 0; i < numLimbs; i++)
+@@ -222,7 +222,7 @@ namespace lbcrypto {
+ 
+     // // WARNING: will block until the other party calls receiveCiphertext
+     // template<typename DCRTPoly>
+-    // void asyncSendDCRTPoly(const DCRTPoly& input, Channel& chl) {
++    // void asyncSendDCRTPoly(const DCRTPoly& input, osuCryptoNew::Channel& chl) {
+     //     constexpr ui32 phim = DCRTPoly::phim;
+     //     constexpr ui32 numLimbs = DCRTPoly::numLimbs;
+     //     for (ui32 i = 0; i < numLimbs; i++)
+@@ -232,7 +232,7 @@ namespace lbcrypto {
+ 
+     // // WARNING: will block until the other party calls sendCiphertext
+     // template<typename DCRTPoly>
+-    // void asyncReceiveDCRTPoly(const DCRTPoly& input, Channel& chl) {
++    // void asyncReceiveDCRTPoly(const DCRTPoly& input, osuCryptoNew::Channel& chl) {
+     //     constexpr ui32 phim = DCRTPoly::phim;
+     //     constexpr ui32 numLimbs = DCRTPoly::numLimbs;
+     //     for (ui32 i = 0; i < numLimbs; i++)
+@@ -240,14 +240,14 @@ namespace lbcrypto {
+     // }
+ 
+     template<typename PolyType>
+-    void sendDCRTPolyVector(const std::vector<PolyType>& toSend, Channel& chl) {
++    void sendDCRTPolyVector(const std::vector<PolyType>& toSend, osuCryptoNew::Channel& chl) {
+         chl.send(toSend.size());
+         for (ui32 i = 0; i < toSend.size(); i++)
+             sendDCRTPoly(toSend[i], chl);
+     }
+ 
+     template<typename PolyType>
+-    void receiveDCRTPolyVector(std::vector<PolyType>& toLoad, Channel& chl) {
++    void receiveDCRTPolyVector(std::vector<PolyType>& toLoad, osuCryptoNew::Channel& chl) {
+         size_t h; chl.recv(h);
+         toLoad = std::vector<PolyType>(h);
+         for (ui32 i = 0; i < h; i++)
+@@ -255,14 +255,14 @@ namespace lbcrypto {
+     }
+ 
+     // template<typename PolyType>
+-    // void asyncSendDCRTPolyVector(const std::vector<PolyType>& toSend, Channel& chl) {
++    // void asyncSendDCRTPolyVector(const std::vector<PolyType>& toSend, osuCryptoNew::Channel& chl) {
+     //     chl.asyncSend(toSend.size());
+     //     for (ui32 i = 0; i < toSend.size(); i++)
+     //         asyncSendDCRTPoly(toSend[i], chl);
+     // }
+ 
+     // template<typename PolyType>
+-    // void asyncreceiveDCRTPolyVector(std::vector<PolyType>& toLoad, Channel& chl) {
++    // void asyncreceiveDCRTPolyVector(std::vector<PolyType>& toLoad, osuCryptoNew::Channel& chl) {
+     //     size_t h; chl.asyncRecv(h);
+     //     toLoad = std::vector<PolyType>(h);
+     //     for (ui32 i = 0; i < h; i++)
+@@ -270,7 +270,7 @@ namespace lbcrypto {
+     // }
+ 
+     template<typename PolyType>
+-    void sendDCRTPolyMatrix(const std::vector<std::vector<PolyType>>& toSend, Channel& chl) {
++    void sendDCRTPolyMatrix(const std::vector<std::vector<PolyType>>& toSend, osuCryptoNew::Channel& chl) {
+         chl.send(toSend.size());
+         chl.send(toSend[0].size());
+         for (ui32 i = 0; i < toSend.size(); i++)
+@@ -279,7 +279,7 @@ namespace lbcrypto {
+     }
+ 
+     template<typename PolyType>
+-    void receiveDCRTPolyMatrix(std::vector<std::vector<PolyType>>& toLoad, Channel& chl) {
++    void receiveDCRTPolyMatrix(std::vector<std::vector<PolyType>>& toLoad, osuCryptoNew::Channel& chl) {
+         size_t h; chl.recv(h);
+         size_t w; chl.recv(w);
+         toLoad = std::vector<std::vector<PolyType>>(h, std::vector<PolyType>(w));
+@@ -289,7 +289,7 @@ namespace lbcrypto {
+     }
+ 
+     template<typename PolyType>
+-    void sendDCRTPolyFilter(const std::vector<std::vector<std::vector<PolyType>>>& toSend, Channel& chl) {
++    void sendDCRTPolyFilter(const std::vector<std::vector<std::vector<PolyType>>>& toSend, osuCryptoNew::Channel& chl) {
+         chl.send(toSend.size());
+         chl.send(toSend[0].size());
+         chl.send(toSend[0][0].size());
+@@ -300,7 +300,7 @@ namespace lbcrypto {
+     }
+ 
+     template<typename PolyType>
+-    void receiveDCRTPolyFilter(std::vector<std::vector<std::vector<PolyType>>>& toLoad, Channel& chl) {
++    void receiveDCRTPolyFilter(std::vector<std::vector<std::vector<PolyType>>>& toLoad, osuCryptoNew::Channel& chl) {
+         size_t h; chl.recv(h);
+         size_t w; chl.recv(w);
+         size_t d; chl.recv(d);
+@@ -319,7 +319,7 @@ namespace lbcrypto {
+     /** Keys **/
+ 
+     template <typename DCRTPoly>
+-    void sendPublicKey(const PublicKeyDCRT<DCRTPoly>& pk, Channel& chl) {
++    void sendPublicKey(const PublicKeyDCRT<DCRTPoly>& pk, osuCryptoNew::Channel& chl) {
+         sendDCRTPoly(pk.a, chl);
+         sendDCRTPoly(pk.aShoup, chl);
+         sendDCRTPoly(pk.b, chl);
+@@ -327,7 +327,7 @@ namespace lbcrypto {
+     };
+ 
+     template <typename DCRTPoly>
+-    void receivePublicKey(const PublicKeyDCRT<DCRTPoly>& pk, Channel& chl) {
++    void receivePublicKey(const PublicKeyDCRT<DCRTPoly>& pk, osuCryptoNew::Channel& chl) {
+         receiveDCRTPoly(pk.a, chl);
+         receiveDCRTPoly(pk.aShoup, chl);
+         receiveDCRTPoly(pk.b, chl);
+@@ -335,25 +335,25 @@ namespace lbcrypto {
+     };
+ 
+     template <typename DCRTPoly>
+-    void sendPublicKey(const PublicKeyDCRTSeeded<DCRTPoly>& pk, Channel& chl) {
++    void sendPublicKey(const PublicKeyDCRTSeeded<DCRTPoly>& pk, osuCryptoNew::Channel& chl) {
+         chl.send(pk.seed);
+         sendDCRTPoly(pk.b, chl);
+     };
+ 
+     template <typename DCRTPoly>
+-    void receivePublicKey(const PublicKeyDCRTSeeded<DCRTPoly>& pk, Channel& chl) {
++    void receivePublicKey(const PublicKeyDCRTSeeded<DCRTPoly>& pk, osuCryptoNew::Channel& chl) {
+         chl.recv(pk.seed);
+         receiveDCRTPoly(pk.b, chl);
+     };
+ 
+     template <typename DCRTPoly>
+-    void sendSecretKey(const SecretKeyDCRT<DCRTPoly>& sk, Channel& chl) {
++    void sendSecretKey(const SecretKeyDCRT<DCRTPoly>& sk, osuCryptoNew::Channel& chl) {
+         sendDCRTPoly(sk.s, chl);
+         sendDCRTPoly(sk.sShoup, chl);
+     };
+ 
+     template <typename DCRTPoly>
+-    void receiveSecretKey(const SecretKeyDCRT<DCRTPoly>& sk, Channel& chl) {
++    void receiveSecretKey(const SecretKeyDCRT<DCRTPoly>& sk, osuCryptoNew::Channel& chl) {
+         receiveDCRTPoly(sk.s, chl);
+         receiveDCRTPoly(sk.sShoup, chl);
+     };
+@@ -361,23 +361,23 @@ namespace lbcrypto {
+     /** Encoding Input Types **/
+ 
+     template <typename poly>
+-    void sendEncodingInput(const poly& toSend, Channel& chl) {
++    void sendEncodingInput(const poly& toSend, osuCryptoNew::Channel& chl) {
+         chl.send(toSend.vals, poly::phim);
+     };
+ 
+     template <typename poly>
+-    void receiveEncodingInput(const poly& toLoad, Channel& chl) {
++    void receiveEncodingInput(const poly& toLoad, osuCryptoNew::Channel& chl) {
+         chl.recv(toLoad.vals, poly::phim);
+     }
+ 
+     template <typename T, ui32 numModuli, ui32 phim>
+-    void sendEncodingInput(const Array2d<T, numModuli, phim>& toSend, Channel& chl) {
++    void sendEncodingInput(const Array2d<T, numModuli, phim>& toSend, osuCryptoNew::Channel& chl) {
+         for (ui32 i = 0; i < numModuli; i++)
+             chl.send(toSend[i], phim);
+     }
+ 
+     template <typename T, ui32 numModuli, ui32 phim>
+-    void receiveEncodingInput(const Array2d<T, numModuli, phim>& toLoad, Channel& chl) {
++    void receiveEncodingInput(const Array2d<T, numModuli, phim>& toLoad, osuCryptoNew::Channel& chl) {
+         for (ui32 i = 0; i < numModuli; i++)
+             chl.recv(toLoad[i], phim);
+     }
+diff --git a/src/lib/pke/ole.h b/src/lib/pke/ole.h
+index 6150a930b0cc972290b53477daf3198f00f52b71..ff6889790f07b6b705b3c337b9be97a91ed2e32a 100644
+--- a/src/lib/pke/ole.h
++++ b/src/lib/pke/ole.h
+@@ -5,19 +5,19 @@
+ #ifndef LBCRYPTO_PKE_OLE
+ #define LBCRYPTO_PKE_OLE
+ 
+-#include <cryptoTools/Common/Defines.h>
+-#include <cryptoTools/Common/Timer.h>
+-#include <cryptoTools/Common/Log.h>
++#include "../../../third_party/cryptoTools/cryptoTools/Common/Defines.h"
++#include "../../../third_party/cryptoTools/cryptoTools/Common/Timer.h"
++#include "../../../third_party/cryptoTools/cryptoTools/Common/Log.h"
+ 
+-#include <cryptoTools/Network/Channel.h>
+-#include <cryptoTools/Network/Session.h>
+-#include <cryptoTools/Network/IOService.h>
++#include "../../../third_party/cryptoTools/cryptoTools/Network/Channel.h"
++#include "../../../third_party/cryptoTools/cryptoTools/Network/Session.h"
++#include "../../../third_party/cryptoTools/cryptoTools/Network/IOService.h"
+ 
+ #include "bfv.h"
+ #include "gazelle-network.h"
+ 
+ using namespace std; 
+-using namespace osuCrypto;
++using namespace osuCryptoNew;
+ 
+ namespace lbcrypto {
+ 
+@@ -38,7 +38,7 @@ namespace lbcrypto {
+             : numBlocks(as.size()), aBlocks(as), bBlocks(bs) { ASSERT_DEBUG(as.size() == bs.size()); };
+     
+         
+-        void send(Channel& chl) const {
++        void send(osuCryptoNew::Channel& chl) const {
+             chl.send(numBlocks);
+             for (ui32 i = 0; i < numBlocks; i++) {
+                 sendEncodingInput(aBlocks[i], chl);
+@@ -46,7 +46,7 @@ namespace lbcrypto {
+             }
+         }
+ 
+-        static VOLESenderInput<encoding_input_t> recv(Channel& chl) {
++        static VOLESenderInput<encoding_input_t> recv(osuCryptoNew::Channel& chl) {
+             ui32 nB; chl.recv(nB);
+             vector<encoding_input_t> aB(nB), bB(nB);
+             for (ui32 i = 0; i < nB; i++) {
+@@ -92,13 +92,13 @@ namespace lbcrypto {
+         VOLEReceiverOutput(const vector<encoding_input_t>& in) 
+             : numBlocks(in.size()), cBlocks(in) {};
+     
+-        void send(Channel& chl) const {
++        void send(osuCryptoNew::Channel& chl) const {
+             chl.send(numBlocks);
+             for (ui32 i = 0; i < numBlocks; i++)
+                 chl.send(cBlocks[i].vals, encoding_input_t::phim);
+         }
+ 
+-        static VOLEReceiverOutput<encoding_input_t> receive(Channel& chl) {
++        static VOLEReceiverOutput<encoding_input_t> receive(osuCryptoNew::Channel& chl) {
+             ui32 blocks; chl.recv(blocks);
+             vector<encoding_input_t> toRecv(blocks);
+             for (ui32 i = 0; i < blocks; i++)
+@@ -197,7 +197,7 @@ namespace lbcrypto {
+             const VOLESenderInput<typename SchemeType::encoding_input_t>& input, 
+             const typename SchemeType::PublicKey& pk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+             using Ciphertext = typename SchemeType::Ciphertext;
+             using CompressedCiphertext = typename SchemeType::CompressedCiphertext;
+@@ -224,7 +224,7 @@ namespace lbcrypto {
+             const VOLESenderInput<typename SchemeType::encoding_input_t>& input, 
+             const typename SchemeType::PublicKey& pk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+             using SeededCiphertext = typename SchemeType::SeededCiphertext;
+             using Ciphertext = typename SchemeType::Ciphertext;
+@@ -254,7 +254,7 @@ namespace lbcrypto {
+             const VOLESenderInput<typename SchemeType::encoding_input_t>& input, 
+             const typename SchemeType::PublicKey& pk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+             using Ciphertext = typename SchemeType::Ciphertext;
+             // using SeededCiphertext = typename SchemeType::SeededCiphertext;
+@@ -287,7 +287,7 @@ namespace lbcrypto {
+             const VOLESenderInput<typename SchemeType::encoding_input_t>& input, 
+             const typename SchemeType::PublicKey& pk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+             using Ciphertext = typename SchemeType::Ciphertext;
+             using SeededCiphertext = typename SchemeType::SeededCiphertext;
+@@ -339,7 +339,7 @@ namespace lbcrypto {
+             const vector<VOLESenderInput<typename SchemeType::encoding_input_t>>& input,
+             const typename SchemeType::PublicKey& pk,
+             const SchemeType& scheme,
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+ 
+             const ui32 numVOLEs = input.size();
+@@ -377,7 +377,7 @@ namespace lbcrypto {
+             const vector<VOLESenderInput<typename SchemeType::encoding_input_t>>& input,
+             const typename SchemeType::PublicKey& pk,
+             const SchemeType& scheme,
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+ 
+             const ui32 numVOLEs = input.size();
+@@ -415,7 +415,7 @@ namespace lbcrypto {
+             const vector<VOLESenderInput<typename SchemeType::encoding_input_t>>& input,
+             const typename SchemeType::PublicKey& pk,
+             const SchemeType& scheme,
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+ 
+             const ui32 numVOLEs = input.size();
+@@ -490,7 +490,7 @@ namespace lbcrypto {
+             const VOLEReceiverInput<typename SchemeType::plaintext_type>& input,
+             const typename SchemeType::SecretKey& sk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+ 
+             using encoding_input_t = typename SchemeType::encoding_input_t;
+@@ -519,7 +519,7 @@ namespace lbcrypto {
+             const VOLEReceiverInput<typename SchemeType::plaintext_type>& input,
+             const typename SchemeType::SecretKey& sk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+ 
+             using encoding_input_t = typename SchemeType::encoding_input_t;
+@@ -549,7 +549,7 @@ namespace lbcrypto {
+             const VOLEReceiverInput<typename SchemeType::plaintext_type>& input,
+             const typename SchemeType::SecretKey& sk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+ 
+             using encoding_input_t = typename SchemeType::encoding_input_t;
+@@ -584,7 +584,7 @@ namespace lbcrypto {
+             const vector<VOLEReceiverInput<typename SchemeType::plaintext_type>>& input,
+             const typename SchemeType::SecretKey& sk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+             using encoding_input_t = typename SchemeType::encoding_input_t;
+             // using FreshCTType = typename SchemeType::SeededCiphertext;
+@@ -632,7 +632,7 @@ namespace lbcrypto {
+             const vector<VOLEReceiverInput<typename SchemeType::plaintext_type>>& input,
+             const typename SchemeType::SecretKey& sk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+             using encoding_input_t = typename SchemeType::encoding_input_t;
+             // using FreshCTType = typename SchemeType::SeededCiphertext;
+@@ -668,7 +668,7 @@ namespace lbcrypto {
+             const vector<VOLEReceiverInput<typename SchemeType::plaintext_type>>& input,
+             const typename SchemeType::SecretKey& sk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+             using encoding_input_t = typename SchemeType::encoding_input_t;
+             using FreshCTType = typename SchemeType::SeededCiphertext;
+@@ -755,13 +755,13 @@ namespace lbcrypto {
+         BOLEReceiverInput(const ui32 n) : numBlocks(n), x(n) {};
+         BOLEReceiverInput(const vector<encoding_input_t>& in) : numBlocks(in.size()), x(in) {};
+    
+-        void send(Channel& chl) const {
++        void send(osuCryptoNew::Channel& chl) const {
+             chl.send(numBlocks);
+             for (ui32 i = 0; i < numBlocks; i++)
+                 chl.send(x[i].vals, encoding_input_t::phim);
+         }
+ 
+-        static BOLEReceiverInput<encoding_input_t> receive(Channel& chl) {
++        static BOLEReceiverInput<encoding_input_t> receive(osuCryptoNew::Channel& chl) {
+             ui32 n; chl.recv(n);
+             vector<encoding_input_t> toRecv(n);
+             for (ui32 i = 0; i < n; i++)
+@@ -783,7 +783,7 @@ namespace lbcrypto {
+             const BOLESenderInput<typename SchemeType::encoding_input_t>& input, 
+             const typename SchemeType::PublicKey& pk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+             using Ciphertext = typename SchemeType::Ciphertext;
+             using CompressedCiphertext = typename SchemeType::CompressedCiphertext;
+@@ -873,7 +873,7 @@ namespace lbcrypto {
+             const BOLEReceiverInput<typename SchemeType::encoding_input_t>& input,
+             const typename SchemeType::SecretKey& sk,
+             const SchemeType& scheme, 
+-            Channel& chl
++            osuCryptoNew::Channel& chl
+         ) {
+ 
+             using encoding_input_t = typename SchemeType::encoding_input_t;
+diff --git a/src/lib/pke/pke_types.h b/src/lib/pke/pke_types.h
+index 8145ff901f5f12e235dda44610c8828f406812e7..70433882e4de150f94c868a857e26d40969d785b 100644
+--- a/src/lib/pke/pke_types.h
++++ b/src/lib/pke/pke_types.h
+@@ -55,7 +55,7 @@ namespace lbcrypto {
+ 
+     template <typename DCRTPolyType>
+     struct PublicKeyDCRTSeeded {
+-        osuCrypto::block seed;
++        osuCryptoNew::block seed;
+         DCRTPolyType b;
+         PublicKeyDCRTSeeded() {};
+ 
+@@ -171,7 +171,7 @@ namespace lbcrypto {
+         static constexpr ui32 phim = 1<<DCRTPoly::logn;
+         static constexpr ui32 numLimbs = DCRTPoly::numLimbs;
+ 
+-        osuCrypto::block seed;
++        osuCryptoNew::block seed;
+         DCRTPoly b;
+ 
+         DCRT_Seeded_Ciphertext() {};
+diff --git a/third_party/cryptoTools/cryptoTools/Circuit/BetaCircuit.cpp b/third_party/cryptoTools/cryptoTools/Circuit/BetaCircuit.cpp
+index 08941cca8ce29143e5ac12e5b36ad9c46062485d..bbebcb1d6c8f5def67aab4372a8ae5769b47838d 100644
+--- a/third_party/cryptoTools/cryptoTools/Circuit/BetaCircuit.cpp
++++ b/third_party/cryptoTools/cryptoTools/Circuit/BetaCircuit.cpp
+@@ -13,7 +13,7 @@
+ using json = nlohmann::json;
+ #endif 
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+     BetaCircuit::BetaCircuit()
+@@ -304,12 +304,12 @@ namespace osuCrypto
+         }
+     }
+ 
+-    void osuCrypto::BetaCircuit::addPrint(BetaWire wire)
++    void osuCryptoNew::BetaCircuit::addPrint(BetaWire wire)
+     {
+         mPrints.emplace_back(mGates.size(), wire, "", isInvert(wire));
+     }
+ 
+-    void osuCrypto::BetaCircuit::addPrint(std::string str)
++    void osuCryptoNew::BetaCircuit::addPrint(std::string str)
+     {
+         mPrints.emplace_back(mGates.size(), -1, str, false);
+     }
+diff --git a/third_party/cryptoTools/cryptoTools/Circuit/BetaCircuit.h b/third_party/cryptoTools/cryptoTools/Circuit/BetaCircuit.h
+index 4e8ebd799249343ca115abbb0431905f52e13266..5c60697376df3dc527e5fac788dc3d02322f8238 100644
+--- a/third_party/cryptoTools/cryptoTools/Circuit/BetaCircuit.h
++++ b/third_party/cryptoTools/cryptoTools/Circuit/BetaCircuit.h
+@@ -8,7 +8,7 @@
+ #include <array>
+ 
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+ 	typedef u32 BetaWire;
+@@ -34,7 +34,7 @@ namespace osuCrypto
+ 			, mCAlpha(gt == GateType::Nand || gt == GateType::nb_Or || gt == GateType::na_Or || gt == GateType::Or)
+ 		{}
+ 
+-        void setType(osuCrypto::GateType gt)
++        void setType(osuCryptoNew::GateType gt)
+         {
+             mType = gt;
+             // compute the gate modifier variables
+diff --git a/third_party/cryptoTools/cryptoTools/Circuit/BetaLibrary.cpp b/third_party/cryptoTools/cryptoTools/Circuit/BetaLibrary.cpp
+index 0873dd623b24d161e816b3c3abee110f7061ff4e..b733df4f6e9b66c5c469b26585dd7427e940c60a 100644
+--- a/third_party/cryptoTools/cryptoTools/Circuit/BetaLibrary.cpp
++++ b/third_party/cryptoTools/cryptoTools/Circuit/BetaLibrary.cpp
+@@ -5,7 +5,7 @@
+ 
+ #include "Gate.h"
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     BetaLibrary::BetaLibrary()
+     {
+@@ -20,7 +20,7 @@ namespace osuCrypto
+         }
+     }
+ 
+-    BetaCircuit * osuCrypto::BetaLibrary::int_int_add(u64 aSize, u64 bSize, u64 cSize, Optimized op)
++    BetaCircuit * osuCryptoNew::BetaLibrary::int_int_add(u64 aSize, u64 bSize, u64 cSize, Optimized op)
+     {
+         auto key = "add" + std::to_string(int(op)) + "_" + std::to_string(aSize) + "x" + std::to_string(bSize) + "x" + std::to_string(cSize);
+ 
+@@ -60,7 +60,7 @@ namespace osuCrypto
+     }
+ 
+ 
+-    BetaCircuit * osuCrypto::BetaLibrary::int_int_add_msb(u64 aSize)
++    BetaCircuit * osuCryptoNew::BetaLibrary::int_int_add_msb(u64 aSize)
+     {
+         auto key = "add_msb_" + std::to_string(aSize);
+ 
+diff --git a/third_party/cryptoTools/cryptoTools/Circuit/BetaLibrary.h b/third_party/cryptoTools/cryptoTools/Circuit/BetaLibrary.h
+index ee2dc133ced24d80d1f07574ef7d88a9f7a1b902..5059aa6f3ea81f0fe75a9cea4a6203bcdc04c921 100644
+--- a/third_party/cryptoTools/cryptoTools/Circuit/BetaLibrary.h
++++ b/third_party/cryptoTools/cryptoTools/Circuit/BetaLibrary.h
+@@ -6,7 +6,7 @@
+ #include <unordered_map>
+ #include <cryptoTools/Common/BitVector.h>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     class BetaLibrary
+     {
+diff --git a/third_party/cryptoTools/cryptoTools/Circuit/Gate.h b/third_party/cryptoTools/cryptoTools/Circuit/Gate.h
+index f5d8180cc6a5ef4fab84ac96aac5f69d0c5bf13e..86f12e6799b3f3e96849097984774061ea2960db 100644
+--- a/third_party/cryptoTools/cryptoTools/Circuit/Gate.h
++++ b/third_party/cryptoTools/cryptoTools/Circuit/Gate.h
+@@ -4,7 +4,7 @@
+ #include <vector>
+ #include <array>
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+ 	typedef u64 Wire;
+ 
+diff --git a/third_party/cryptoTools/cryptoTools/Common/BitIterator.h b/third_party/cryptoTools/cryptoTools/Common/BitIterator.h
+index 6300138b5606e82cd4680065410de51f193efe9d..c6bae03db760a495e6802251e2df366183d9b0ff 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/BitIterator.h
++++ b/third_party/cryptoTools/cryptoTools/Common/BitIterator.h
+@@ -2,7 +2,7 @@
+ // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use. 
+ #include <cryptoTools/Common/Defines.h>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+ 	// A class to reference a specific bit.
+diff --git a/third_party/cryptoTools/cryptoTools/Common/BitVector.cpp b/third_party/cryptoTools/cryptoTools/Common/BitVector.cpp
+index c392db4ce0e467d51db6b3c0f34b325b83ce5efc..8b1c0142d130a8efa7ab4a9d3335a5b4b74b6407 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/BitVector.cpp
++++ b/third_party/cryptoTools/cryptoTools/Common/BitVector.cpp
+@@ -3,7 +3,7 @@
+ #include <cstring>
+ #include <iomanip>
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+ 
+     BitVector::BitVector(std::string data)
+diff --git a/third_party/cryptoTools/cryptoTools/Common/BitVector.h b/third_party/cryptoTools/cryptoTools/Common/BitVector.h
+index 262d31a4718cd7aa194c159bbcf6b8e57e0ba679..4e20129111022baa4e6272021abee125dd1c20b1 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/BitVector.h
++++ b/third_party/cryptoTools/cryptoTools/Common/BitVector.h
+@@ -5,7 +5,7 @@
+ #include <cryptoTools/Crypto/PRNG.h>
+ #include <cryptoTools/Network/IoBuffer.h>
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+ 	// A class to access a vector of packed bits. Similar to std::vector<bool>.
+     class BitVector
+diff --git a/third_party/cryptoTools/cryptoTools/Common/CLP.cpp b/third_party/cryptoTools/cryptoTools/Common/CLP.cpp
+index 7cb61d1abfa681e292ce1d142c4d95e2b937657e..723325442a4fde40253466b2f6d0d39a9e9e0ca1 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/CLP.cpp
++++ b/third_party/cryptoTools/cryptoTools/Common/CLP.cpp
+@@ -3,7 +3,7 @@
+ #include <iostream>
+ #include "Defines.h"
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+     void CLP::parse(int argc, char const*const* argv)
+diff --git a/third_party/cryptoTools/cryptoTools/Common/CLP.h b/third_party/cryptoTools/cryptoTools/Common/CLP.h
+index d95af550cd2346195553c76c5cc9914c1dc23d0f..dca71aebe4803a19a5eb9f2d0583cf971fabffcd 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/CLP.h
++++ b/third_party/cryptoTools/cryptoTools/Common/CLP.h
+@@ -9,7 +9,7 @@
+ #include <iostream>
+ #include "cryptoTools/Common/Defines.h"
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     // An error that is thrown when the input isn't of the correct form.
+     class CommandLineParserError : public std::exception
+diff --git a/third_party/cryptoTools/cryptoTools/Common/CuckooIndex.cpp b/third_party/cryptoTools/cryptoTools/Common/CuckooIndex.cpp
+index 40216b0a4ad9000c6a128dfd5ece62e371b6d6bd..443ecb197fbfeb1cecf81387d001014ef7e1e69d 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/CuckooIndex.cpp
++++ b/third_party/cryptoTools/cryptoTools/Common/CuckooIndex.cpp
+@@ -8,7 +8,7 @@
+ 
+ #define BATCH_SIZE 8
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+ 	// parameters for k=2 hash functions, 2^n items, and statistical security 40
+diff --git a/third_party/cryptoTools/cryptoTools/Common/CuckooIndex.h b/third_party/cryptoTools/cryptoTools/Common/CuckooIndex.h
+index 777aeaa51bf923efabce5cd53035fac849c572ce..f859d24d5b6582f6ab72de6ea7f26ec49675998e 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/CuckooIndex.h
++++ b/third_party/cryptoTools/cryptoTools/Common/CuckooIndex.h
+@@ -5,7 +5,7 @@
+ #include "cryptoTools/Common/Matrix.h"
+ #include <atomic>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+ 	// The parameters that define a cuckoo table.
+diff --git a/third_party/cryptoTools/cryptoTools/Common/Defines.cpp b/third_party/cryptoTools/cryptoTools/Common/Defines.cpp
+index 399dd067b177a9155ead095d1c6aa940a896de95..73298a3e1316d43077bb6c91a9c2f8c330199170 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/Defines.cpp
++++ b/third_party/cryptoTools/cryptoTools/Common/Defines.cpp
+@@ -5,7 +5,7 @@
+ #include <iomanip>
+ #include <cstring>
+ 
+-namespace osuCrypto 
++namespace osuCryptoNew 
+ {
+ 
+ 
+diff --git a/third_party/cryptoTools/cryptoTools/Common/Defines.h b/third_party/cryptoTools/cryptoTools/Common/Defines.h
+index 6f374bb6f4ef7a135861f890015507f22757a769..23242cc0ebd68a57af2ce469f3e286b5bd58853e 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/Defines.h
++++ b/third_party/cryptoTools/cryptoTools/Common/Defines.h
+@@ -34,7 +34,7 @@
+ #endif
+ 
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+     template<typename T> using ptr = T*;
+     template<typename T> using uPtr = std::unique_ptr<T>;
+     template<typename T> using sPtr = std::shared_ptr<T>;
+@@ -71,4 +71,4 @@ namespace osuCrypto {
+ #endif
+ #endif
+ 
+-namespace oc = osuCrypto;
++namespace oc = osuCryptoNew;
+diff --git a/third_party/cryptoTools/cryptoTools/Common/Finally.h b/third_party/cryptoTools/cryptoTools/Common/Finally.h
+index b390f746899a2027f1d879afc818975320beb864..8840e3accf721e8995e4fa26194ec5e8f33c8e83 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/Finally.h
++++ b/third_party/cryptoTools/cryptoTools/Common/Finally.h
+@@ -2,7 +2,7 @@
+ 
+ #include <functional>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+     class Finally
+diff --git a/third_party/cryptoTools/cryptoTools/Common/Log.cpp b/third_party/cryptoTools/cryptoTools/Common/Log.cpp
+index bb4a9c8649f5a3b8dd15cb574171b16a2cb22597..9eea13dc8c5dd4e35cdfd3c4bdf498f3a88b4a25 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/Log.cpp
++++ b/third_party/cryptoTools/cryptoTools/Common/Log.cpp
+@@ -6,7 +6,7 @@
+ #endif
+ 
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     std::chrono::time_point<std::chrono::system_clock> gStart = std::chrono::system_clock::now();
+ 
+diff --git a/third_party/cryptoTools/cryptoTools/Common/Log.h b/third_party/cryptoTools/cryptoTools/Common/Log.h
+index e4cbd43e9feb76631924a0403dce9d1586b8dfc7..e4b4012b551d540c733bdb81f8ba16a8ac5cf8ae 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/Log.h
++++ b/third_party/cryptoTools/cryptoTools/Common/Log.h
+@@ -8,7 +8,7 @@
+ #include <chrono>
+ 
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     extern std::chrono::time_point<std::chrono::system_clock> gStart;
+     class Log
+diff --git a/third_party/cryptoTools/cryptoTools/Common/Matrix.h b/third_party/cryptoTools/cryptoTools/Common/Matrix.h
+index 176cc31a83daabb59917a331077a771df627c6ac..6e402e57c01773c9206cc2d8cc3527611aa8f020 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/Matrix.h
++++ b/third_party/cryptoTools/cryptoTools/Common/Matrix.h
+@@ -7,7 +7,7 @@
+ #include <cryptoTools/Common/MatrixView.h>
+ #include <cstring>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     enum class AllocType
+     {
+diff --git a/third_party/cryptoTools/cryptoTools/Common/MatrixView.h b/third_party/cryptoTools/cryptoTools/Common/MatrixView.h
+index 9408fd7e9ad782fac49be9554d9d16e4dbb46301..70acb59ec04bc513a248c03fc8d91f7e453d0d29 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/MatrixView.h
++++ b/third_party/cryptoTools/cryptoTools/Common/MatrixView.h
+@@ -3,7 +3,7 @@
+ #include <cryptoTools/Common/Defines.h>
+ #include <array>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+     template<class T>
+diff --git a/third_party/cryptoTools/cryptoTools/Common/TestCollection.cpp b/third_party/cryptoTools/cryptoTools/Common/TestCollection.cpp
+index 6861ea810c0cf5bfa79b57c25613876859ef45eb..052c69db7e28c445c78eb878f832a4ec0f80bcb3 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/TestCollection.cpp
++++ b/third_party/cryptoTools/cryptoTools/Common/TestCollection.cpp
+@@ -6,7 +6,7 @@
+ #include <iomanip>
+ #include <cmath>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+     TestCollection globalTests;
+diff --git a/third_party/cryptoTools/cryptoTools/Common/TestCollection.h b/third_party/cryptoTools/cryptoTools/Common/TestCollection.h
+index 9e076d512d16d603541dac40d4294b21a988926d..60fede2d2fb59c5a0d579049fc72189a3d6b140e 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/TestCollection.h
++++ b/third_party/cryptoTools/cryptoTools/Common/TestCollection.h
+@@ -17,7 +17,7 @@
+ //    return 0;                                    
+ //}();
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     class CLP;
+     class TestCollection
+diff --git a/third_party/cryptoTools/cryptoTools/Common/ThreadBarrier.h b/third_party/cryptoTools/cryptoTools/Common/ThreadBarrier.h
+index 2fb715f71935f3c25b77577ec0678d5c1c0a5cea..76bd2259313548e6c90af13f74b1a50618807f95 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/ThreadBarrier.h
++++ b/third_party/cryptoTools/cryptoTools/Common/ThreadBarrier.h
+@@ -2,7 +2,7 @@
+ #include <future>
+ #include <atomic>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+     class ThreadBarrier
+diff --git a/third_party/cryptoTools/cryptoTools/Common/Timer.cpp b/third_party/cryptoTools/cryptoTools/Common/Timer.cpp
+index a08cd6cd9a6f23e9080f04494b7406d9ee7f883e..2e8114d9fc43bd63c06ac19b7692e12fe6e61584 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/Timer.cpp
++++ b/third_party/cryptoTools/cryptoTools/Common/Timer.cpp
+@@ -6,7 +6,7 @@
+ #include <iomanip>
+ #include <cmath>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     const Timer::timeUnit& Timer::setTimePoint(const std::string& msg)
+     {
+diff --git a/third_party/cryptoTools/cryptoTools/Common/Timer.h b/third_party/cryptoTools/cryptoTools/Common/Timer.h
+index 91e55583dffc466df5f7a6c52594fadfa04229a7..338b9b915c4636eee8af0e3f0cf26b512f8b4dc4 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/Timer.h
++++ b/third_party/cryptoTools/cryptoTools/Common/Timer.h
+@@ -3,8 +3,9 @@
+ #include <list>
+ #include <chrono>
+ #include <string>
++#include <stdexcept>
+ #include <mutex>
+-namespace osuCrypto
++namespace osuCryptoNew
+ { 
+ 
+     class Timer
+diff --git a/third_party/cryptoTools/cryptoTools/Common/block.cpp b/third_party/cryptoTools/cryptoTools/Common/block.cpp
+index 09347f27c708408be04603c84537c3311719ead0..c0c08111301411980280e83b7eec1027acec38d5 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/block.cpp
++++ b/third_party/cryptoTools/cryptoTools/Common/block.cpp
+@@ -6,7 +6,7 @@
+ #include <sstream>
+ #include <vector>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+     const block ZeroBlock = toBlock(0, 0);
+diff --git a/third_party/cryptoTools/cryptoTools/Common/block.h b/third_party/cryptoTools/cryptoTools/Common/block.h
+index b8cd90c79ee4a60294ebdb146c4687048f1d20fa..b33a2dbbbbfed3aab2db10ec6594ff16818d7f28 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/block.h
++++ b/third_party/cryptoTools/cryptoTools/Common/block.h
+@@ -13,7 +13,7 @@
+ #endif
+ 
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     struct alignas(16) block
+     {
+@@ -107,14 +107,14 @@ namespace osuCrypto
+             return *(const std::array<T, 16 / sizeof(T)>*)this;
+         }
+ 
+-        inline bool operator<(const osuCrypto::block & rhs)
++        inline bool operator<(const osuCryptoNew::block & rhs)
+         {
+             auto& x = as<std::uint64_t>();
+             auto& y = rhs.as<std::uint64_t>();
+             return x[1] < y[1] || (x[1] == y[1] && x[0] < y[0]);
+         }
+ 
+-        inline osuCrypto::block operator^(const osuCrypto::block & rhs) const
++        inline osuCryptoNew::block operator^(const osuCryptoNew::block & rhs) const
+         {
+ #ifdef OC_ENABLE_SSE2
+             return mm_xor_si128(rhs);
+@@ -123,12 +123,12 @@ namespace osuCrypto
+ #endif
+         }
+ #ifdef OC_ENABLE_SSE2
+-        inline osuCrypto::block mm_xor_si128(const osuCrypto::block & rhs) const
++        inline osuCryptoNew::block mm_xor_si128(const osuCryptoNew::block & rhs) const
+         {
+             return _mm_xor_si128(*this, rhs);
+         }
+ #endif
+-        inline osuCrypto::block cc_xor_si128(const osuCrypto::block & rhs) const
++        inline osuCryptoNew::block cc_xor_si128(const osuCryptoNew::block & rhs) const
+         {
+             auto ret = *this;
+             ret.as<std::uint64_t>()[0] ^= rhs.as<std::uint64_t>()[0];
+@@ -137,7 +137,7 @@ namespace osuCrypto
+         }
+ 
+ 
+-        inline osuCrypto::block operator&(const osuCrypto::block & rhs)const
++        inline osuCryptoNew::block operator&(const osuCryptoNew::block & rhs)const
+         {
+ #ifdef OC_ENABLE_SSE2
+             return mm_and_si128(rhs);
+@@ -147,12 +147,12 @@ namespace osuCrypto
+         }
+ 
+ #ifdef OC_ENABLE_SSE2
+-        inline osuCrypto::block mm_and_si128(const osuCrypto::block & rhs)const
++        inline osuCryptoNew::block mm_and_si128(const osuCryptoNew::block & rhs)const
+         {
+             return _mm_and_si128(*this, rhs);
+         }
+ #endif
+-        inline osuCrypto::block cc_and_si128(const osuCrypto::block & rhs)const
++        inline osuCryptoNew::block cc_and_si128(const osuCryptoNew::block & rhs)const
+         {
+             auto ret = *this;
+             ret.as<std::uint64_t>()[0] &= rhs.as<std::uint64_t>()[0];
+@@ -161,7 +161,7 @@ namespace osuCrypto
+         }
+ 
+ 
+-        inline osuCrypto::block operator|(const osuCrypto::block & rhs)const
++        inline osuCryptoNew::block operator|(const osuCryptoNew::block & rhs)const
+         {
+ #ifdef OC_ENABLE_SSE2
+             return mm_or_si128(rhs);
+@@ -170,12 +170,12 @@ namespace osuCrypto
+ #endif
+         }
+ #ifdef OC_ENABLE_SSE2
+-        inline osuCrypto::block mm_or_si128(const osuCrypto::block & rhs)const
++        inline osuCryptoNew::block mm_or_si128(const osuCryptoNew::block & rhs)const
+         {
+             return _mm_or_si128(*this, rhs);
+         }
+ #endif
+-        inline osuCrypto::block cc_or_si128(const osuCrypto::block & rhs)const
++        inline osuCryptoNew::block cc_or_si128(const osuCryptoNew::block & rhs)const
+         {
+             auto ret = *this;
+             ret.as<std::uint64_t>()[0] |= rhs.as<std::uint64_t>()[0];
+@@ -184,7 +184,7 @@ namespace osuCrypto
+         }
+ 
+ 
+-        inline osuCrypto::block operator<<(const std::uint8_t & rhs)const
++        inline osuCryptoNew::block operator<<(const std::uint8_t & rhs)const
+         {
+ #ifdef OC_ENABLE_SSE2
+             return mm_slli_epi64(rhs);
+@@ -194,12 +194,12 @@ namespace osuCrypto
+         }
+ 
+ #ifdef OC_ENABLE_SSE2
+-        inline osuCrypto::block mm_slli_epi64(const std::uint8_t & rhs)const
++        inline osuCryptoNew::block mm_slli_epi64(const std::uint8_t & rhs)const
+         {
+             return _mm_slli_epi64(*this, rhs);
+         }
+ #endif
+-        inline osuCrypto::block cc_slli_epi64(const std::uint8_t & rhs)const
++        inline osuCryptoNew::block cc_slli_epi64(const std::uint8_t & rhs)const
+         {
+             auto ret = *this;
+             ret.as<std::uint64_t>()[0] <<= rhs;
+@@ -231,7 +231,7 @@ namespace osuCrypto
+         }
+ 
+ 
+-        inline osuCrypto::block operator+(const osuCrypto::block & rhs)const
++        inline osuCryptoNew::block operator+(const osuCryptoNew::block & rhs)const
+         {
+ #ifdef OC_ENABLE_SSE2
+             return mm_add_epi64(rhs);
+@@ -241,13 +241,13 @@ namespace osuCrypto
+         }
+ 
+ #ifdef OC_ENABLE_SSE2
+-        inline block mm_add_epi64(const osuCrypto::block & rhs) const
++        inline block mm_add_epi64(const osuCryptoNew::block & rhs) const
+         {
+             return _mm_add_epi64(*this, rhs);
+ 
+         }
+ #endif
+-        inline block cc_add_epi64(const osuCrypto::block & rhs) const
++        inline block cc_add_epi64(const osuCryptoNew::block & rhs) const
+         {
+             auto ret = *this;
+             ret.as<std::uint64_t>()[0] += rhs.as<std::uint64_t>()[0];
+@@ -257,7 +257,7 @@ namespace osuCrypto
+ 
+ 
+ 
+-        inline bool operator==(const osuCrypto::block & rhs) const
++        inline bool operator==(const osuCryptoNew::block & rhs) const
+         {
+ #ifdef OC_ENABLE_SSE2
+             auto neq = _mm_xor_si128(*this, rhs);
+@@ -268,7 +268,7 @@ namespace osuCrypto
+ #endif
+         }
+ 
+-        inline bool operator!=(const osuCrypto::block & rhs)const
++        inline bool operator!=(const osuCryptoNew::block & rhs)const
+         {
+             return !(*this == rhs);
+         }
+@@ -487,18 +487,18 @@ namespace osuCrypto
+     extern const std::array<block, 2> zeroAndAllOne;
+ }
+ 
+-std::ostream& operator<<(std::ostream& out, const osuCrypto::block& block);
+-namespace osuCrypto
++std::ostream& operator<<(std::ostream& out, const osuCryptoNew::block& block);
++namespace osuCryptoNew
+ {
+     using ::operator<<;
+ }
+ 
+-inline bool eq(const osuCrypto::block& lhs, const osuCrypto::block& rhs)
++inline bool eq(const osuCryptoNew::block& lhs, const osuCryptoNew::block& rhs)
+ {
+     return lhs == rhs;
+ }
+ 
+-inline bool neq(const osuCrypto::block& lhs, const osuCrypto::block& rhs)
++inline bool neq(const osuCryptoNew::block& lhs, const osuCryptoNew::block& rhs)
+ {
+     return lhs != rhs;
+ }
+diff --git a/third_party/cryptoTools/cryptoTools/Common/config.h b/third_party/cryptoTools/cryptoTools/Common/config.h
+index f0f4320c2a604e4bad66de0105d94bc3cc5c6131..7dead89e3520edc123c8e13d9be0e8e086a9fa86 100644
+--- a/third_party/cryptoTools/cryptoTools/Common/config.h
++++ b/third_party/cryptoTools/cryptoTools/Common/config.h
+@@ -2,7 +2,7 @@
+ 
+ 
+ // use the miracl library for curves
+-#define ENABLE_MIRACL ON 
++/* #undef ENABLE_MIRACL */
+ 
+ // use the relic library for curves
+ /* #undef ENABLE_RELIC */
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/AES.cpp b/third_party/cryptoTools/cryptoTools/Crypto/AES.cpp
+index 59cb0a5a3aa7bea681ae0e69d002e30a9d1be1fb..a9905f69454aa475b23a95848076eb4d8e6527bd 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/AES.cpp
++++ b/third_party/cryptoTools/cryptoTools/Crypto/AES.cpp
+@@ -7,7 +7,7 @@
+ static_assert(0, "OC_ENABLE_PORTABLE_AES must be defined if ENABLE_AESNI is not.");
+ #endif
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+     const AES mAesFixedKey(toBlock(45345336, -103343430));
+ 
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/AES.h b/third_party/cryptoTools/cryptoTools/Crypto/AES.h
+index ff110e7576fa74a6df97f4c26ee895eead9faeea..aab33914257da097172ebfbbb6d2b131bdf7c5d4 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/AES.h
++++ b/third_party/cryptoTools/cryptoTools/Crypto/AES.h
+@@ -2,7 +2,7 @@
+ // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use.
+ #include <cryptoTools/Common/Defines.h>
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+     namespace details
+     {
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/Blake2.cpp b/third_party/cryptoTools/cryptoTools/Crypto/Blake2.cpp
+index 4b05ce210227b4338de8104691d8f2cd7f6674e0..a7438c80100dea59bd5d381c68435bd25deeafe4 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/Blake2.cpp
++++ b/third_party/cryptoTools/cryptoTools/Crypto/Blake2.cpp
+@@ -1,6 +1,6 @@
+ #include <cryptoTools/Crypto/Blake2.h>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 	const u64 Blake2::HashSize;
+ 	const u64 Blake2::MaxHashSize;
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/Blake2.h b/third_party/cryptoTools/cryptoTools/Crypto/Blake2.h
+index 03537d5499a6a1216309c8ac51fb91925de28b61..e7d682ba221aa8424db0863053f0a2f4065da2db 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/Blake2.h
++++ b/third_party/cryptoTools/cryptoTools/Crypto/Blake2.h
+@@ -9,7 +9,7 @@
+ #endif
+ #include <cstring>
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+ 	// An implementation of Blake 2
+ 	class Blake2
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/Commit.h b/third_party/cryptoTools/cryptoTools/Crypto/Commit.h
+index d20da4a57497212bbcb9c071d93a40ba54a4c79d..2a3e4d6400e66c3937ba4562d87749cd19a5c5a5 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/Commit.h
++++ b/third_party/cryptoTools/cryptoTools/Crypto/Commit.h
+@@ -6,7 +6,7 @@
+ #include <cryptoTools/Crypto/RandomOracle.h>
+ #include <iostream>
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+ #define COMMIT_BUFF_u32_SIZE  5
+ static_assert(RandomOracle::HashSize == sizeof(u32) * COMMIT_BUFF_u32_SIZE, "buffer need to be the same size as hash size");
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/Curve.cpp b/third_party/cryptoTools/cryptoTools/Crypto/Curve.cpp
+index f98afab207e07ef1fa172f31bc6478b0eac65f1d..d83a1941872e8e9e60c5bdbfa0de70acb66ddcd5 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/Curve.cpp
++++ b/third_party/cryptoTools/cryptoTools/Crypto/Curve.cpp
+@@ -6,7 +6,7 @@
+ #include <miracl/include/miracl.h>
+ #include <sstream>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     EllipticCurve::EllipticCurve()
+     {
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/Curve.h b/third_party/cryptoTools/cryptoTools/Crypto/Curve.h
+index 2e169d68b69519c8d8d9abf952a8fd41d34dac98..0b68381d4467a7e8b1269addeb4ea7075b70f024 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/Curve.h
++++ b/third_party/cryptoTools/cryptoTools/Crypto/Curve.h
+@@ -6,7 +6,7 @@
+ #include <miracl/include/miracl.h>
+ #include <cryptoTools/Crypto/PRNG.h>
+ #include <memory>
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+ #ifndef MR_GENERIC_MT
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/PRNG.cpp b/third_party/cryptoTools/cryptoTools/Crypto/PRNG.cpp
+index a87b4824e919aabebdb903f9ec743018ef611e54..226f3a419a2a555209c471722cc142e5bb84d8bb 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/PRNG.cpp
++++ b/third_party/cryptoTools/cryptoTools/Crypto/PRNG.cpp
+@@ -3,7 +3,7 @@
+ #include <algorithm>
+ #include <cstring>
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+     PRNG::PRNG(const block& seed, u64 bufferSize)
+         :
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/PRNG.h b/third_party/cryptoTools/cryptoTools/Crypto/PRNG.h
+index a438b8398d972e9997ca1d181ee01526640f2902..5499df3c8e0e8fecf3f2904d71ea8c58d14688a9 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/PRNG.h
++++ b/third_party/cryptoTools/cryptoTools/Crypto/PRNG.h
+@@ -5,7 +5,7 @@
+ #include <vector>
+ #include <cstring>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+ 	// A Peudorandom number generator implemented using AES-NI.
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/RCurve.cpp b/third_party/cryptoTools/cryptoTools/Crypto/RCurve.cpp
+index a54430601f0293bc13713db75f6e4483e7394754..39c28a08b694b66885c6d32140e3005ea5bc66fc 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/RCurve.cpp
++++ b/third_party/cryptoTools/cryptoTools/Crypto/RCurve.cpp
+@@ -36,7 +36,7 @@ static_assert(0, "Relic must be built with -DMULTI=PTHREAD or -DMULTI=OPENMP");
+ #endif
+ 
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+ 
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/RCurve.h b/third_party/cryptoTools/cryptoTools/Crypto/RCurve.h
+index 5fcaf42200e4390276138d82ecdcbbce4ebaefef..d9720e3915ab5434a8394b2425731eaa825a8285 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/RCurve.h
++++ b/third_party/cryptoTools/cryptoTools/Crypto/RCurve.h
+@@ -14,7 +14,7 @@ extern "C" {
+ #endif
+ #include <cryptoTools/Crypto/PRNG.h>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+ 
+diff --git a/third_party/cryptoTools/cryptoTools/Crypto/RandomOracle.h b/third_party/cryptoTools/cryptoTools/Crypto/RandomOracle.h
+index 012cd50d44e2de655ee30a5a2868a57a01bbc2a8..21456a80c32ac69f495ba1169c7fdeba4d4bed54 100644
+--- a/third_party/cryptoTools/cryptoTools/Crypto/RandomOracle.h
++++ b/third_party/cryptoTools/cryptoTools/Crypto/RandomOracle.h
+@@ -1,7 +1,7 @@
+ #pragma once
+ 
+ #include <cryptoTools/Crypto/Blake2.h>
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 	using RandomOracle = Blake2;
+ }
+\ No newline at end of file
+diff --git a/third_party/cryptoTools/cryptoTools/Network/Channel.cpp b/third_party/cryptoTools/cryptoTools/Network/Channel.cpp
+index 3471b99a666deeab864ae83472975a9bd1a4e65d..f5abb667871cf8198ac468939c838868bdc0d6fd 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/Channel.cpp
++++ b/third_party/cryptoTools/cryptoTools/Network/Channel.cpp
+@@ -11,7 +11,7 @@
+ #include <thread>
+ #include <chrono>
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+ 
+ 
+@@ -524,7 +524,7 @@ namespace osuCrypto {
+         );
+     }
+ 
+-    void osuCrypto::StartSocketOp::retryConnect(const error_code& ec)
++    void osuCryptoNew::StartSocketOp::retryConnect(const error_code& ec)
+     {
+         if (canceled() || ec == boost::system::errc::operation_canceled)
+         {
+@@ -690,7 +690,7 @@ namespace osuCrypto {
+         else completionHandle();
+     }
+ 
+-    std::string osuCrypto::Channel::commonName()
++    std::string osuCryptoNew::Channel::commonName()
+     {
+         if(mBase)
+             return mBase->commonName();
+diff --git a/third_party/cryptoTools/cryptoTools/Network/Channel.h b/third_party/cryptoTools/cryptoTools/Network/Channel.h
+index adfbe9b702168b2f658c5bd253542dd96e3b0d12..903f8317963e1c80e60e353ce17047a53052a74e 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/Channel.h
++++ b/third_party/cryptoTools/cryptoTools/Network/Channel.h
+@@ -18,7 +18,7 @@
+ 
+ #include "TLS.h"
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+     class ChannelBase;
+     class Session;
+diff --git a/third_party/cryptoTools/cryptoTools/Network/IOService.cpp b/third_party/cryptoTools/cryptoTools/Network/IOService.cpp
+index 8bb1b3baf41a0573c277a82629b29129c2961652..635f33acca1e347618f6f147141959334d9bc8ba 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/IOService.cpp
++++ b/third_party/cryptoTools/cryptoTools/Network/IOService.cpp
+@@ -18,7 +18,7 @@
+ #include <sstream>
+ #include "util.h"
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+     void post(IOService* ios, std::function<void()>&& fn)
+@@ -995,7 +995,7 @@ namespace osuCrypto
+ 
+ 
+ 
+-    osuCrypto::details::SessionGroup::~SessionGroup()
++    osuCryptoNew::details::SessionGroup::~SessionGroup()
+     {
+         if (hasSubscriptions())
+             lout << "logic error " LOCATION << std::endl;
+diff --git a/third_party/cryptoTools/cryptoTools/Network/IOService.h b/third_party/cryptoTools/cryptoTools/Network/IOService.h
+index ee3a42ce8f0cc4fb49509529e74c4d75f53ddbb2..413d5d297302aea4bcf31b75725658071e0cd801 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/IOService.h
++++ b/third_party/cryptoTools/cryptoTools/Network/IOService.h
+@@ -32,7 +32,7 @@
+ #include <functional>
+ 
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+ 	class Acceptor;
+diff --git a/third_party/cryptoTools/cryptoTools/Network/IoBuffer.cpp b/third_party/cryptoTools/cryptoTools/Network/IoBuffer.cpp
+index 22326f79617646fbfc5e30e5b5956dbc154bbdfc..c5c4e75eb4e118ece124441dcee0c0f5bf9af073 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/IoBuffer.cpp
++++ b/third_party/cryptoTools/cryptoTools/Network/IoBuffer.cpp
+@@ -7,7 +7,7 @@
+ #include <sstream>
+ #include <exception>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     namespace details
+     {
+diff --git a/third_party/cryptoTools/cryptoTools/Network/IoBuffer.h b/third_party/cryptoTools/cryptoTools/Network/IoBuffer.h
+index 490638192e3c471245a97d92d86610654a68c3a9..39e7695ef6810bd56d6b1d4336ea943423f3f17e 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/IoBuffer.h
++++ b/third_party/cryptoTools/cryptoTools/Network/IoBuffer.h
+@@ -21,7 +21,7 @@
+ 
+ //#define ENABLE_NET_LOG
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     enum class Errc
+     {
+@@ -32,27 +32,27 @@ namespace osuCrypto
+ namespace boost {
+     namespace system {
+         template <>
+-        struct is_error_code_enum<osuCrypto::Errc> : true_type {};
++        struct is_error_code_enum<osuCryptoNew::Errc> : true_type {};
+     }
+ }
+ 
+ namespace { // anonymous namespace
+ 
+-    struct osuCryptoErrCategory : boost::system::error_category
++    struct osuCryptoNewErrCategory : boost::system::error_category
+     {
+         const char* name() const noexcept override
+         {
+-            return "osuCrypto";
++            return "osuCryptoNew";
+         }
+ 
+         std::string message(int ev) const override
+         {
+-            switch (static_cast<osuCrypto::Errc>(ev))
++            switch (static_cast<osuCryptoNew::Errc>(ev))
+             {
+-            case osuCrypto::Errc::success:
++            case osuCryptoNew::Errc::success:
+                 return "Success";
+ 
+-            // case osuCrypto::Errc::CloseChannel:
++            // case osuCryptoNew::Errc::CloseChannel:
+             //     return "the channel should be closed.";
+ 
+             default:
+@@ -61,11 +61,11 @@ namespace { // anonymous namespace
+         }
+     };
+ 
+-    const osuCryptoErrCategory theCategory{};
++    const osuCryptoNewErrCategory theCategory{};
+ 
+ } // anonymous namespace
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     using error_code = boost::system::error_code;
+ 
+diff --git a/third_party/cryptoTools/cryptoTools/Network/Session.cpp b/third_party/cryptoTools/cryptoTools/Network/Session.cpp
+index b479ebf44dbb5b4884a48ad60646faca2cbcb037..fa5c299cd30d942c3e6e4aafd75b7414a0a7ae33 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/Session.cpp
++++ b/third_party/cryptoTools/cryptoTools/Network/Session.cpp
+@@ -15,7 +15,7 @@
+ #include <sstream>
+ #include <random>
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+ 	//extern std::vector<std::string> split(const std::string &s, char delim);
+ 
+diff --git a/third_party/cryptoTools/cryptoTools/Network/Session.h b/third_party/cryptoTools/cryptoTools/Network/Session.h
+index c3927ddad0ddc5438b59774a9ffc9afc555c7c80..2f48a3a214fadb3cf1b33e63005c91960db603a7 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/Session.h
++++ b/third_party/cryptoTools/cryptoTools/Network/Session.h
+@@ -13,7 +13,7 @@
+ #include "TLS.h"
+ #include "util.h"
+ 
+-namespace osuCrypto {
++namespace osuCryptoNew {
+ 
+ 	class IOService;
+ 	class Acceptor;
+diff --git a/third_party/cryptoTools/cryptoTools/Network/SocketAdapter.h b/third_party/cryptoTools/cryptoTools/Network/SocketAdapter.h
+index a81c880e1b7c0e62aef8d50ff3a6cd1e50d66448..0ea94b64006ee8e8d1733c1e019cfd671df5dc21 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/SocketAdapter.h
++++ b/third_party/cryptoTools/cryptoTools/Network/SocketAdapter.h
+@@ -8,7 +8,7 @@
+ #include <iostream>
+ #include "util.h"
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+ 
+diff --git a/third_party/cryptoTools/cryptoTools/Network/TLS.cpp b/third_party/cryptoTools/cryptoTools/Network/TLS.cpp
+index 7ba580e52005f9cb7fd799685e52f8908477bb47..c0b30e5a0eb692879c14c52c02aa706cc0e2a824 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/TLS.cpp
++++ b/third_party/cryptoTools/cryptoTools/Network/TLS.cpp
+@@ -11,7 +11,7 @@ extern "C" {
+ #include "wolfssl/error-ssl.h"
+ }
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+     //namespace {
+@@ -398,20 +398,20 @@ namespace osuCrypto
+         recvNext();
+     }
+ 
+-    void osuCrypto::WolfSocket::setDHParamFile(std::string path, error_code& ec)
++    void osuCryptoNew::WolfSocket::setDHParamFile(std::string path, error_code& ec)
+     {
+         std::vector<u8> paramData;
+         if (!(ec = readFile(path, paramData)))
+             setDHParam(paramData, ec);
+     }
+ 
+-    void osuCrypto::WolfSocket::setDHParam(span<u8> data, error_code& ec)
++    void osuCryptoNew::WolfSocket::setDHParam(span<u8> data, error_code& ec)
+     {
+         ec = wolfssl_error_code(
+             wolfSSL_SetTmpDH_buffer(mSSL, data.data(), static_cast<long>(data.size()), WOLFSSL_FILETYPE_PEM));
+     }
+ 
+-    WolfCertX509 osuCrypto::WolfSocket::getCert()
++    WolfCertX509 osuCryptoNew::WolfSocket::getCert()
+     {
+         auto ptr = wolfSSL_get_peer_certificate(mSSL);
+         if (ptr == nullptr)
+diff --git a/third_party/cryptoTools/cryptoTools/Network/TLS.h b/third_party/cryptoTools/cryptoTools/Network/TLS.h
+index bab88bb3903a4e01b5b71080362067003fb5dc9e..62e167aa25d8c01aa8ea131cbd29f8e79e9372a5 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/TLS.h
++++ b/third_party/cryptoTools/cryptoTools/Network/TLS.h
+@@ -37,7 +37,7 @@
+ #define WOLFSSL_LOGGING
+ #endif
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     using error_code = boost::system::error_code;
+     error_code readFile(const std::string& file, std::vector<u8>& buffer);
+@@ -62,9 +62,9 @@ namespace osuCrypto
+ namespace boost {
+     namespace system {
+         template <>
+-        struct is_error_code_enum<osuCrypto::WolfSSL_errc> : true_type {};
++        struct is_error_code_enum<osuCryptoNew::WolfSSL_errc> : true_type {};
+         template <>
+-        struct is_error_code_enum<osuCrypto::TLS_errc> : true_type {};
++        struct is_error_code_enum<osuCryptoNew::TLS_errc> : true_type {};
+     }
+ }
+ 
+@@ -74,7 +74,7 @@ namespace { // anonymous namespace
+     {
+         const char* name() const noexcept override
+         {
+-            return "osuCrypto_WolfSSL";
++            return "osuCryptoNew_WolfSSL";
+         }
+ 
+         std::string message(int err) const override
+@@ -93,26 +93,26 @@ namespace { // anonymous namespace
+     {
+         const char* name() const noexcept override
+         {
+-            return "osuCrypto_TLS";
++            return "osuCryptoNew_TLS";
+         }
+ 
+         std::string message(int err) const override
+         {
+-            switch (static_cast<osuCrypto::TLS_errc>(err))
++            switch (static_cast<osuCryptoNew::TLS_errc>(err))
+             {
+-            case osuCrypto::TLS_errc::Success:
++            case osuCryptoNew::TLS_errc::Success:
+                 return "Success";
+-            case osuCrypto::TLS_errc::Failure:
++            case osuCryptoNew::TLS_errc::Failure:
+                 return "Generic Failure";
+-            case osuCrypto::TLS_errc::ContextNotInit:
++            case osuCryptoNew::TLS_errc::ContextNotInit:
+                 return "TLS context not init";
+-            case osuCrypto::TLS_errc::ContextAlreadyInit:
++            case osuCryptoNew::TLS_errc::ContextAlreadyInit:
+                 return "TLS context is already init";
+-            case osuCrypto::TLS_errc::ContextFailedToInit:
++            case osuCryptoNew::TLS_errc::ContextFailedToInit:
+                 return "TLS context failed to init";
+-            case osuCrypto::TLS_errc::OnlyValidForServerContext:
++            case osuCryptoNew::TLS_errc::OnlyValidForServerContext:
+                 return "Operation is only valid for server initialized TLC context";
+-            case osuCrypto::TLS_errc::SessionIDMismatch:
++            case osuCryptoNew::TLS_errc::SessionIDMismatch:
+                 return "Critical error on connect. Likely active attack by thirdparty";
+             default:
+                 return "unknown error";
+@@ -124,7 +124,7 @@ namespace { // anonymous namespace
+ 
+ } // anonymous namespace
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     inline error_code make_error_code(WolfSSL_errc e)
+     {
+@@ -365,7 +365,7 @@ namespace osuCrypto
+ 
+ }
+ #else
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+     struct TLSContext {
+         operator bool() const
+diff --git a/third_party/cryptoTools/cryptoTools/Network/util.h b/third_party/cryptoTools/cryptoTools/Network/util.h
+index d90dd6638c677658967f9b866b2fbf39e0d3248f..8d1a151e8175a843394829a6a3da9d8f0ada719a 100644
+--- a/third_party/cryptoTools/cryptoTools/Network/util.h
++++ b/third_party/cryptoTools/cryptoTools/Network/util.h
+@@ -9,7 +9,7 @@
+ #include <unordered_map>
+ //#include <cryptoTools/Network/IOService.h>
+ 
+-namespace osuCrypto
++namespace osuCryptoNew
+ {
+ 
+     class IOService;
