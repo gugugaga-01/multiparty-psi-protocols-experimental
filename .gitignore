@@ -63,6 +63,9 @@ docs/
 CLAUDE.md
 .claude/
 
+# Codex
+.codex/
+
 # OS
 .DS_Store
 Thumbs.db
