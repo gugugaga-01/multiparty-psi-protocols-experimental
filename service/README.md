@@ -1,6 +1,6 @@
-# MPSI Service
+# PSI Service
 
-gRPC-based multi-party PSI service with mTLS, threshold key distribution, and a Python client SDK. Supports multiple protocols — each `psi_party` process can handle different protocols per-request.
+gRPC-based PSI service with mTLS, threshold key distribution, dealerless protocol support, and a Python client SDK. Supports multiple protocols, including multi-party threshold PSI and semi-honest two-party DH PSI; each `psi_party` process can handle different protocols per-request.
 
 For standalone experiment implementations (plaintext TCP, no gRPC), see `experiments/*/README.md`. For prerequisites and project overview, see the [root README](../README.md).
 
@@ -28,6 +28,12 @@ cmake .. -DMPSI_BUILD_BEH21=ON
 make -j$(nproc)
 ```
 
+DH PSI protocol support is controlled by `PSI_BUILD_DH` (enabled by default):
+
+```bash
+cmake .. -DPSI_BUILD_DH=ON   # or -DPSI_BUILD_DH=OFF
+```
+
 To enable XZH26 EC-MPSI protocol support (requires libsodium, Boost):
 
 ```bash
@@ -37,7 +43,7 @@ cmake .. -DMPSI_BUILD_XZH26=ON
 make -j$(nproc)
 ```
 
-Prerequisites: gRPC, protobuf, NTL, GMP. XZH26 additionally requires libsodium and Boost.
+Prerequisites: gRPC, protobuf, NTL, GMP. DH PSI requires libsodium. XZH26 additionally requires libsodium and Boost.
 
 ## Supported Protocols
 
@@ -47,8 +53,9 @@ Prerequisites: gRPC, protobuf, NTL, GMP. XZH26 additionally requires libsodium a
 | `beh21_ot_mpsi` | Bay et al., IEEE TIFS 2021 | Paillier threshold encryption + Bloom filters + SCP | Required (trusted dealer) | gRPC (mTLS optional) |
 | `yyh26_tt_mpsi` | Yanai et al., NDSS 2026 | OPPRF + KKRT OT + BFV BOLE + Shamir SS | Not needed | Unencrypted TCP (BtEndpoint)* |
 | `xzh26_ec_mpsi` | TBD | EC-ElGamal (Ristretto255) + Bloom filters + OPPRF | Not needed (runtime DKG) | gRPC (mTLS optional) |
+| `dh_psi` | Diffie-Hellman-style PSI | DH-style commutative blinding | Not needed | gRPC (mTLS optional) |
 
-Both protocols operate under the **semi-honest** (honest-but-curious) threat model.
+The listed protocols operate under the **semi-honest** (honest-but-curious) threat model. DH PSI is exactly two-party and dealerless; use `protocol="dh_psi"`, `num_parties=2`, and `threshold=2`.
 
 \* YYH26 internal crypto phases use unencrypted TCP via cryptoTools' BtEndpoint. This is inherited from the upstream library — cryptoTools' networking predates gRPC integration and uses its own socket layer. Protocol-level crypto (OT, BFV homomorphic encryption) already protects data confidentiality, so the lack of transport encryption does not leak plaintext inputs. However, traffic metadata is visible. Migrating these channels to gRPC with mTLS is tracked as future work.
 
@@ -58,7 +65,7 @@ Each data owner runs one `psi_party` process. The service supports **per-request
 
 ```
                   ┌─────────────────────────┐
-                  │       psi_dealer        │ (optional, KS05 only)
+                  │       psi_dealer        │ (optional, dealer-backed protocols)
                   │  Paillier key distrib.  │
                   └────────┬────────────────┘
                            │ key shares
@@ -231,7 +238,7 @@ with PsiClient("10.0.0.3:50090") as client:
         leader_address="10.0.0.3:53000",
         num_parties=3,
         threshold=3,
-        protocol="ks05_t_mpsi",  # or "yyh26_tt_mpsi"
+        protocol="ks05_t_mpsi",  # or "yyh26_tt_mpsi", "dh_psi"
     )
     print(intersection)
 
@@ -287,6 +294,23 @@ Each party must include `--dealer` to fetch keys:
 - **Communication**: All inter-party communication uses gRPC (with optional mTLS)
 - **Threat model**: Semi-honest (honest-but-curious) adversaries
 - **Key distribution**: Trusted dealer model — the dealer sees all secret key shares
+
+## DH PSI Protocol
+
+DH PSI is a semi-honest two-party PSI protocol. It does not use `psi_dealer`; start exactly two `psi_party` processes and submit requests with `protocol="dh_psi"`, `num_parties=2`, and `threshold=2`. Values other than 2 for party count or threshold are rejected by the web API before execution.
+
+Ensure it is enabled with:
+
+```bash
+cmake .. -DPSI_BUILD_DH=ON
+make -j$(nproc)
+```
+
+Run the dealerless demo:
+
+```bash
+bash service/demos/dhpsi/demo.sh
+```
 
 ## YYH26 TT-MPSI Protocol
 
@@ -440,7 +464,7 @@ with PsiClient("10.0.0.1:50090", tls=True,
 | `leader_address` | `""` | Inter-party address of the leader (required) |
 | `num_parties` | 3 | Number of participating parties |
 | `threshold` | 3 | Elements in >= threshold parties appear in result |
-| `protocol` | `"ks05_t_mpsi"` | Protocol identifier (`ks05_t_mpsi`, `beh21_ot_mpsi`, or `yyh26_tt_mpsi`) |
+| `protocol` | `"ks05_t_mpsi"` | Protocol identifier (`ks05_t_mpsi`, `beh21_ot_mpsi`, `xzh26_ec_mpsi`, `yyh26_tt_mpsi`, or `dh_psi`) |
 | `timeout` | None | RPC timeout in seconds |
 
 ## Tests
@@ -459,8 +483,8 @@ cd build && ctest --output-on-failure --test-dir service
 
 ## Security Notes
 
-- **Semi-honest model**: Both KS05 and YYH26 protocols assume honest-but-curious adversaries. Parties follow the protocol correctly but may try to learn extra information.
-- **Trusted dealer (KS05 only)**: Key generation uses a trusted dealer — the dealer sees all secret key shares. It wipes secrets after distribution but must be trusted not to retain them.
+- **Semi-honest model**: The service protocols assume honest-but-curious adversaries. Parties follow the protocol correctly but may try to learn extra information. DH PSI is limited to two parties with `num_parties=2` and `threshold=2`.
+- **Trusted dealer (dealer-backed protocols)**: KS05 and BEH21 use a trusted dealer. The dealer sees secret key shares, wipes secrets after distribution, and must be trusted not to retain them. DH PSI is dealerless.
 - **CN verification**: When mTLS is enabled, the dealer and inter-party servers verify the peer's certificate CN matches the claimed party identity.
 - **Key size**: Paillier modulus is 3072-bit (128-bit security per NIST SP 800-57).
 - **Unencrypted TCP (YYH26)**: Internal crypto channels use unencrypted TCP. See [YYH26 Current limitations](#current-limitations) above.

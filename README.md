@@ -1,6 +1,6 @@
 # psinsieme
 
-Experimental implementations of multi-party Private Set Intersection (PSI) protocols for research and evaluation.
+Experimental implementations of Private Set Intersection (PSI) protocols for research and evaluation, including multi-party, threshold, and two-party variants.
 
 ## Protocols
 
@@ -10,6 +10,7 @@ Experimental implementations of multi-party Private Set Intersection (PSI) proto
 | BEH21 Threshold MPSI | Bay et al., IEEE TIFS 2021 [[doi]](https://doi.org/10.1109/TIFS.2021.3118879) | [experiments/beh21](experiments/beh21/) | [service](service/) |
 | YYH26 T-Threshold MPSI | TBD, NDSS 2026 | [experiments/yyh26](experiments/yyh26/) | [service](service/) |
 | XZH26 EC-ElGamal Bloom OPPRF MPSI | TBD | [experiments/xzh26](experiments/xzh26/) | [service](service/) |
+| DH PSI | Diffie-Hellman-style two-party PSI | - | [service](service/) |
 
 The repository has two layers:
 
@@ -23,7 +24,7 @@ There are two supported install paths. Use Docker for the fastest web-console se
 
 ### Option 1: Docker Hub image
 
-The published image includes the web console, Python client runtime, frontend assets, and prebuilt `psi_party` / `psi_dealer` binaries with KS05, BEH21, and XZH26 enabled.
+The published image includes the web console, Python client runtime, frontend assets, and prebuilt `psi_party` / `psi_dealer` binaries with KS05, BEH21, and XZH26 enabled. Source builds control dealerless two-party DH PSI with `-DPSI_BUILD_DH=ON/OFF`.
 
 ```bash
 docker pull gugugaga001/psinsieme:latest
@@ -93,14 +94,15 @@ graph TB
 
 ### Core (service)
 
-The default service build compiles **KS05 + BEH21 + XZH26** (YYH26 is opt-in; see below).
+The default service build compiles **KS05 + BEH21 + XZH26 + DH PSI** (YYH26 is opt-in; see below).
 
 - C++20 compiler (GCC 10+ or Clang 15+)
 - CMake 3.16+
 - [NTL](https://libntl.org/) (Number Theory Library)
 - [GMP](https://gmplib.org/) (GNU Multiple Precision)
 - [gRPC](https://grpc.io/) and [Protobuf](https://protobuf.dev/)
-- [libsodium](https://libsodium.org/) and [Boost](https://www.boost.org/) (system, thread) — needed by XZH26
+- [libsodium](https://libsodium.org/) — needed by DH PSI and XZH26
+- [Boost](https://www.boost.org/) (system, thread) — needed by XZH26
 - The `experiments/yyh26/upstream` git submodule — XZH26 reuses its cryptoTools sources and prebuilt miracl
 
 ```bash
@@ -113,8 +115,9 @@ sudo apt install build-essential cmake libntl-dev libgmp-dev \
 git submodule update --init experiments/yyh26/upstream
 ```
 
-To skip XZH26 (and avoid libsodium / the submodule), configure with `-DMPSI_BUILD_XZH26=OFF`.
+To skip XZH26 (and avoid its Boost/submodule requirements), configure with `-DMPSI_BUILD_XZH26=OFF`. To avoid libsodium entirely, also disable DH PSI with `-DPSI_BUILD_DH=OFF`.
 BEH21 has no extra dependencies; disable it with `-DMPSI_BUILD_BEH21=OFF` if desired.
+DH PSI is dealerless and controlled by `-DPSI_BUILD_DH=ON/OFF` (enabled by default).
 
 ### Experiments (KS05/BEH21)
 
@@ -167,13 +170,14 @@ cmake ..
 make -j$(nproc)
 ```
 
-This produces `psi_party` and `psi_dealer` under `build/service/`, with KS05, BEH21, and XZH26 compiled in.
+This produces `psi_party` and `psi_dealer` under `build/service/`, with KS05, BEH21, XZH26, and DH PSI compiled in. Use `-DPSI_BUILD_DH=OFF` to disable dealerless two-party DH PSI.
 
 Run the demo:
 
 ```bash
 bash service/demos/ks05/demo.sh      # 3-party KS05 with dealer
 bash service/demos/beh21/demo.sh     # 3-party BEH21 with dealer (built by default)
+bash service/demos/dhpsi/demo.sh     # 2-party dealerless DH PSI (PSI_BUILD_DH)
 bash service/demos/yyh26/demo.sh     # 3-party YYH26 (opt-in: -DMPSI_BUILD_YYH26=ON -DMPSI_BUILD_XZH26=OFF)
 ```
 

@@ -111,6 +111,27 @@ if(MPSI_BUILD_BEH21)
         --certs-dir "${CMAKE_CURRENT_SOURCE_DIR}/../certs/test")
 endif()
 
+# === DH PSI Tests ===
+if(PSI_BUILD_DH)
+    # In-process integration and validation tests
+    add_executable(test_dhpsi_integration protocols/dhpsi/test_dhpsi_integration.cpp)
+    target_include_directories(test_dhpsi_integration PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/..
+    )
+    target_link_libraries(test_dhpsi_integration PRIVATE
+        dhpsi_protocol mpsi_core GTest::gtest_main)
+    gtest_discover_tests(test_dhpsi_integration)
+
+    # gRPC integration tests through the PsiProtocol plugin wrapper
+    add_executable(test_dhpsi_grpc protocols/dhpsi/test_dhpsi_grpc_integration.cpp)
+    target_include_directories(test_dhpsi_grpc PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/..
+    )
+    target_link_libraries(test_dhpsi_grpc PRIVATE
+        dhpsi_protocol mpsi_core mpsi_proto GTest::gtest_main)
+    gtest_discover_tests(test_dhpsi_grpc)
+endif()
+
 # === XZH26 EC-MPSI Tests ===
 if(MPSI_BUILD_XZH26)
     find_library(SODIUM_LIB sodium)

@@ -8,6 +8,7 @@ const PROTOCOLS = [
   { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
   { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
   { key: 'xzh26_ec_mpsi', label: 'XZH26 MPSI' },
+  { key: 'dh_psi',        label: 'DH PSI' },
 ]
 
 const PARTY_COLORS = [
@@ -44,14 +45,28 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
   }, [firstProtocol, selectedProtocolAvailable])
 
   // XZH26 is plain MPSI (intersection of all parties), so the threshold is
-  // always N — lock the field and feed N through instead of t.
+  // always N. DH PSI is exactly two-party PSI, so both N and t are fixed at 2.
   const isFullMpsi = protocol === 'xzh26_ec_mpsi'
+  const isTwoPartyPsi = protocol === 'dh_psi'
   const requiresEqualSizes = protocol === 'xzh26_ec_mpsi' || protocol === 'beh21_ot_mpsi'
-  const effT = isFullMpsi ? n : t
+  const effN = isTwoPartyPsi ? '2' : n
+  const effT = isTwoPartyPsi ? '2' : isFullMpsi ? n : t
+  const setupBadge = isTwoPartyPsi ? tr('protocol.chip.twoParty') : requiresEqualSizes ? tr('demo.equalSizeBadge') : tr('demo.thresholdBadge')
   const inputCount = inputs.reduce((sum, row) => sum + row.length, 0)
 
+  useEffect(() => {
+    if (!isTwoPartyPsi) return
+    setN('2')
+    setT('2')
+    if (customize && inputs.length !== 2) {
+      api.demoDefaults(2)
+        .then((d) => setInputs(d.inputs))
+        .catch((e) => setErr(String((e as Error).message)))
+    }
+  }, [isTwoPartyPsi, customize, inputs.length])
+
   const loadDefaults = async (overrideSizes?: number[]) => {
-    const N = Math.max(2, parseInt(n, 10) || 2)
+    const N = Math.max(2, parseInt(effN, 10) || 2)
     try {
       const d = await api.demoDefaults(N, overrideSizes)
       setInputs(d.inputs)
@@ -83,7 +98,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
 
   const run = async () => {
     setErr(null); setResult(null)
-    const numParties = parseInt(n, 10)
+    const numParties = parseInt(effN, 10)
     const threshold = parseInt(effT, 10)
     if (!selectedProtocolAvailable) { setErr(tr('form.protocolUnavailable')); return }
     if (!Number.isFinite(numParties) || numParties < 2) { setErr(tr('form.invalidParties')); return }
@@ -123,7 +138,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
         </div>
         <div className="runner-summary" aria-label={tr('demo.summary')}>
           <span><Icon name="icon-variant" size={18} />{protocol}</span>
-          <span>N={n}</span>
+          <span>N={effN}</span>
           <span>t={effT}</span>
           <span>{autoCluster ? tr('demo.autoCluster.on') : tr('demo.autoCluster.off')}</span>
         </div>
@@ -132,7 +147,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
       <div className="form-section">
         <div className="form-section-head">
           <strong>{tr('demo.setup')}</strong>
-          <span>{requiresEqualSizes ? tr('demo.equalSizeBadge') : tr('demo.thresholdBadge')}</span>
+          <span>{setupBadge}</span>
         </div>
       <div className="form-grid demo-form-grid">
         <label className="field grow">
@@ -147,10 +162,11 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
             <small>{tr('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
           )}
           {requiresEqualSizes && <small>{tr('protocol.equalSizeHint')}</small>}
+          {isTwoPartyPsi && <small>{tr('protocol.twoPartyHint')}</small>}
         </label>
         <label className="field compact">
           <span>{tr('demo.n')}</span>
-          <Input value={n} disabled={busy} onChange={(e) => {
+          <Input value={effN} disabled={busy || isTwoPartyPsi} onChange={(e) => {
             const x = e.target.value.replace(/\D/g, '')
             setN(x); if (parseInt(t, 10) > (parseInt(x, 10) || 0)) setT(x)
           }} />
@@ -159,10 +175,11 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
           <span>{tr('demo.t')}</span>
           <Input
             value={effT}
-            disabled={busy || isFullMpsi}
+            disabled={busy || isFullMpsi || isTwoPartyPsi}
             onChange={(e) => setT(e.target.value.replace(/\D/g, ''))}
           />
           {isFullMpsi && <small>{tr('demo.t.lockedMpsi')}</small>}
+          {isTwoPartyPsi && <small>{tr('demo.t.lockedTwoParty')}</small>}
         </label>
       </div>
       </div>
@@ -248,7 +265,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
         <div className="aii-busy-inline">
           <Loading active style={{ height: 320 }} />
           <div className="aii-busy-msg">
-            {tr('demo.busy', { protocol, n, t: effT })}
+            {tr('demo.busy', { protocol, n: effN, t: effT })}
           </div>
         </div>
       )}

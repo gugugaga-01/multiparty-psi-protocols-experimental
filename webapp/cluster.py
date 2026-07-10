@@ -38,13 +38,13 @@ INTER_PORT_BASE = 53000
 CLIENT_PORT_BASE = 53100
 
 # Protocols that don't use the trusted dealer (no Paillier key distribution).
-# XZH26 runs its DKG inside the protocol; YYH26 is dealerless by design.
-DEALERLESS_PROTOCOLS = {"yyh26_tt_mpsi", "xzh26_ec_mpsi"}
+# XZH26 runs its DKG inside the protocol; YYH26 and DH PSI are dealerless.
+DEALERLESS_PROTOCOLS = {"yyh26_tt_mpsi", "xzh26_ec_mpsi", "dh_psi"}
 
 # All protocol IDs the UI knows about. Which of these are actually runnable
 # depends on the build flags the psi_party binary was compiled with — see
 # available_protocols().
-KNOWN_PROTOCOLS = ["ks05_t_mpsi", "beh21_ot_mpsi", "yyh26_tt_mpsi", "xzh26_ec_mpsi"]
+KNOWN_PROTOCOLS = ["ks05_t_mpsi", "beh21_ot_mpsi", "yyh26_tt_mpsi", "xzh26_ec_mpsi", "dh_psi"]
 
 # Cache of compiled-in protocols, keyed by (binary path, mtime, size) so we
 # only rescan the binary when it changes (status is polled every few seconds).

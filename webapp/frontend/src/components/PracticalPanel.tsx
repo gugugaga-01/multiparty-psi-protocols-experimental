@@ -8,6 +8,7 @@ const PROTOCOLS = [
   { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
   { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
   { key: 'xzh26_ec_mpsi', label: 'XZH26 MPSI' },
+  { key: 'dh_psi',        label: 'DH PSI' },
 ]
 
 export function PracticalPanel({ available }: { available?: string[] | null }) {
@@ -44,15 +45,26 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
   }, [firstProtocol, selectedProtocolAvailable])
 
   // XZH26 is plain MPSI (intersection of all parties): threshold is always N.
+  // DH PSI is exactly two-party PSI, so both N and t are fixed at 2.
   const isFullMpsi = protocol === 'xzh26_ec_mpsi'
+  const isTwoPartyPsi = protocol === 'dh_psi'
   const requiresEqualSizes = protocol === 'xzh26_ec_mpsi' || protocol === 'beh21_ot_mpsi'
-  const effT = isFullMpsi ? n : t
+  const effN = isTwoPartyPsi ? '2' : n
+  const effT = isTwoPartyPsi ? '2' : isFullMpsi ? n : t
+  const setupBadge = isTwoPartyPsi ? tr('protocol.chip.twoParty') : requiresEqualSizes ? tr('demo.equalSizeBadge') : tr('demo.thresholdBadge')
   const elementCount = elements.split(/[\n,]/).map((s) => s.trim()).filter(Boolean).length
+
+  useEffect(() => {
+    if (!isTwoPartyPsi) return
+    setN('2')
+    setT('2')
+    setLeader((prev) => prev === '127.0.0.1:53002' ? '127.0.0.1:53001' : prev)
+  }, [isTwoPartyPsi])
 
   const submit = async () => {
     setErr(null); setResult(null)
     const els = elements.split(/[\n,]/).map((s) => s.trim()).filter(Boolean)
-    const numParties = parseInt(n, 10)
+    const numParties = parseInt(effN, 10)
     const threshold = parseInt(effT, 10)
     if (!target.trim()) { setErr(tr('form.missingTarget')); return }
     if (!leader.trim()) { setErr(tr('form.missingLeader')); return }
@@ -117,7 +129,7 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
       <div className="form-section">
         <div className="form-section-head">
           <strong>{tr('pr.protocolSection')}</strong>
-          <span>{requiresEqualSizes ? tr('demo.equalSizeBadge') : tr('demo.thresholdBadge')}</span>
+          <span>{setupBadge}</span>
         </div>
       <div className="form-grid practical-form-grid">
         <label className="field compact">
@@ -141,18 +153,21 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
             <small>{tr('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
           )}
           {requiresEqualSizes && <small>{tr('protocol.equalSizeHint')}</small>}
+          {isTwoPartyPsi && <small>{tr('protocol.twoPartyHint')}</small>}
         </label>
         <label className="field compact">
           <span>N</span>
-          <Input value={n} disabled={busy} onChange={(e) => setN(e.target.value.replace(/\D/g, ''))} />
+          <Input value={effN} disabled={busy || isTwoPartyPsi} onChange={(e) => setN(e.target.value.replace(/\D/g, ''))} />
+          {isTwoPartyPsi && <small>{tr('protocol.twoPartyHint')}</small>}
         </label>
         <label className="field compact">
           <span>t</span>
           <Input
             value={effT}
-            disabled={busy || isFullMpsi}
+            disabled={busy || isFullMpsi || isTwoPartyPsi}
             onChange={(e) => setT(e.target.value.replace(/\D/g, ''))}
           />
+          {isTwoPartyPsi && <small>{tr('demo.t.lockedTwoParty')}</small>}
         </label>
       </div>
       </div>

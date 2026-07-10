@@ -1,6 +1,6 @@
 # psinsieme web console
 
-A browser UI for running the PSI protocols without touching the shell. It wraps
+A browser UI for running PSI and MPSI protocols without touching the shell. It wraps
 the same `psi_party` / `psi_dealer` binaries that `service/demos/` drive, and
 talks to them through the Python client SDK in `service/clients/python`.
 
@@ -101,9 +101,13 @@ logs (dealer + each party) land in `webapp/logs/`.
   unequal custom inputs are rejected with a clear error.
 - `xzh26_ec_mpsi` is plain MPSI, so the threshold is locked to N in the UI.
   `beh21_ot_mpsi` and `ks05_t_mpsi` are threshold protocols (t ≤ N is allowed).
-- Dealer use: KS05 and BEH21 use the trusted dealer; XZH26 and YYH26 are
-  dealerless (DKG runs in-protocol).
+- `dh_psi` is semi-honest two-party PSI. The UI locks `num_parties=2`
+  and `threshold=2`; demo and submit APIs reject other values clearly.
+- Dealer use: KS05 and BEH21 use the trusted dealer; XZH26, YYH26, and
+  DH PSI are dealerless (XZH26 DKG runs in-protocol).
 - XZH26 and YYH26 **cannot both be compiled into one `psi_party`** — they vendor
   conflicting copies of osuCrypto/cryptoTools. XZH26 is on by default; build
-  YYH26 instead with `-DMPSI_BUILD_YYH26=ON -DMPSI_BUILD_XZH26=OFF`. The build
+  YYH26 instead with `-DMPSI_BUILD_YYH26=ON -DMPSI_BUILD_XZH26=OFF`. DH PSI
+  is controlled by `-DPSI_BUILD_DH=ON/OFF`; it is detected as `dh_psi` when
+  compiled into `psi_party`. The build
   fails fast if both flags are set.
