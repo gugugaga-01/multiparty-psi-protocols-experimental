@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button, Card, Input, Select, Switch, Divider, Collapse, Loading, Icon } from 'animal-island-ui'
-import { api, type SubmitResult } from '../api'
+import { api, formatApiError, type SubmitResult } from '../api'
 import { useProtocolSelection } from '../ProtocolSelectionContext'
 import { useI18n } from '../i18n'
 import { ProtocolPicker } from './ProtocolPicker'
@@ -74,7 +74,7 @@ export function PracticalPanel() {
       const r = await api.submit(body)
       setResult(r)
     } catch (e) {
-      setErr(String((e as Error).message))
+      setErr(formatApiError(e, tr))
     } finally { setBusy(false) }
   }
 
@@ -237,7 +237,11 @@ export function PracticalPanel() {
           <div className="result-overview practical-result">
             <div>
               <span>{tr('pr.status')}</span>
-              <strong>{result.status || tr('demo.party.empty')}</strong>
+              <strong>
+                {(result.role ?? role) === 'leader'
+                  ? tr('pr.status.leader', { count: result.intersection.length })
+                  : tr('pr.status.member')}
+              </strong>
             </div>
             <div>
               <span>{tr('pr.intersection')} ({result.intersection.length})</span>

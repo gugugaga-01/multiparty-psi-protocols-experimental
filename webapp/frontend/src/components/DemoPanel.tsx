@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button, Card, Input, Switch, Divider, Loading, Icon } from 'animal-island-ui'
-import { api, type DemoResult } from '../api'
+import { api, formatApiError, formatApiProblem, type DemoResult } from '../api'
 import { useProtocolSelection } from '../ProtocolSelectionContext'
 import { useI18n } from '../i18n'
 import { ProtocolPicker } from './ProtocolPicker'
@@ -40,15 +40,15 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
     if (inputs.length === expectedParties) return
     api.demoDefaults(expectedParties)
       .then((d) => setInputs(d.inputs))
-      .catch((e) => setErr(String((e as Error).message)))
-  }, [customize, effN, inputs.length, protocol])
+      .catch((e) => setErr(formatApiError(e, tr)))
+  }, [customize, effN, inputs.length, protocol, tr])
 
   const loadDefaults = async (overrideSizes?: number[]) => {
     const N = Math.max(2, parseInt(effN, 10) || 2)
     try {
       const d = await api.demoDefaults(N, overrideSizes)
       setInputs(d.inputs)
-    } catch (e) { setErr(String((e as Error).message)) }
+    } catch (e) { setErr(formatApiError(e, tr)) }
   }
 
   // Resize a single party's input list (deterministic, server-driven so the
@@ -66,7 +66,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
         if (d.inputs[i]) next[i] = d.inputs[i]
         return next
       })
-    } catch (e) { setErr(String((e as Error).message)) }
+    } catch (e) { setErr(formatApiError(e, tr)) }
   }
 
   const toggleCustomize = (v: boolean) => {
@@ -94,11 +94,7 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
       const r = await api.demo(body)
       setResult(r)
     } catch (e) {
-      let msg = String((e as Error).message)
-      if (/Failed to fetch|NetworkError|connection refused/i.test(msg)) {
-        msg += '\n' + tr('demo.connRefused.hint')
-      }
-      setErr(msg)
+      setErr(formatApiError(e, tr))
     } finally {
       setBusy(false)
       onAfterRun()
@@ -281,9 +277,11 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
                         {p.role === 'leader' ? tr('demo.leader') : tr('demo.member')}
                       </span>
                     </div>
-                    <div className="kv">addr: {p.address}</div>
+                    <div className="kv">{tr('demo.party.address')}: {p.address}</div>
                     {p.error ? (
-                      <div className="banner bad" style={{ marginTop: 6 }}>{p.error}</div>
+                      <div className="banner bad" style={{ marginTop: 6 }}>
+                        {formatApiProblem(p.error, p.error_code, p.error_params, tr)}
+                      </div>
                     ) : (
                       <>
                         <div style={{ marginTop: 6 }}>

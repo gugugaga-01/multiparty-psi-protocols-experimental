@@ -36,6 +36,8 @@ export type DemoResult = {
     intersection: string[]
     status: string
     error?: string | null
+    error_code?: string | null
+    error_params?: ApiErrorParams | null
   }>
   success: boolean
 }
@@ -43,6 +45,45 @@ export type DemoResult = {
 export type SubmitResult = {
   intersection: string[]
   status: string
+  role?: 'leader' | 'member'
+}
+
+export type ApiErrorParams = Record<string, string | number>
+
+export class ApiError extends Error {
+  readonly code: string | null
+  readonly params: ApiErrorParams
+  readonly detail: string
+
+  constructor(detail: string, code?: string | null, params?: ApiErrorParams) {
+    super(detail)
+    this.name = 'ApiError'
+    this.detail = detail
+    this.code = code ?? null
+    this.params = params ?? {}
+  }
+}
+
+type Translator = (key: string, vars?: ApiErrorParams) => string
+
+export function formatApiError(error: unknown, t: Translator): string {
+  if (error instanceof ApiError && error.code) {
+    const key = `error.${error.code}`
+    const localized = t(key, error.params)
+    if (localized !== key) return localized
+  }
+  if (error instanceof TypeError) return t('error.network')
+  const detail = error instanceof Error ? error.message : String(error)
+  return t('error.unexpected', { detail })
+}
+
+export function formatApiProblem(
+  detail: string,
+  code: string | null | undefined,
+  params: ApiErrorParams | null | undefined,
+  t: Translator,
+): string {
+  return formatApiError(new ApiError(detail, code, params ?? undefined), t)
 }
 
 async function jfetch<T>(path: string, init?: RequestInit): Promise<T> {
@@ -54,11 +95,21 @@ async function jfetch<T>(path: string, init?: RequestInit): Promise<T> {
   let data: unknown
   try { data = text ? JSON.parse(text) : {} } catch { data = { detail: text } }
   if (!res.ok) {
-    const detail =
-      (data && typeof data === 'object' && 'detail' in data
-        ? String((data as { detail: unknown }).detail)
-        : `${res.status} ${res.statusText}`)
-    throw new Error(detail)
+    const payload = data && typeof data === 'object'
+      ? data as { detail?: unknown; code?: unknown; params?: unknown }
+      : {}
+    const detail = payload.detail === undefined
+      ? `${res.status} ${res.statusText}`
+      : String(payload.detail)
+    const code = typeof payload.code === 'string' ? payload.code : null
+    const params = payload.params && typeof payload.params === 'object'
+      ? Object.fromEntries(
+          Object.entries(payload.params).filter((entry): entry is [string, string | number] =>
+            typeof entry[1] === 'string' || typeof entry[1] === 'number',
+          ),
+        )
+      : {}
+    throw new ApiError(detail, code, params)
   }
   return data as T
 }
