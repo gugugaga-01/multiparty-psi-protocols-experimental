@@ -27,3 +27,11 @@ The following are included as git submodules and carry their own licenses and tr
 - **Source:** https://github.com/leodec/ole_wahc
 - **Location:** `experiments/yyh26/libOLE/`
 - **Notable transitive deps:** BLAKE2 (CC0/OpenSSL/Apache 2.0, Samuel Neves), PALISADE math (BSD 2-Clause, NJIT)
+
+## System Dependencies
+
+### libsodium
+
+- **License:** ISC
+- **Source:** https://github.com/jedisct1/libsodium
+- **Used by:** service DH PSI (`dh_psi`) and XZH26 when built with libsodium-backed group operations
