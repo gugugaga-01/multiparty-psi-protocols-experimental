@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button, Card, Collapse, Divider, Icon, type IconName } from 'animal-island-ui'
 import { useI18n } from '../i18n'
+import { PROTOCOL_CATEGORIES, PROTOCOLS } from '../protocolCatalog'
 
 const guideSteps = [
   { key: 'guide.step1', icon: 'icon-diy', color: 'app-green' },
@@ -24,59 +25,6 @@ const projectStats = [
   { key: 'project.stat.protocols', icon: 'icon-variant', color: 'app-blue' },
   { key: 'project.stat.service', icon: 'icon-helicopter', color: 'app-green' },
   { key: 'project.stat.console', icon: 'icon-map', color: 'app-orange' },
-] as const
-
-const protocols = [
-  {
-    id: 'ks05_t_mpsi',
-    name: 'KS05 T-MPSI',
-    icon: 'icon-miles',
-    color: 'app-blue',
-    modelKey: 'protocol.ks05.model',
-    dealerKey: 'protocol.dealer.required',
-    fitKey: 'protocol.ks05.fit',
-    chips: ['protocol.chip.threshold', 'protocol.chip.dealer', 'protocol.chip.paillier'],
-  },
-  {
-    id: 'beh21_ot_mpsi',
-    name: 'BEH21 T-MPSI',
-    icon: 'icon-critterpedia',
-    color: 'app-green',
-    modelKey: 'protocol.beh21.model',
-    dealerKey: 'protocol.dealer.required',
-    fitKey: 'protocol.beh21.fit',
-    chips: ['protocol.chip.threshold', 'protocol.chip.dealer', 'protocol.chip.equalSize'],
-  },
-  {
-    id: 'xzh26_ec_mpsi',
-    name: 'XZH26 MPSI',
-    icon: 'icon-map',
-    color: 'app-orange',
-    modelKey: 'protocol.xzh26.model',
-    dealerKey: 'protocol.dealer.none',
-    fitKey: 'protocol.xzh26.fit',
-    chips: ['protocol.chip.plain', 'protocol.chip.dealerless', 'protocol.chip.fullSet'],
-  },
-  {
-    id: 'dh_psi',
-    name: 'DH PSI',
-    icon: 'icon-chat',
-    color: 'app-teal',
-    modelKey: 'protocol.dh.model',
-    dealerKey: 'protocol.dealer.none',
-    fitKey: 'protocol.dh.fit',
-    chips: ['protocol.chip.twoParty', 'protocol.chip.dealerless', 'protocol.chip.semiHonest'],
-  },
-  {
-    id: 'yyh26_tt_mpsi',
-    name: 'YYH26 TT-MPSI',
-    icon: 'icon-variant',
-    color: 'purple',
-    modelKey: 'protocol.yyh26.model',
-    dealerKey: 'protocol.dealer.none',
-    fitKey: 'protocol.yyh26.fit',
-    chips: ['protocol.chip.threshold', 'protocol.chip.dealerless', 'protocol.chip.experimental'],
-  },
 ] as const
 
 const historyItems = [
@@ -1078,7 +1026,7 @@ export function ProtocolsPage({ available }: { available?: string[] | null }) {
       <div className="protocol-summary-strip">
         <div>
           <span>{t('protocol.summary.total')}</span>
-          <strong>{protocols.length}</strong>
+          <strong>{PROTOCOLS.length}</strong>
         </div>
         <div>
           <span>{t('protocol.summary.built')}</span>
@@ -1090,38 +1038,64 @@ export function ProtocolsPage({ available }: { available?: string[] | null }) {
         </div>
       </div>
 
-      <div className="protocol-list">
-        {protocols.map((p) => {
-          const isAvailable = available?.includes(p.id) ?? null
+      <div className="protocol-category-list">
+        {PROTOCOL_CATEGORIES.map((category) => {
+          const categoryProtocols = PROTOCOLS.filter((protocol) => protocol.category === category.id)
+          const builtCount = available == null
+            ? null
+            : categoryProtocols.filter((protocol) => available.includes(protocol.id)).length
+          const headingId = `protocol-category-${category.id}`
+
           return (
-            <Card key={p.id} type="title" color={p.color} className="protocol-card">
-            <div className="protocol-heading">
-              <Icon name={p.icon} size={38} bounce />
-              <div>
-                <div className="protocol-title-row">
-                  <h3>{p.name}</h3>
-                  {isAvailable !== null && (
-                    <span className={'protocol-status ' + (isAvailable ? 'ok' : 'warn')}>
-                      {isAvailable ? t('protocol.available') : t('protocol.notAvailable')}
-                    </span>
-                  )}
+            <section className="protocol-category-section" aria-labelledby={headingId} key={category.id}>
+              <div className="protocol-category-heading">
+                <div>
+                  <span className="protocol-category-kicker">{t('protocol.category')}</span>
+                  <h2 id={headingId}>{t(category.labelKey)}</h2>
                 </div>
-                <code>{p.id}</code>
+                <span className="protocol-category-count">
+                  {builtCount == null
+                    ? t('protocol.category.knownCount', { total: categoryProtocols.length })
+                    : t('protocol.category.builtCount', { built: builtCount, total: categoryProtocols.length })}
+                </span>
               </div>
-            </div>
-            <div className="protocol-chip-row">
-              {p.chips.map((chip) => <span key={chip}>{t(chip)}</span>)}
-            </div>
-            <Divider type="line-white" />
-            <div className="protocol-details">
-              <span>{t('protocol.model')}</span>
-              <p>{t(p.modelKey)}</p>
-              <span>{t('protocol.dealer')}</span>
-              <p>{t(p.dealerKey)}</p>
-              <span>{t('protocol.fit')}</span>
-              <p>{t(p.fitKey)}</p>
-            </div>
-            </Card>
+
+              <div className="protocol-list">
+                {categoryProtocols.map((p) => {
+                  const isAvailable = available?.includes(p.id) ?? null
+                  return (
+                    <Card key={p.id} type="title" color={p.color} className="protocol-card">
+                      <div className="protocol-heading">
+                        <Icon name={p.icon} size={38} bounce />
+                        <div>
+                          <div className="protocol-title-row">
+                            <h3>{p.name}</h3>
+                            {isAvailable !== null && (
+                              <span className={'protocol-status ' + (isAvailable ? 'ok' : 'warn')}>
+                                {isAvailable ? t('protocol.available') : t('protocol.notAvailable')}
+                              </span>
+                            )}
+                          </div>
+                          <code>{p.id}</code>
+                        </div>
+                      </div>
+                      <div className="protocol-chip-row">
+                        {p.chips.map((chip) => <span key={chip}>{t(chip)}</span>)}
+                      </div>
+                      <Divider type="line-white" />
+                      <div className="protocol-details">
+                        <span>{t('protocol.model')}</span>
+                        <p>{t(p.modelKey)}</p>
+                        <span>{t('protocol.dealer')}</span>
+                        <p>{t(p.dealerKey)}</p>
+                        <span>{t('protocol.fit')}</span>
+                        <p>{t(p.fitKey)}</p>
+                      </div>
+                    </Card>
+                  )
+                })}
+              </div>
+            </section>
           )
         })}
       </div>
