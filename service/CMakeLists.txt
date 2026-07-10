@@ -262,6 +262,40 @@ endif()
 option(MPSI_BUILD_XZH26 "Build XZH26 EC-MPSI protocol support" ON)
 
 if(MPSI_BUILD_XZH26)
+    # The yyh26 upstream submodule vendors an older cryptoTools release. Apply
+    # the parent-owned compatibility patch before compiling it so current
+    # Boost.Asio versions accept its strand declarations.
+    set(XZH26_UPSTREAM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../experiments/yyh26/upstream")
+    set(XZH26_UPSTREAM_PATCH
+        "${CMAKE_CURRENT_SOURCE_DIR}/../experiments/yyh26/patches/upstream-modern-build.patch")
+    find_program(GIT_EXECUTABLE git REQUIRED)
+    execute_process(
+        COMMAND "${GIT_EXECUTABLE}" -C "${XZH26_UPSTREAM_DIR}" apply --reverse --check
+                --whitespace=nowarn "${XZH26_UPSTREAM_PATCH}"
+        RESULT_VARIABLE XZH26_PATCH_ALREADY_APPLIED
+        OUTPUT_QUIET
+        ERROR_QUIET)
+    if(NOT XZH26_PATCH_ALREADY_APPLIED EQUAL 0)
+        execute_process(
+            COMMAND "${GIT_EXECUTABLE}" -C "${XZH26_UPSTREAM_DIR}" apply --check
+                    --whitespace=nowarn "${XZH26_UPSTREAM_PATCH}"
+            RESULT_VARIABLE XZH26_PATCH_CAN_APPLY
+            OUTPUT_QUIET
+            ERROR_QUIET)
+        if(NOT XZH26_PATCH_CAN_APPLY EQUAL 0)
+            message(FATAL_ERROR
+                "XZH26 upstream compatibility patch cannot be applied. Run "
+                "git submodule update --init experiments/yyh26/upstream and retry.")
+        endif()
+        execute_process(
+            COMMAND "${GIT_EXECUTABLE}" -C "${XZH26_UPSTREAM_DIR}" apply
+                    --whitespace=nowarn "${XZH26_UPSTREAM_PATCH}"
+            RESULT_VARIABLE XZH26_PATCH_RESULT)
+        if(NOT XZH26_PATCH_RESULT EQUAL 0)
+            message(FATAL_ERROR "Failed to apply the XZH26 upstream compatibility patch")
+        endif()
+        message(STATUS "Applied XZH26 upstream compatibility patch")
+    endif()
     find_library(SODIUM_LIB sodium)
     if(NOT SODIUM_LIB)
         message(FATAL_ERROR "libsodium not found. Install: sudo apt install libsodium-dev")
