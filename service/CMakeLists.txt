@@ -182,6 +182,34 @@ if(MPSI_BUILD_YYH26)
     target_link_libraries(yyh26_plugin PRIVATE yyh26_protocol mpsi_core)
 endif()
 
+# DH PSI protocol (optional, dealerless 2-party Ristretto255)
+option(PSI_BUILD_DH "Build DH PSI protocol support" ON)
+
+if(PSI_BUILD_DH)
+    find_library(SODIUM_LIB sodium)
+    find_path(SODIUM_INCLUDE_DIR sodium.h)
+    if(NOT SODIUM_LIB OR NOT SODIUM_INCLUDE_DIR)
+        message(FATAL_ERROR "libsodium development files not found. Install: sudo apt install libsodium-dev")
+    endif()
+
+    add_library(dhpsi_protocol
+        protocols/dhpsi/protocol/dh_psi.cpp
+        protocols/dhpsi/dhpsi_protocol.cpp
+    )
+    target_include_directories(dhpsi_protocol PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${SODIUM_INCLUDE_DIR}
+    )
+    target_link_libraries(dhpsi_protocol PUBLIC mpsi_core ${SODIUM_LIB})
+    target_link_libraries(dhpsi_protocol PRIVATE pthread)
+
+    add_library(dhpsi_plugin OBJECT
+        protocols/dhpsi/dhpsi_plugin.cpp
+    )
+    target_include_directories(dhpsi_plugin PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(dhpsi_plugin PRIVATE dhpsi_protocol mpsi_core mpsi_proto)
+endif()
+
 # psi_party binary (client-facing PsiService + inter-party protocol)
 add_executable(psi_party
     party/main.cpp
@@ -189,6 +217,11 @@ add_executable(psi_party
 )
 target_include_directories(psi_party PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(psi_party PRIVATE ks05_protocol ks05_crypto mpsi_core mpsi_proto pthread)
+
+if(PSI_BUILD_DH)
+    target_sources(psi_party PRIVATE $<TARGET_OBJECTS:dhpsi_plugin>)
+    target_link_libraries(psi_party PRIVATE dhpsi_protocol)
+endif()
 
 if(MPSI_BUILD_YYH26)
     target_sources(psi_party PRIVATE $<TARGET_OBJECTS:yyh26_plugin>)
