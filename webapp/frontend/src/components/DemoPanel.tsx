@@ -1,15 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Button, Card, Input, Select, Switch, Divider, Loading, Icon } from 'animal-island-ui'
+import { Button, Card, Input, Switch, Divider, Loading, Icon } from 'animal-island-ui'
 import { api, type DemoResult } from '../api'
+import { useProtocolSelection } from '../ProtocolSelectionContext'
 import { useI18n } from '../i18n'
-
-const PROTOCOLS = [
-  { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
-  { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
-  { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
-  { key: 'xzh26_ec_mpsi', label: 'XZH26 MPSI' },
-  { key: 'dh_psi',        label: 'DH PSI' },
-]
+import { ProtocolPicker } from './ProtocolPicker'
 
 const PARTY_COLORS = [
   'app-pink', 'app-blue', 'app-yellow', 'app-orange',
@@ -18,17 +12,9 @@ const PARTY_COLORS = [
 ] as const
 
 
-export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; available?: string[] | null }) {
+export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
   const { t: tr } = useI18n()
-  // Only offer protocols actually compiled into psi_party. When availability is
-  // unknown (status not yet loaded), show all so the UI degrades gracefully.
-  const protocolOptions = available && available.length
-    ? PROTOCOLS.filter((p) => available.includes(p.key))
-    : PROTOCOLS
-  const missingProtocols = available && available.length
-    ? PROTOCOLS.filter((p) => !available.includes(p.key))
-    : []
-  const [protocol, setProtocol] = useState('ks05_t_mpsi')
+  const { protocol } = useProtocolSelection()
   const [n, setN] = useState('3')
   const [t, setT] = useState('3')
   const [autoCluster, setAutoCluster] = useState(true)
@@ -38,32 +24,24 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
   const [err, setErr] = useState<string | null>(null)
   const [result, setResult] = useState<DemoResult | null>(null)
 
-  const firstProtocol = protocolOptions[0]?.key
-  const selectedProtocolAvailable = protocolOptions.some((p) => p.key === protocol)
-  useEffect(() => {
-    if (firstProtocol && !selectedProtocolAvailable) setProtocol(firstProtocol)
-  }, [firstProtocol, selectedProtocolAvailable])
-
   // XZH26 is plain MPSI (intersection of all parties), so the threshold is
   // always N. DH PSI is exactly two-party PSI, so both N and t are fixed at 2.
-  const isFullMpsi = protocol === 'xzh26_ec_mpsi'
-  const isTwoPartyPsi = protocol === 'dh_psi'
-  const requiresEqualSizes = protocol === 'xzh26_ec_mpsi' || protocol === 'beh21_ot_mpsi'
+  const isFullMpsi = protocol?.thresholdMode === 'all_parties'
+  const isTwoPartyPsi = protocol?.thresholdMode === 'fixed_two'
+  const requiresEqualSizes = protocol?.equalSize ?? false
   const effN = isTwoPartyPsi ? '2' : n
   const effT = isTwoPartyPsi ? '2' : isFullMpsi ? n : t
   const setupBadge = isTwoPartyPsi ? tr('protocol.chip.twoParty') : requiresEqualSizes ? tr('demo.equalSizeBadge') : tr('demo.thresholdBadge')
   const inputCount = inputs.reduce((sum, row) => sum + row.length, 0)
 
   useEffect(() => {
-    if (!isTwoPartyPsi) return
-    setN('2')
-    setT('2')
-    if (customize && inputs.length !== 2) {
-      api.demoDefaults(2)
-        .then((d) => setInputs(d.inputs))
-        .catch((e) => setErr(String((e as Error).message)))
-    }
-  }, [isTwoPartyPsi, customize, inputs.length])
+    if (!customize || !protocol) return
+    const expectedParties = parseInt(effN, 10)
+    if (inputs.length === expectedParties) return
+    api.demoDefaults(expectedParties)
+      .then((d) => setInputs(d.inputs))
+      .catch((e) => setErr(String((e as Error).message)))
+  }, [customize, effN, inputs.length, protocol])
 
   const loadDefaults = async (overrideSizes?: number[]) => {
     const N = Math.max(2, parseInt(effN, 10) || 2)
@@ -77,7 +55,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
   // overlap recipe stays consistent — only that party's row gets replaced so
   // edits the user made to other rows are preserved).
   const resizeParty = async (i: number, newSize: number) => {
-    const N = parseInt(n, 10) || inputs.length
+    const N = parseInt(effN, 10) || inputs.length
     if (newSize < 1) return
     const sizes = inputs.map((row) => row.length)
     sizes[i] = newSize
@@ -91,16 +69,15 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
     } catch (e) { setErr(String((e as Error).message)) }
   }
 
-  const toggleCustomize = async (v: boolean) => {
+  const toggleCustomize = (v: boolean) => {
     setCustomize(v)
-    if (v && inputs.length === 0) await loadDefaults()
   }
 
   const run = async () => {
     setErr(null); setResult(null)
     const numParties = parseInt(effN, 10)
     const threshold = parseInt(effT, 10)
-    if (!selectedProtocolAvailable) { setErr(tr('form.protocolUnavailable')); return }
+    if (!protocol) { setErr(tr('form.protocolUnavailable')); return }
     if (!Number.isFinite(numParties) || numParties < 2) { setErr(tr('form.invalidParties')); return }
     if (!Number.isFinite(threshold) || threshold < 2 || threshold > numParties) { setErr(tr('form.invalidThreshold')); return }
 
@@ -109,7 +86,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
       const body: Parameters<typeof api.demo>[0] = {
         num_parties: numParties,
         threshold,
-        protocol,
+        protocol: protocol.id,
         auto_cluster: autoCluster,
       }
       if (customize && inputs.length > 0) body.inputs = inputs
@@ -137,7 +114,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
           <p>{tr('demo.lead')}</p>
         </div>
         <div className="runner-summary" aria-label={tr('demo.summary')}>
-          <span><Icon name="icon-variant" size={18} />{protocol}</span>
+          <span><Icon name="icon-variant" size={18} />{protocol?.id ?? tr('protocol.noneAvailable')}</span>
           <span>N={effN}</span>
           <span>t={effT}</span>
           <span>{autoCluster ? tr('demo.autoCluster.on') : tr('demo.autoCluster.off')}</span>
@@ -150,20 +127,15 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
           <span>{setupBadge}</span>
         </div>
       <div className="form-grid demo-form-grid">
-        <label className="field grow">
-          <span>{tr('demo.protocol')}</span>
-          <Select
-            options={protocolOptions}
-            value={protocol}
-            onChange={(v) => setProtocol(v as string)}
-            disabled={busy}
-          />
-          {missingProtocols.length > 0 && (
-            <small>{tr('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
+        <ProtocolPicker
+          disabled={busy}
+          hint={(
+            <>
+              {requiresEqualSizes && <small>{tr('protocol.equalSizeHint')}</small>}
+              {isTwoPartyPsi && <small>{tr('protocol.twoPartyHint')}</small>}
+            </>
           )}
-          {requiresEqualSizes && <small>{tr('protocol.equalSizeHint')}</small>}
-          {isTwoPartyPsi && <small>{tr('protocol.twoPartyHint')}</small>}
-        </label>
+        />
         <label className="field compact">
           <span>{tr('demo.n')}</span>
           <Input value={effN} disabled={busy || isTwoPartyPsi} onChange={(e) => {
@@ -251,7 +223,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
 
       <Divider />
       <div className="action-row">
-        <Button type="primary" size="large" loading={busy} onClick={run}>
+        <Button type="primary" size="large" loading={busy} disabled={!protocol} onClick={run}>
           {tr('demo.run')}
         </Button>
         {result && (
@@ -265,7 +237,7 @@ export function DemoPanel({ onAfterRun, available }: { onAfterRun: () => void; a
         <div className="aii-busy-inline">
           <Loading active style={{ height: 320 }} />
           <div className="aii-busy-msg">
-            {tr('demo.busy', { protocol, n: effN, t: effT })}
+            {tr('demo.busy', { protocol: protocol?.id ?? '-', n: effN, t: effT })}
           </div>
         </div>
       )}

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Button, Card, Input, Select, Switch, Divider, Loading, Icon } from 'animal-island-ui'
+import { Button, Card, Input, Switch, Divider, Loading, Icon } from 'animal-island-ui'
 import { api, type ClusterStatus } from '../api'
+import { useProtocolSelection } from '../ProtocolSelectionContext'
 import { useI18n } from '../i18n'
+import { ProtocolPicker } from './ProtocolPicker'
 
 export function ClusterCard({
   status,
@@ -11,44 +13,21 @@ export function ClusterCard({
   onChange: () => void
 }) {
   const { t } = useI18n()
-  const [protocol, setProtocol] = useState('ks05_t_mpsi')
+  const { protocol } = useProtocolSelection()
   const [n, setN] = useState('3')
   const [tls, setTls] = useState(false)
   const [busy, setBusy] = useState(false)
   const [busyMsg, setBusyMsg] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
 
-  // Protocol labels carry both the key and a brief role hint (translated).
-  // We localise the hint suffix only, since the protocol IDs themselves are
-  // technical names that read the same in any language.
-  const allProtocols = [
-    { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
-    { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
-    { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
-    { key: 'xzh26_ec_mpsi', label: 'XZH26 MPSI' },
-    { key: 'dh_psi',        label: 'DH PSI' },
-  ]
-  // Only offer protocols compiled into psi_party; fall back to all when
-  // availability is not yet known.
-  const avail = status?.protocols_available
-  const protocols = avail && avail.length
-    ? allProtocols.filter((p) => avail.includes(p.key))
-    : allProtocols
-  const missingProtocols = avail && avail.length
-    ? allProtocols.filter((p) => !avail.includes(p.key))
-    : []
-  const firstProtocol = protocols[0]?.key
-  const selectedProtocolAvailable = protocols.some((p) => p.key === protocol)
-  const isTwoPartyPsi = protocol === 'dh_psi'
+  const isTwoPartyPsi = protocol?.thresholdMode === 'fixed_two'
+  const effN = isTwoPartyPsi ? '2' : n
 
   useEffect(() => {
-    if (isTwoPartyPsi) setN('2')
-  }, [isTwoPartyPsi])
-
-  useEffect(() => {
-    if (status?.protocol) setProtocol(status.protocol)
-    if (status?.num_parties && status.num_parties > 0) setN(String(status.num_parties))
-  }, [status?.protocol, status?.num_parties])
+    if (!isTwoPartyPsi && status?.num_parties && status.num_parties > 0) {
+      setN(String(status.num_parties))
+    }
+  }, [isTwoPartyPsi, status?.num_parties])
 
   const anyRunning =
     !!status &&
@@ -60,22 +39,18 @@ export function ClusterCard({
   const dealerTone = status?.dealer.running ? 'ok' : 'warn'
   const partyTone = runningParties === partyTotal && partyTotal > 0 ? 'ok' : runningParties > 0 ? 'warn' : 'bad'
 
-  useEffect(() => {
-    if (!anyRunning && firstProtocol && !selectedProtocolAvailable) setProtocol(firstProtocol)
-  }, [anyRunning, firstProtocol, selectedProtocolAvailable])
-
   const start = async () => {
     setErr(null)
-    const numParties = isTwoPartyPsi ? 2 : parseInt(n, 10)
-    if (!selectedProtocolAvailable) { setErr(t('form.protocolUnavailable')); return }
+    const numParties = parseInt(effN, 10)
+    if (!protocol) { setErr(t('form.protocolUnavailable')); return }
     if (!Number.isFinite(numParties) || numParties < 2) { setErr(t('form.invalidParties')); return }
 
     setBusy(true)
-    setBusyMsg(t('cluster.busy.start', { protocol, n: numParties }))
+    setBusyMsg(t('cluster.busy.start', { protocol: protocol.id, n: numParties }))
     try {
       await api.clusterStart({
         num_parties: numParties,
-        protocol,
+        protocol: protocol.id,
         tls,
       })
       onChange()
@@ -132,22 +107,11 @@ export function ClusterCard({
       </div>
 
       <div className="form-grid cluster-form-grid">
-        <label className="field grow">
-          <span>{t('cluster.protocol')}</span>
-          <Select
-            options={protocols}
-            value={protocol}
-            onChange={(v) => setProtocol(v as string)}
-            disabled={busy || anyRunning}
-          />
-          {missingProtocols.length > 0 && (
-            <small>{t('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
-          )}
-        </label>
+        <ProtocolPicker disabled={busy || anyRunning} />
         <label className="field compact">
           <span>{t('cluster.parties')}</span>
           <Input
-            value={isTwoPartyPsi ? '2' : n}
+            value={effN}
             onChange={(e) => setN(e.target.value.replace(/\D/g, '') || '')}
             disabled={busy || anyRunning || isTwoPartyPsi}
           />
@@ -159,7 +123,7 @@ export function ClusterCard({
         </label>
       </div>
       <div className="action-row">
-        <Button type="primary" loading={busy} disabled={anyRunning} onClick={start}>
+        <Button type="primary" loading={busy} disabled={anyRunning || !protocol} onClick={start}>
           {t('cluster.start')}
         </Button>
         <Button type="default" danger loading={busy} disabled={!anyRunning} onClick={stop}>
