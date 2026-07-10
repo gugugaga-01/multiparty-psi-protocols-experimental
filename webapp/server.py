@@ -149,6 +149,10 @@ EQUAL_SIZE_PROTOCOLS = {"xzh26_ec_mpsi", "beh21_ot_mpsi"}
 # generated inputs (matches the mid value of the KS05 default ladder).
 EQUAL_SIZE_DEFAULT = 16
 
+# Protocols with a fixed two-party contract. Missing N/t values are normalized
+# to 2, but explicit non-2 values are rejected before a run starts.
+TWO_PARTY_PROTOCOLS = {"dh_psi"}
+
 
 def build_demo_inputs(n: int, sizes: list[int] | None = None) -> list[list[str]]:
     # Default sizes mirror service/demos/ks05/demo.sh: party 0 = 12, mid = 16,
@@ -219,6 +223,40 @@ def _bounded_timeout(value: Any) -> float:
     return timeout
 
 
+def _exact_int(value: Any, name: str, expected: int, protocol: str) -> int:
+    try:
+        n = int(value)
+    except (TypeError, ValueError):
+        raise ValueError(f"{name} must be an integer") from None
+    if n != expected:
+        raise ValueError(f"{protocol} requires {name}={expected}")
+    return expected
+
+
+def _request_num_parties(protocol: str, raw: Any, *, default: int) -> int:
+    if protocol in TWO_PARTY_PROTOCOLS:
+        return 2 if raw is None else _exact_int(raw, "num_parties", 2, protocol)
+    return _bounded_int(raw if raw is not None else default, "num_parties", 2, MAX_PARTIES)
+
+
+def _request_party_shape(
+    protocol: str,
+    n_raw: Any,
+    t_raw: Any,
+    *,
+    default_n: int,
+    default_threshold_to_n: bool,
+) -> tuple[int, int]:
+    n = _request_num_parties(protocol, n_raw, default=default_n)
+    if protocol in TWO_PARTY_PROTOCOLS:
+        if t_raw is not None:
+            _exact_int(t_raw, "threshold", 2, protocol)
+        return 2, 2
+    default_t = n if default_threshold_to_n else 3
+    t = _bounded_int(t_raw if t_raw is not None else default_t, "threshold", 2, n)
+    return n, t
+
+
 def _clean_elements(raw: Any, name: str = "elements") -> list[str]:
     if not isinstance(raw, list) or not raw:
         raise ValueError(f"{name} must be a non-empty list of strings")
@@ -252,11 +290,15 @@ def _validate_inputs(inputs: list[list[str]]) -> None:
 
 
 def handle_demo(req: dict[str, Any]) -> dict[str, Any]:
-    n = _bounded_int(req.get("num_parties", 3), "num_parties", 2, MAX_PARTIES)
-    auto_cluster = bool(req.get("auto_cluster", True))
-    t_raw = req.get("threshold")
-    t = _bounded_int(t_raw if t_raw is not None else n, "threshold", 2, n)
     protocol = str(req.get("protocol", "ks05_t_mpsi"))
+    n, t = _request_party_shape(
+        protocol,
+        req.get("num_parties"),
+        req.get("threshold"),
+        default_n=3,
+        default_threshold_to_n=True,
+    )
+    auto_cluster = bool(req.get("auto_cluster", True))
     client_port_base = int(req.get("client_port_base", 53100))
     inter_port_base = int(req.get("inter_port_base", 53000))
     timeout = _bounded_timeout(req.get("timeout", 300))
@@ -436,8 +478,13 @@ def handle_submit(req: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("role must be 'leader' or 'member'")
 
     protocol = str(req.get("protocol", "ks05_t_mpsi"))
-    num_parties = _bounded_int(req.get("num_parties", 3), "num_parties", 2, MAX_PARTIES)
-    threshold = _bounded_int(req.get("threshold", 3), "threshold", 2, num_parties)
+    num_parties, threshold = _request_party_shape(
+        protocol,
+        req.get("num_parties"),
+        req.get("threshold"),
+        default_n=3,
+        default_threshold_to_n=False,
+    )
     timeout = _bounded_timeout(req.get("timeout", 300))
     tls = bool(req.get("tls", False))
 
@@ -685,9 +732,9 @@ class Handler(BaseHTTPRequestHandler):
                 self._send_json(200, handle_submit(req))
                 return
             if path == "/api/cluster/start":
-                n = _bounded_int(req.get("num_parties", 3), "num_parties", 2, MAX_PARTIES)
-                use_tls = bool(req.get("tls", False))
                 proto = str(req.get("protocol") or "ks05_t_mpsi")
+                n = _request_num_parties(proto, req.get("num_parties"), default=3)
+                use_tls = bool(req.get("tls", False))
                 build_dir = req.get("build_dir") or None
                 result = cluster.start(
                     num_parties=n, protocol=proto, use_tls=use_tls, build_dir=build_dir,

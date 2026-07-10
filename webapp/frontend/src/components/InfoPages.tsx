@@ -58,6 +58,16 @@ const protocols = [
     chips: ['protocol.chip.plain', 'protocol.chip.dealerless', 'protocol.chip.fullSet'],
   },
   {
+    id: 'dh_psi',
+    name: 'DH PSI',
+    icon: 'icon-chat',
+    color: 'app-teal',
+    modelKey: 'protocol.dh.model',
+    dealerKey: 'protocol.dealer.none',
+    fitKey: 'protocol.dh.fit',
+    chips: ['protocol.chip.twoParty', 'protocol.chip.dealerless', 'protocol.chip.semiHonest'],
+  },
+  {
     id: 'yyh26_tt_mpsi',
     name: 'YYH26 TT-MPSI',
     icon: 'icon-variant',

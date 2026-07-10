@@ -26,6 +26,7 @@ export function ClusterCard({
     { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
     { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
     { key: 'xzh26_ec_mpsi', label: 'XZH26 MPSI' },
+    { key: 'dh_psi',        label: 'DH PSI' },
   ]
   // Only offer protocols compiled into psi_party; fall back to all when
   // availability is not yet known.
@@ -38,6 +39,11 @@ export function ClusterCard({
     : []
   const firstProtocol = protocols[0]?.key
   const selectedProtocolAvailable = protocols.some((p) => p.key === protocol)
+  const isTwoPartyPsi = protocol === 'dh_psi'
+
+  useEffect(() => {
+    if (isTwoPartyPsi) setN('2')
+  }, [isTwoPartyPsi])
 
   useEffect(() => {
     if (status?.protocol) setProtocol(status.protocol)
@@ -60,12 +66,12 @@ export function ClusterCard({
 
   const start = async () => {
     setErr(null)
-    const numParties = parseInt(n, 10)
+    const numParties = isTwoPartyPsi ? 2 : parseInt(n, 10)
     if (!selectedProtocolAvailable) { setErr(t('form.protocolUnavailable')); return }
     if (!Number.isFinite(numParties) || numParties < 2) { setErr(t('form.invalidParties')); return }
 
     setBusy(true)
-    setBusyMsg(t('cluster.busy.start', { protocol, n }))
+    setBusyMsg(t('cluster.busy.start', { protocol, n: numParties }))
     try {
       await api.clusterStart({
         num_parties: numParties,
@@ -141,10 +147,11 @@ export function ClusterCard({
         <label className="field compact">
           <span>{t('cluster.parties')}</span>
           <Input
-            value={n}
+            value={isTwoPartyPsi ? '2' : n}
             onChange={(e) => setN(e.target.value.replace(/\D/g, '') || '')}
-            disabled={busy || anyRunning}
+            disabled={busy || anyRunning || isTwoPartyPsi}
           />
+          {isTwoPartyPsi && <small>{t('protocol.twoPartyHint')}</small>}
         </label>
         <label className="field compact">
           <span>{t('cluster.mtls')}</span>
