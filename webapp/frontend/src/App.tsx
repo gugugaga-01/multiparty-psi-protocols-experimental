@@ -6,6 +6,7 @@ import { DemoPanel } from './components/DemoPanel'
 import { GuidePage, ProjectPage, ProtocolsPage, WhyPsiPage } from './components/InfoPages'
 import { PracticalPanel } from './components/PracticalPanel'
 import { I18nProvider } from './I18nProvider'
+import { ProtocolSelectionProvider } from './ProtocolSelectionContext'
 import { useI18n, type Locale } from './i18n'
 
 const PAGES = ['console', 'why', 'guide', 'project', 'protocols'] as const
@@ -55,6 +56,11 @@ function ConsolePage({
   const anyRunning = !!status && (status.dealer.running || status.parties.some((p) => p.running))
 
   return (
+    <ProtocolSelectionProvider
+      available={status?.protocols_available ?? null}
+      activeProtocol={anyRunning ? status?.protocol ?? null : null}
+      locked={anyRunning}
+    >
     <main className="console-page">
       <section className="console-overview" aria-labelledby="console-overview-title">
         <div className="console-overview-copy">
@@ -93,12 +99,13 @@ function ConsolePage({
           defaultActiveKey="demo"
           leafAnimation
           items={[
-            { key: 'demo',      label: t('tabs.demo'),      children: <DemoPanel onAfterRun={refresh} available={status?.protocols_available ?? null} /> },
-            { key: 'practical', label: t('tabs.practical'), children: <PracticalPanel available={status?.protocols_available ?? null} /> },
+            { key: 'demo',      label: t('tabs.demo'),      children: <DemoPanel onAfterRun={refresh} /> },
+            { key: 'practical', label: t('tabs.practical'), children: <PracticalPanel /> },
           ]}
         />
       </section>
     </main>
+    </ProtocolSelectionProvider>
   )
 }
 

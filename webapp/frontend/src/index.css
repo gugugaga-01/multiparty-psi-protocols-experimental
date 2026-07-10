@@ -3410,12 +3410,33 @@ body {
 .demo-form-grid,
 .practical-form-grid,
 .two-col {
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
 }
 
 label.field {
+  max-width: 100%;
+  min-width: 0;
   gap: 7px;
   line-height: 1.25;
+}
+
+label.field > [class*="animal-wrapper"] {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+label.field [class*="animal-trigger"] {
+  min-width: 0;
+  gap: 8px;
+}
+
+label.field [class*="animal-value"],
+label.field [class*="animal-placeholder"] {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 label.field > span,
@@ -3436,6 +3457,81 @@ textarea.aii-textarea {
 
 .element-editor textarea.aii-textarea {
   min-height: 180px;
+}
+
+.protocol-category-list {
+  display: grid;
+  gap: 26px;
+}
+
+.protocol-category-section {
+  min-width: 0;
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(214, 191, 138, 0.76);
+  border-radius: 22px;
+  background: rgba(255, 250, 240, 0.66);
+}
+
+.protocol-category-section .protocol-list {
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+}
+
+.protocol-category-heading {
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.protocol-category-heading > div {
+  min-width: 0;
+}
+
+.protocol-category-kicker {
+  color: #725d42;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.protocol-category-heading h2 {
+  min-width: 0;
+  margin: 3px 0 0;
+  color: #4a3a20;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.protocol-category-count {
+  flex: 0 0 auto;
+  padding: 5px 10px;
+  border: 1px solid #d6bf8a;
+  border-radius: 999px;
+  background: #fff8e6;
+  color: #5a4524;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+.protocol-heading > div,
+.protocol-title-row h3 {
+  min-width: 0;
+}
+
+.protocol-heading > div {
+  flex: 1 1 auto;
+}
+
+.protocol-title-row h3 {
+  overflow-wrap: anywhere;
 }
 
 .action-row {
@@ -3760,6 +3856,20 @@ select:focus-visible,
   .runner-summary span {
     flex: 1 1 130px;
     justify-content: center;
+  }
+
+  [class*="animal-tabContent-"] {
+    min-width: 0;
+    padding: 14px;
+  }
+
+  .protocol-category-section {
+    padding: 14px;
+  }
+
+  .protocol-category-heading {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .action-row button {

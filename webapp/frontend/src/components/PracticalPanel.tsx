@@ -1,24 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Button, Card, Input, Select, Switch, Divider, Collapse, Loading, Icon } from 'animal-island-ui'
 import { api, type SubmitResult } from '../api'
+import { useProtocolSelection } from '../ProtocolSelectionContext'
 import { useI18n } from '../i18n'
+import { ProtocolPicker } from './ProtocolPicker'
 
-const PROTOCOLS = [
-  { key: 'ks05_t_mpsi',   label: 'KS05 T-MPSI' },
-  { key: 'beh21_ot_mpsi', label: 'BEH21 T-MPSI' },
-  { key: 'yyh26_tt_mpsi', label: 'YYH26 TT-MPSI' },
-  { key: 'xzh26_ec_mpsi', label: 'XZH26 MPSI' },
-  { key: 'dh_psi',        label: 'DH PSI' },
-]
-
-export function PracticalPanel({ available }: { available?: string[] | null }) {
+export function PracticalPanel() {
   const { t: tr } = useI18n()
-  const protocolOptions = available && available.length
-    ? PROTOCOLS.filter((p) => available.includes(p.key))
-    : PROTOCOLS
-  const missingProtocols = available && available.length
-    ? PROTOCOLS.filter((p) => !available.includes(p.key))
-    : []
+  const { protocol } = useProtocolSelection()
   const ROLES = [
     { key: 'member', label: tr('pr.role.member') },
     { key: 'leader', label: tr('pr.role.leader') },
@@ -26,7 +15,6 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
   const [target, setTarget] = useState('127.0.0.1:53100')
   const [leader, setLeader] = useState('127.0.0.1:53002')
   const [role, setRole] = useState<'leader' | 'member'>('member')
-  const [protocol, setProtocol] = useState('ks05_t_mpsi')
   const [n, setN] = useState('3')
   const [t, setT] = useState('3')
   const [elements, setElements] = useState('Alpha\nBravo\nCharlie\nDelta')
@@ -38,27 +26,22 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
   const [err, setErr] = useState<string | null>(null)
   const [result, setResult] = useState<SubmitResult | null>(null)
 
-  const firstProtocol = protocolOptions[0]?.key
-  const selectedProtocolAvailable = protocolOptions.some((p) => p.key === protocol)
-  useEffect(() => {
-    if (firstProtocol && !selectedProtocolAvailable) setProtocol(firstProtocol)
-  }, [firstProtocol, selectedProtocolAvailable])
-
   // XZH26 is plain MPSI (intersection of all parties): threshold is always N.
   // DH PSI is exactly two-party PSI, so both N and t are fixed at 2.
-  const isFullMpsi = protocol === 'xzh26_ec_mpsi'
-  const isTwoPartyPsi = protocol === 'dh_psi'
-  const requiresEqualSizes = protocol === 'xzh26_ec_mpsi' || protocol === 'beh21_ot_mpsi'
+  const isFullMpsi = protocol?.thresholdMode === 'all_parties'
+  const isTwoPartyPsi = protocol?.thresholdMode === 'fixed_two'
+  const requiresEqualSizes = protocol?.equalSize ?? false
   const effN = isTwoPartyPsi ? '2' : n
   const effT = isTwoPartyPsi ? '2' : isFullMpsi ? n : t
   const setupBadge = isTwoPartyPsi ? tr('protocol.chip.twoParty') : requiresEqualSizes ? tr('demo.equalSizeBadge') : tr('demo.thresholdBadge')
   const elementCount = elements.split(/[\n,]/).map((s) => s.trim()).filter(Boolean).length
 
   useEffect(() => {
-    if (!isTwoPartyPsi) return
-    setN('2')
-    setT('2')
-    setLeader((prev) => prev === '127.0.0.1:53002' ? '127.0.0.1:53001' : prev)
+    setLeader((current) => {
+      if (isTwoPartyPsi && current === '127.0.0.1:53002') return '127.0.0.1:53001'
+      if (!isTwoPartyPsi && current === '127.0.0.1:53001') return '127.0.0.1:53002'
+      return current
+    })
   }, [isTwoPartyPsi])
 
   const submit = async () => {
@@ -68,7 +51,7 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
     const threshold = parseInt(effT, 10)
     if (!target.trim()) { setErr(tr('form.missingTarget')); return }
     if (!leader.trim()) { setErr(tr('form.missingLeader')); return }
-    if (!selectedProtocolAvailable) { setErr(tr('form.protocolUnavailable')); return }
+    if (!protocol) { setErr(tr('form.protocolUnavailable')); return }
     if (!Number.isFinite(numParties) || numParties < 2) { setErr(tr('form.invalidParties')); return }
     if (!Number.isFinite(threshold) || threshold < 2 || threshold > numParties) { setErr(tr('form.invalidThreshold')); return }
     if (els.length === 0) { setErr(tr('form.missingElements')); return }
@@ -78,7 +61,7 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
       const body: Parameters<typeof api.submit>[0] = {
         target: target.trim(), leader_address: leader.trim(), role,
         elements: els,
-        protocol,
+        protocol: protocol.id,
         num_parties: numParties,
         threshold,
         tls,
@@ -105,7 +88,7 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
         </div>
         <div className="runner-summary" aria-label={tr('pr.summary')}>
           <span><Icon name="icon-miles" size={18} />{role === 'leader' ? tr('pr.role.leader') : tr('pr.role.member')}</span>
-          <span>{protocol}</span>
+          <span>{protocol?.id ?? tr('protocol.noneAvailable')}</span>
           <span>{tr('pr.elementCount', { count: elementCount })}</span>
         </div>
       </div>
@@ -132,6 +115,15 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
           <span>{setupBadge}</span>
         </div>
       <div className="form-grid practical-form-grid">
+        <ProtocolPicker
+          disabled={busy}
+          hint={(
+            <>
+              {requiresEqualSizes && <small>{tr('protocol.equalSizeHint')}</small>}
+              {isTwoPartyPsi && <small>{tr('protocol.twoPartyHint')}</small>}
+            </>
+          )}
+        />
         <label className="field compact">
           <span>{tr('pr.role')}</span>
           <Select
@@ -140,20 +132,6 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
             onChange={(v) => setRole(v as 'leader' | 'member')}
             disabled={busy}
           />
-        </label>
-        <label className="field grow">
-          <span>{tr('pr.protocol')}</span>
-          <Select
-            options={protocolOptions}
-            value={protocol}
-            onChange={(v) => setProtocol(v as string)}
-            disabled={busy}
-          />
-          {missingProtocols.length > 0 && (
-            <small>{tr('protocol.notBuilt', { list: missingProtocols.map((p) => p.label).join(', ') })}</small>
-          )}
-          {requiresEqualSizes && <small>{tr('protocol.equalSizeHint')}</small>}
-          {isTwoPartyPsi && <small>{tr('protocol.twoPartyHint')}</small>}
         </label>
         <label className="field compact">
           <span>N</span>
@@ -233,7 +211,7 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
 
       <Divider />
       <div className="action-row">
-        <Button type="primary" size="large" loading={busy} onClick={submit}>
+        <Button type="primary" size="large" loading={busy} disabled={!protocol} onClick={submit}>
           {tr('pr.submit')}
         </Button>
       </div>
@@ -242,7 +220,7 @@ export function PracticalPanel({ available }: { available?: string[] | null }) {
         <div className="aii-busy-inline">
           <Loading active style={{ height: 280 }} />
           <div className="aii-busy-msg">
-            {tr('pr.busy', { target, role: role === 'leader' ? tr('pr.role.leader') : tr('pr.role.member'), protocol })}
+            {tr('pr.busy', { target, role: role === 'leader' ? tr('pr.role.leader') : tr('pr.role.member'), protocol: protocol?.id ?? '-' })}
           </div>
         </div>
       )}
