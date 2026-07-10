@@ -188,7 +188,7 @@ type ApplicationScenario = {
   visualTitleKey: string
   riskKey: string
   psiKeepKey: string
-  resultItems: string[]
+  resultItemKeys: string[]
 }
 
 const applicationScenarios: Record<ApplicationVariant, ApplicationScenario> = {
@@ -214,7 +214,7 @@ const applicationScenarios: Record<ApplicationVariant, ApplicationScenario> = {
     visualTitleKey: 'why.app.genetics.visualTitle',
     riskKey: 'why.app.genetics.risk',
     psiKeepKey: 'why.app.genetics.psiKeep',
-    resultItems: ['BRCA1 marker', 'LDLR marker'],
+    resultItemKeys: ['why.app.genetics.resultItem1', 'why.app.genetics.resultItem2'],
   },
   recommendation: {
     leftKey: 'why.app.recommendation.left',
@@ -238,7 +238,7 @@ const applicationScenarios: Record<ApplicationVariant, ApplicationScenario> = {
     visualTitleKey: 'why.app.recommendation.visualTitle',
     riskKey: 'why.app.recommendation.risk',
     psiKeepKey: 'why.app.recommendation.psiKeep',
-    resultItems: ['recommend: Moonrise', 'recommend: Blue Hour'],
+    resultItemKeys: ['why.app.recommendation.resultItem1', 'why.app.recommendation.resultItem2'],
   },
   contacts: {
     leftKey: 'why.app.contacts.left',
@@ -262,7 +262,7 @@ const applicationScenarios: Record<ApplicationVariant, ApplicationScenario> = {
     visualTitleKey: 'why.app.contacts.visualTitle',
     riskKey: 'why.app.contacts.risk',
     psiKeepKey: 'why.app.contacts.psiKeep',
-    resultItems: ['maya', 'li'],
+    resultItemKeys: ['why.app.contacts.resultItem1', 'why.app.contacts.resultItem2'],
   },
   ads: {
     leftKey: 'why.app.ads.left',
@@ -286,7 +286,7 @@ const applicationScenarios: Record<ApplicationVariant, ApplicationScenario> = {
     visualTitleKey: 'why.app.ads.visualTitle',
     riskKey: 'why.app.ads.risk',
     psiKeepKey: 'why.app.ads.psiKeep',
-    resultItems: ['2 conversions'],
+    resultItemKeys: ['why.app.ads.resultItem'],
   },
   tracing: {
     leftKey: 'why.app.tracing.left',
@@ -310,7 +310,7 @@ const applicationScenarios: Record<ApplicationVariant, ApplicationScenario> = {
     visualTitleKey: 'why.app.tracing.visualTitle',
     riskKey: 'why.app.tracing.risk',
     psiKeepKey: 'why.app.tracing.psiKeep',
-    resultItems: ['encounter-9d'],
+    resultItemKeys: ['why.app.tracing.resultItem'],
   },
 }
 
@@ -418,7 +418,7 @@ function ApplicationIllustration({ variant, scenario }: { variant: ApplicationVa
             <div className="visual-flow-node">∩</div>
             <div className="visual-panel outcome">
               <span className="visual-panel-label">{t('why.app.genetics.visual.result')}</span>
-              <VisualPills items={scenario.resultItems} />
+              <VisualPills items={scenario.resultItemKeys.map((key) => t(key))} />
               <strong>{t(scenario.purposeKey)}</strong>
             </div>
           </div>
@@ -456,7 +456,7 @@ function ApplicationIllustration({ variant, scenario }: { variant: ApplicationVa
             <div className="visual-flow-node">→</div>
             <div className="visual-panel outcome suggestions">
               <span className="visual-panel-label">{t('why.app.contacts.visual.suggestions')}</span>
-              <VisualPills items={scenario.resultItems} />
+              <VisualPills items={scenario.resultItemKeys.map((key) => t(key))} />
               <strong>{t(scenario.purposeKey)}</strong>
             </div>
           </div>

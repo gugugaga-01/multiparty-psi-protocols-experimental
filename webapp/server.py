@@ -154,6 +154,44 @@ EQUAL_SIZE_DEFAULT = 16
 TWO_PARTY_PROTOCOLS = {"dh_psi"}
 
 
+def _classify_problem(detail: str) -> tuple[str, dict[str, str | int]]:
+    """Map known user-facing failures to stable localization codes."""
+    lowered = detail.lower()
+    if "connection refused" in lowered or "failed to connect" in lowered or "statuscode.unavailable" in lowered:
+        return "connection.failed", {}
+    if "not available on this party" in lowered or "unsupported protocol" in lowered or "not compiled" in lowered:
+        return "protocol.unavailable", {}
+    if "same number of elements" in lowered or "equal size" in lowered:
+        return "protocol.equalSizes", {}
+    if " requires " in lowered and ("num_parties=" in lowered or "threshold=" in lowered):
+        return "protocol.requirement", {}
+    if "cluster already running" in lowered:
+        return "cluster.alreadyRunning", {}
+    if "not found at" in lowered:
+        return "cluster.binaryMissing", {}
+    if "did not start listening" in lowered:
+        return "cluster.startFailed", {}
+    if "timed out" in lowered or "deadline exceeded" in lowered:
+        return "request.timeout", {}
+    if "no result" == lowered:
+        return "demo.noResult", {}
+    return "validation.invalid", {}
+
+
+def _problem_payload(
+    detail: str,
+    *,
+    code: str | None = None,
+    params: dict[str, str | int] | None = None,
+) -> dict[str, Any]:
+    problem_code, problem_params = _classify_problem(detail)
+    return {
+        "detail": detail,
+        "code": code or problem_code,
+        "params": params if params is not None else problem_params,
+    }
+
+
 def build_demo_inputs(n: int, sizes: list[int] | None = None) -> list[list[str]]:
     # Default sizes mirror service/demos/ks05/demo.sh: party 0 = 12, mid = 16,
     # last = 20. Caller can override per-party with `sizes`; we keep the overlap
@@ -412,7 +450,15 @@ def handle_demo(req: dict[str, Any]) -> dict[str, Any]:
                          i, role, len(intersection), status, dt)
         except Exception as e:
             dt = time.monotonic() - t0
-            results[i] = {"intersection": [], "status": "", "role": role, "error": str(e)}
+            problem = _problem_payload(str(e))
+            results[i] = {
+                "intersection": [],
+                "status": "",
+                "role": role,
+                "error": problem["detail"],
+                "error_code": problem["code"],
+                "error_params": problem["params"],
+            }
             log.exception("party %d (%s) failed after %.2fs: %s", i, role, dt, e)
 
     t_total = time.monotonic()
@@ -434,7 +480,14 @@ def handle_demo(req: dict[str, Any]) -> dict[str, Any]:
     parties = []
     success = True
     for i in range(n):
-        r = results.get(i, {"intersection": [], "status": "", "role": "?", "error": "no result"})
+        r = results.get(i, {
+            "intersection": [],
+            "status": "",
+            "role": "?",
+            "error": "no result",
+            "error_code": "demo.noResult",
+            "error_params": {},
+        })
         if r.get("error"):
             success = False
         parties.append({
@@ -445,6 +498,8 @@ def handle_demo(req: dict[str, Any]) -> dict[str, Any]:
             "intersection": r["intersection"],
             "status": r["status"],
             "error": r.get("error"),
+            "error_code": r.get("error_code"),
+            "error_params": r.get("error_params"),
         })
 
     leader_idx = inter_addrs.index(leader_address)
@@ -517,7 +572,7 @@ def handle_submit(req: dict[str, Any]) -> dict[str, Any]:
         raise
     dt = time.monotonic() - t0
     log.info("submit ok: |out|=%d status=%r elapsed=%.2fs", len(intersection), status, dt)
-    return {"intersection": list(intersection), "status": status}
+    return {"intersection": list(intersection), "status": status, "role": role}
 
 
 # ---------------------------------------------------------------------------
@@ -585,6 +640,16 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _send_problem(
+        self,
+        status: int,
+        detail: str,
+        *,
+        code: str | None = None,
+        params: dict[str, str | int] | None = None,
+    ) -> None:
+        self._send_json(status, _problem_payload(detail, code=code, params=params))
+
     def _send_file(self, path: Path) -> None:
         if not path.is_file():
             self._status = 404
@@ -614,14 +679,14 @@ class Handler(BaseHTTPRequestHandler):
 
     def _check_unsafe_request(self) -> bool:
         if WEB_TOKEN and self.headers.get("X-PSINSIEME-Token") != WEB_TOKEN:
-            self._send_json(401, {"detail": "missing or invalid API token"})
+            self._send_problem(401, "missing or invalid API token", code="auth.invalidToken")
             return False
         origin = self.headers.get("Origin")
         if origin:
             from urllib.parse import urlparse
             origin_host = urlparse(origin).netloc
             if origin_host and origin_host != self.headers.get("Host"):
-                self._send_json(403, {"detail": "cross-origin POST rejected"})
+                self._send_problem(403, "cross-origin POST rejected", code="auth.crossOrigin")
                 return False
         return True
 
@@ -659,10 +724,20 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 n = int((qs.get("n") or ["3"])[0])
             except ValueError:
-                self._send_json(400, {"detail": "n must be an integer"})
+                self._send_problem(
+                    400,
+                    "n must be an integer",
+                    code="validation.integer",
+                    params={"field": "N"},
+                )
                 return
             if n < 2 or n > 32:
-                self._send_json(400, {"detail": "n must be in [2, 32]"})
+                self._send_problem(
+                    400,
+                    "n must be in [2, 32]",
+                    code="validation.range",
+                    params={"field": "N", "min": 2, "max": 32},
+                )
                 return
             sizes_raw = (qs.get("sizes") or [""])[0]
             sizes: list[int] | None = None
@@ -670,15 +745,24 @@ class Handler(BaseHTTPRequestHandler):
                 try:
                     sizes = [int(x) for x in sizes_raw.split(",") if x.strip()]
                 except ValueError:
-                    self._send_json(400, {"detail": "sizes must be a comma-separated list of integers"})
+                    self._send_problem(
+                        400,
+                        "sizes must be a comma-separated list of integers",
+                        code="validation.integerList",
+                    )
                     return
                 if len(sizes) != n:
-                    self._send_json(400, {"detail": f"sizes must have {n} entries"})
+                    self._send_problem(
+                        400,
+                        f"sizes must have {n} entries",
+                        code="validation.listLength",
+                        params={"field": "sizes", "count": n},
+                    )
                     return
             try:
                 inputs = build_demo_inputs(n, sizes=sizes)
             except ValueError as e:
-                self._send_json(400, {"detail": str(e)})
+                self._send_problem(400, str(e))
                 return
             t_default = n
             self._send_json(200, {
@@ -718,10 +802,12 @@ class Handler(BaseHTTPRequestHandler):
         try:
             req = self._read_json()
         except json.JSONDecodeError as e:
-            self._send_json(400, {"detail": f"invalid json: {e}"})
+            self._send_problem(400, f"invalid json: {e}", code="request.invalidJson")
             return
         except ValueError as e:
-            self._send_json(400, {"detail": str(e)})
+            detail = str(e)
+            code = "request.bodyTooLarge" if "exceeds" in detail else None
+            self._send_problem(400, detail, code=code)
             return
 
         try:
@@ -748,10 +834,10 @@ class Handler(BaseHTTPRequestHandler):
             self.send_error(404, "Not found")
         except (ValueError, RuntimeError) as e:
             log.warning("bad request to %s: %s", path, e)
-            self._send_json(400, {"detail": str(e)})
+            self._send_problem(400, str(e))
         except Exception as e:
             log.error("handler %s failed: %s\n%s", path, e, traceback.format_exc())
-            self._send_json(500, {"detail": str(e)})
+            self._send_problem(500, str(e), code="internal.unexpected")
 
 
 def main() -> None:

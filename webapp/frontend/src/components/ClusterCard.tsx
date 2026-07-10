@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button, Card, Input, Switch, Divider, Loading, Icon } from 'animal-island-ui'
-import { api, type ClusterStatus } from '../api'
+import { api, formatApiError, type ClusterStatus } from '../api'
 import { useProtocolSelection } from '../ProtocolSelectionContext'
 import { useI18n } from '../i18n'
 import { ProtocolPicker } from './ProtocolPicker'
@@ -54,13 +54,13 @@ export function ClusterCard({
         tls,
       })
       onChange()
-    } catch (e) { setErr(String((e as Error).message)) }
+    } catch (e) { setErr(formatApiError(e, t)) }
     finally { setBusy(false); setBusyMsg(null) }
   }
   const stop = async () => {
     setBusy(true); setErr(null); setBusyMsg(t('cluster.busy.stop'))
     try { await api.clusterStop(); onChange() }
-    catch (e) { setErr(String((e as Error).message)) }
+    catch (e) { setErr(formatApiError(e, t)) }
     finally { setBusy(false); setBusyMsg(null) }
   }
 
