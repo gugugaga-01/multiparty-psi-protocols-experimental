@@ -374,7 +374,7 @@ function DhTokenList({ items, step, party }: { items: string[]; step: number; pa
   )
 }
 
-function ScenarioList({ title, tag, items }: { title: string; tag: string; items: ScenarioToken[] }) {
+function ScenarioList({ title, tag, items, stage }: { title: string; tag: string; items: ScenarioToken[]; stage: number }) {
   return (
     <div className="scenario-list">
       <div className="scenario-list-head">
@@ -383,7 +383,18 @@ function ScenarioList({ title, tag, items }: { title: string; tag: string; items
       </div>
       <div className="scenario-chip-list">
         {items.map((item) => (
-          <span key={item.label} className={'scenario-chip ' + (item.match ? 'is-match' : 'is-private')}>
+          <span
+            key={item.label}
+            className={'scenario-chip ' + (
+              stage < 2
+                ? 'is-neutral'
+                : item.match
+                  ? 'is-match'
+                  : stage >= 2
+                    ? 'is-protected'
+                    : 'is-private'
+            )}
+          >
             {item.label}
           </span>
         ))}
@@ -400,7 +411,7 @@ function VisualPills({ items }: { items: string[] }) {
   )
 }
 
-function ApplicationIllustration({ variant, scenario }: { variant: ApplicationVariant; scenario: ApplicationScenario }) {
+function ApplicationIllustration({ variant, scenario, stage }: { variant: ApplicationVariant; scenario: ApplicationScenario; stage: number }) {
   const { t } = useI18n()
 
   const visual = (() => {
@@ -509,23 +520,45 @@ function ApplicationIllustration({ variant, scenario }: { variant: ApplicationVa
   })()
 
   return (
-    <div className={'application-illustration illustration-' + variant}>
-      <span className="scene-stage-label">{t('why.app.stage.plain')}</span>
-      <div className="visual-heading">
-        <span>{t(scenario.visualTitleKey)}</span>
-        <strong>{t(scenario.outputValueKey)}</strong>
-      </div>
-      {visual}
-      <div className="privacy-comparison">
-        <div className="privacy-card risk">
-          <span>{t('why.app.stage.risk')}</span>
-          <p>{t(scenario.riskKey)}</p>
+    <div className={'application-illustration illustration-' + variant + ' walkthrough-stage-' + stage}>
+      <span className="scene-stage-label">
+        {t(`why.app.walkthrough.stage${stage}.title`)}
+      </span>
+      {stage >= 2 && (
+        <div className="visual-heading">
+          <span>{t(scenario.visualTitleKey)}</span>
+          <strong>{t(scenario.outputValueKey)}</strong>
         </div>
-        <div className="privacy-card psi">
-          <span>{t('why.app.stage.psiKeeps')}</span>
-          <p>{t(scenario.psiKeepKey)}</p>
+      )}
+      {stage === 0 ? (
+        <div className="walkthrough-ready">
+          <span aria-hidden="true">🔒</span>
+          <strong>{t(scenario.leftKey)} + {t(scenario.rightKey)}</strong>
+          <p>{t('why.app.walkthrough.stage0.body')}</p>
         </div>
-      </div>
+      ) : stage === 1 ? (
+        <div className="walkthrough-purpose">
+          <span aria-hidden="true">🎯</span>
+          <strong>{t('why.app.walkthrough.stage1.prompt')}</strong>
+          <p>{t(scenario.purposeKey)}</p>
+        </div>
+      ) : visual}
+      {stage === 3 && (
+        <div className="privacy-comparison walkthrough-leakage">
+          <div className="privacy-card output is-visible">
+            <span>{t('why.app.walkthrough.intendedLeak')}</span>
+            <p>{t('why.app.walkthrough.outputLeak', { output: t(scenario.outputValueKey) })}</p>
+          </div>
+          <div className="privacy-card risk is-visible">
+            <span>{t('why.app.walkthrough.rawLeak')}</span>
+            <p>{t(scenario.riskKey)}</p>
+          </div>
+          <div className="privacy-card psi is-visible">
+            <span>{t('why.app.walkthrough.keptPrivate')}</span>
+            <p>{t(scenario.psiKeepKey)}</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -533,29 +566,22 @@ function ApplicationIllustration({ variant, scenario }: { variant: ApplicationVa
 function ApplicationExplorer() {
   const { t } = useI18n()
   const [variant, setVariant] = useState<ApplicationVariant>('genetics')
+  const [stage, setStage] = useState(0)
   const activeItem = applicationItems.find((item) => item.variant === variant) ?? applicationItems[0]
   const scenario = applicationScenarios[activeItem.variant]
+  const stageKeys = ['stage0', 'stage1', 'stage2', 'stage3'] as const
+
+  const chooseVariant = (nextVariant: ApplicationVariant) => {
+    setVariant(nextVariant)
+    setStage(0)
+  }
 
   return (
     <Card type="title" color={activeItem.color} className={'application-lab-card scenario-' + activeItem.variant}>
       <div className="application-lab-copy">
         <span className="info-kicker">{t('why.apps.kicker')}</span>
         <h4>{t(`${activeItem.key}.title`)}</h4>
-        <p>{t(activeItem.key + '.body')}</p>
-        <div className="application-lab-metrics">
-          <div>
-            <span>{t('why.app.stage.input')}</span>
-            <strong>{t(scenario.leftKey)} {t('why.app.stage.with')} {t(scenario.rightKey)}</strong>
-          </div>
-          <div>
-            <span>{t('why.app.stage.output')}</span>
-            <strong>{t(scenario.outputValueKey)}</strong>
-          </div>
-          <div>
-            <span>{t('why.app.stage.psiKeeps')}</span>
-            <strong>{t('why.app.metric.nonmatches')}</strong>
-          </div>
-        </div>
+        <p>{t('why.app.walkthrough.intro')}</p>
       </div>
 
       <div className="application-lab-layout">
@@ -567,7 +593,7 @@ function ApplicationExplorer() {
               role="tab"
               aria-selected={item.variant === activeItem.variant}
               className={item.variant === activeItem.variant ? 'active' : ''}
-              onClick={() => setVariant(item.variant)}
+              onClick={() => chooseVariant(item.variant)}
             >
               <Icon name={item.icon} size={24} bounce={item.variant === activeItem.variant} />
               <span>{t(`${item.key}.title`)}</span>
@@ -575,26 +601,52 @@ function ApplicationExplorer() {
           ))}
         </div>
 
-        <div className="application-scene" aria-label={t(`${activeItem.key}.animation`)}>
+        <div className="application-walkthrough">
+          <div className="walkthrough-progress-head">
+            <div>
+              <span>{t('why.app.walkthrough.label')}</span>
+              <strong>{t('why.app.walkthrough.progress', { current: stage + 1, total: stageKeys.length })}</strong>
+            </div>
+            <p>{t(`why.app.walkthrough.${stageKeys[stage]}.body`)}</p>
+          </div>
+          <div className="walkthrough-stepper" role="tablist" aria-label={t('why.app.walkthrough.label')}>
+            {stageKeys.map((stageKey, index) => (
+              <button
+                key={stageKey}
+                type="button"
+                role="tab"
+                aria-selected={stage === index}
+                className={stage === index ? 'active' : stage > index ? 'complete' : ''}
+                onClick={() => setStage(index)}
+              >
+                <span>{stage > index ? '✓' : index + 1}</span>
+                <strong>{t(`why.app.walkthrough.${stageKey}.title`)}</strong>
+              </button>
+            ))}
+          </div>
+
+          <div className={'application-scene walkthrough-scene stage-' + stage} aria-label={t(`${activeItem.key}.animation`)}>
           <div className="scene-party scene-party-left">
             <ScenarioList
               title={t(scenario.leftKey)}
               tag={t(scenario.leftTagKey)}
               items={scenario.leftItems}
+              stage={stage}
             />
           </div>
 
-          <ApplicationIllustration variant={activeItem.variant} scenario={scenario} />
+          <ApplicationIllustration variant={activeItem.variant} scenario={scenario} stage={stage} />
 
           <div className="scene-party scene-party-right">
             <ScenarioList
               title={t(scenario.rightKey)}
               tag={t(scenario.rightTagKey)}
               items={scenario.rightItems}
+              stage={stage}
             />
           </div>
 
-          <div className="scene-outcome-strip">
+          {stage >= 2 && <div className="scene-outcome-strip is-visible">
             <div>
               <span>{t('why.app.stage.output')}</span>
               <strong>{t(scenario.outputValueKey)}</strong>
@@ -603,6 +655,16 @@ function ApplicationExplorer() {
               <span>{t('why.app.stage.use')}</span>
               <p>{t(scenario.purposeKey)}</p>
             </div>
+          </div>}
+          </div>
+
+          <div className="walkthrough-controls">
+            <Button type="default" disabled={stage === 0} onClick={() => setStage((current) => Math.max(0, current - 1))}>
+              {t('why.app.walkthrough.prev')}
+            </Button>
+            <Button type="primary" onClick={() => setStage((current) => current === stageKeys.length - 1 ? 0 : current + 1)}>
+              {stage === stageKeys.length - 1 ? t('why.app.walkthrough.replay') : t('why.app.walkthrough.next')}
+            </Button>
           </div>
         </div>
       </div>

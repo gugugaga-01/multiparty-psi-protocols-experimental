@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Button, Card, Input, Switch, Divider, Loading, Icon } from 'animal-island-ui'
+import { useEffect, useRef, useState } from 'react'
+import { Button, Card, Input, Switch, Divider } from 'animal-island-ui'
 import { api, formatApiError, formatApiProblem, type DemoResult } from '../api'
 import { useProtocolSelection } from '../ProtocolSelectionContext'
 import { useI18n } from '../i18n'
@@ -23,6 +23,8 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [result, setResult] = useState<DemoResult | null>(null)
+  const [copied, setCopied] = useState(false)
+  const resultRef = useRef<HTMLDivElement>(null)
 
   // XZH26 is plain MPSI (intersection of all parties), so the threshold is
   // always N. DH PSI is exactly two-party PSI, so both N and t are fixed at 2.
@@ -33,6 +35,22 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
   const effT = isTwoPartyPsi ? '2' : isFullMpsi ? n : t
   const setupBadge = isTwoPartyPsi ? tr('protocol.chip.twoParty') : requiresEqualSizes ? tr('demo.equalSizeBadge') : tr('demo.thresholdBadge')
   const inputCount = inputs.reduce((sum, row) => sum + row.length, 0)
+  const runSummary = !protocol
+    ? tr('form.protocolUnavailable')
+    : isTwoPartyPsi
+      ? tr('run.summary.fixed', { protocol: protocol.name })
+      : isFullMpsi
+        ? tr('run.summary.all', { protocol: protocol.name, n: effN })
+        : tr('run.summary.threshold', { protocol: protocol.name, n: effN, t: effT })
+  const intersection = result?.parties.find((party) => party.role === 'leader' && !party.error)?.intersection
+    ?? result?.expected
+    ?? []
+
+  useEffect(() => {
+    if (!result) return
+    resultRef.current?.focus()
+    resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }, [result])
 
   useEffect(() => {
     if (!customize || !protocol) return
@@ -73,6 +91,12 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
     setCustomize(v)
   }
 
+  const copyResult = async () => {
+    await navigator.clipboard.writeText(intersection.join('\n'))
+    setCopied(true)
+    window.setTimeout(() => setCopied(false), 1600)
+  }
+
   const run = async () => {
     setErr(null); setResult(null)
     const numParties = parseInt(effN, 10)
@@ -102,27 +126,15 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
   }
 
   return (
-    <Card type="default" className="runner-card demo-card">
+    <Card type="default" className="runner-card demo-card modern-card">
       <div className="panel-heading">
         <div>
-          <span className="info-kicker">{tr('demo.kicker')}</span>
+          <span className="eyebrow">{tr('demo.kicker')}</span>
           <h2 className="section-title">{tr('demo.title')}</h2>
           <p>{tr('demo.lead')}</p>
         </div>
-        <div className="runner-summary" aria-label={tr('demo.summary')}>
-          <span><Icon name="icon-variant" size={18} />{protocol?.id ?? tr('protocol.noneAvailable')}</span>
-          <span>N={effN}</span>
-          <span>t={effT}</span>
-          <span>{autoCluster ? tr('demo.autoCluster.on') : tr('demo.autoCluster.off')}</span>
-        </div>
       </div>
-      <Divider type="wave-yellow" />
-      <div className="form-section">
-        <div className="form-section-head">
-          <strong>{tr('demo.setup')}</strong>
-          <span>{setupBadge}</span>
-        </div>
-      <div className="form-grid demo-form-grid">
+      <div className="form-grid quick-form-grid">
         <ProtocolPicker
           disabled={busy}
           hint={(
@@ -139,30 +151,42 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
             setN(x); if (parseInt(t, 10) > (parseInt(x, 10) || 0)) setT(x)
           }} />
         </label>
-        <label className="field compact">
-          <span>{tr('demo.t')}</span>
-          <Input
-            value={effT}
-            disabled={busy || isFullMpsi || isTwoPartyPsi}
-            onChange={(e) => setT(e.target.value.replace(/\D/g, ''))}
-          />
-          {isFullMpsi && <small>{tr('demo.t.lockedMpsi')}</small>}
-          {isTwoPartyPsi && <small>{tr('demo.t.lockedTwoParty')}</small>}
-        </label>
       </div>
+
+      <div className="run-summary" role="status">
+        <span aria-hidden="true">✓</span>
+        <strong>{runSummary}</strong>
+        <small>{setupBadge}</small>
       </div>
-      <div className="toggle-grid">
-        <label className="toggle-card field">
-          <span>{tr('demo.autoCluster')}</span>
-          <Switch checked={autoCluster} onChange={setAutoCluster} disabled={busy} />
-          <small>{tr('demo.autoCluster.hint')}</small>
-        </label>
-        <label className="toggle-card field">
-          <span>{tr('demo.customize')}</span>
-          <Switch checked={customize} onChange={toggleCustomize} disabled={busy} />
-          <small>{tr('demo.customize.hint')}</small>
-        </label>
-      </div>
+
+      <details className="advanced-details">
+        <summary>
+          <span><strong>{tr('run.customize')}</strong><small>{tr('run.customizeHint')}</small></span>
+          <span aria-hidden="true">⌄</span>
+        </summary>
+        <div className="advanced-details-body">
+          <div className="form-grid advanced-run-grid">
+            <label className="field compact">
+              <span>{tr('demo.t')}</span>
+              <Input
+                value={effT}
+                disabled={busy || isFullMpsi || isTwoPartyPsi}
+                onChange={(e) => setT(e.target.value.replace(/\D/g, ''))}
+              />
+              {isFullMpsi && <small>{tr('demo.t.lockedMpsi')}</small>}
+              {isTwoPartyPsi && <small>{tr('demo.t.lockedTwoParty')}</small>}
+            </label>
+            <label className="toggle-card field">
+              <span>{tr('demo.autoCluster')}</span>
+              <Switch checked={autoCluster} onChange={setAutoCluster} disabled={busy} />
+              <small>{tr('demo.autoCluster.hint')}</small>
+            </label>
+            <label className="toggle-card field">
+              <span>{tr('demo.customize')}</span>
+              <Switch checked={customize} onChange={toggleCustomize} disabled={busy} />
+              <small>{tr('demo.customize.hint')}</small>
+            </label>
+          </div>
 
       {customize && inputs.length > 0 && (
         <>
@@ -216,38 +240,50 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
           </div>
         </>
       )}
+        </div>
+      </details>
 
-      <Divider />
       <div className="action-row">
-        <Button type="primary" size="large" loading={busy} disabled={!protocol} onClick={run}>
+        <Button type="primary" size="large" block loading={busy} disabled={!protocol} onClick={run}>
           {tr('demo.run')}
         </Button>
-        {result && (
-          <span className={'pill ' + (result.success ? 'ok' : 'bad')}>
-            {result.success ? tr('demo.success') : tr('demo.failed')}
-          </span>
-        )}
       </div>
 
       {busy && (
-        <div className="aii-busy-inline">
-          <Loading active style={{ height: 320 }} />
-          <div className="aii-busy-msg">
-            {tr('demo.busy', { protocol: protocol?.id ?? '-', n: effN, t: effT })}
+        <div className="progress-panel" role="status" aria-live="polite">
+          <span className="progress-spinner" aria-hidden="true" />
+          <div>
+            <strong>{tr('run.progress.title')}</strong>
+            <span>{tr('demo.busy', { protocol: protocol?.id ?? '-', n: effN, t: effT })}</span>
+            <small>{tr('run.progress.detail')}</small>
           </div>
         </div>
       )}
 
       {err && (
-        <div className="banner bad" style={{ marginTop: 12, whiteSpace: 'pre-wrap' }}>
-          {err}
+        <div className="banner bad error-summary" role="alert" tabIndex={-1}>
+          <strong>{tr('demo.failed')}</strong>
+          <span>{err}</span>
+          <Button type="default" size="small" onClick={run}>{tr('run.again')}</Button>
         </div>
       )}
 
       {result && (
-        <>
-          <Divider type="line-brown" />
-          <div className="col">
+        <div className="result-card" ref={resultRef} tabIndex={-1}>
+          <div className="result-heading">
+            <div>
+              <span className="eyebrow">{result.success ? tr('demo.success') : tr('demo.failed')}</span>
+              <h3>{tr('run.result')} <strong>{intersection.length}</strong></h3>
+            </div>
+            <div className="result-actions">
+              <Button type="default" size="small" onClick={copyResult}>{copied ? tr('run.copied') : tr('run.copy')}</Button>
+              <Button type="default" size="small" onClick={() => setResult(null)}>{tr('run.again')}</Button>
+            </div>
+          </div>
+          <code className="intersection-value">{intersection.join(', ') || tr('demo.party.empty')}</code>
+          <details className="result-details">
+            <summary>{tr('run.resultDetail')}</summary>
+            <div className="col result-details-body">
             <div className="row">
               <span className="pill">{tr('demo.protocol').toLowerCase()}: {result.protocol}</span>
               <span className="pill">N={result.num_parties} t={result.threshold}</span>
@@ -298,8 +334,9 @@ export function DemoPanel({ onAfterRun }: { onAfterRun: () => void }) {
                 </Card>
               ))}
             </div>
-          </div>
-        </>
+            </div>
+          </details>
+        </div>
       )}
     </Card>
   )

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
-import { Cursor, Icon, Tabs, Time, Footer, Switch, type IconName } from 'animal-island-ui'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { Icon, Switch, type IconName } from 'animal-island-ui'
 import { api, type ClusterStatus } from './api'
 import { ClusterCard } from './components/ClusterCard'
 import { DemoPanel } from './components/DemoPanel'
@@ -9,23 +9,38 @@ import { I18nProvider } from './I18nProvider'
 import { ProtocolSelectionProvider } from './ProtocolSelectionContext'
 import { useI18n, type Locale } from './i18n'
 
-const PAGES = ['console', 'why', 'guide', 'project', 'protocols'] as const
-type Page = typeof PAGES[number]
+const RUN_MODE_KEY = 'psinsieme.runMode'
 
-function pageFromHash(): Page {
-  if (typeof window === 'undefined') return 'console'
+type Page = 'run' | 'protocols' | 'learn'
+type LearnSection = 'why' | 'guide' | 'project'
+type RunMode = 'quick' | 'participant'
+
+type Route = {
+  page: Page
+  learnSection: LearnSection
+}
+
+function routeFromHash(): Route {
+  if (typeof window === 'undefined') return { page: 'run', learnSection: 'why' }
   const raw = window.location.hash.replace(/^#\/?/, '')
-  return PAGES.includes(raw as Page) ? (raw as Page) : 'console'
+  if (raw === 'protocols') return { page: 'protocols', learnSection: 'why' }
+  if (raw === 'learn' || raw === 'why' || raw === 'guide' || raw === 'project') {
+    return {
+      page: 'learn',
+      learnSection: raw === 'guide' || raw === 'project' ? raw : 'why',
+    }
+  }
+  return { page: 'run', learnSection: 'why' }
 }
 
 function LocaleSwitch() {
   const { locale, setLocale, t } = useI18n()
   return (
-    <div className="aii-locale-switch">
-      <span className="aii-locale-label">{t('locale.label')}</span>
+    <div className="locale-control">
+      <span>{t('locale.label')}</span>
       <Switch
         checked={locale === 'zh'}
-        onChange={(v) => setLocale((v ? 'zh' : 'en') as Locale)}
+        onChange={(value) => setLocale((value ? 'zh' : 'en') as Locale)}
         checkedChildren="中"
         unCheckedChildren="EN"
       />
@@ -33,27 +48,86 @@ function LocaleSwitch() {
   )
 }
 
-function StatusDot({ tone, label, value }: { tone: 'ok' | 'warn' | 'bad'; label: string; value: string }) {
+function ReadinessBanner({ status, loading }: { status: ClusterStatus | null; loading: boolean }) {
+  const { t } = useI18n()
+  const runningParties = status?.parties.filter((party) => party.running).length ?? 0
+  const anyRunning = !!status && (status.dealer.running || runningParties > 0)
+  const tone = loading ? 'checking' : !status || !status.built ? 'blocked' : anyRunning ? 'running' : 'ready'
+  const title = loading
+    ? t('run.readiness.checking')
+    : !status
+      ? t('run.readiness.unavailable')
+      : !status.built
+        ? t('run.readiness.setup')
+        : anyRunning
+          ? t('run.readiness.running')
+          : t('run.readiness.ready')
+  const detail = loading
+    ? t('run.readiness.checkingDetail')
+    : !status
+      ? t('run.readiness.unavailableDetail')
+      : !status.built
+        ? t('run.readiness.setupDetail')
+        : anyRunning
+          ? t('run.readiness.runningDetail', { protocol: status.protocol || 'PSI', count: runningParties })
+          : t('run.readiness.readyDetail', { count: status.protocols_available?.length ?? 0 })
+
   return (
-    <div className={'console-stat ' + tone}>
-      <span>{label}</span>
-      <strong>{value}</strong>
+    <div className={`readiness-banner ${tone}`} role="status" aria-live="polite">
+      <span className="readiness-icon" aria-hidden="true">
+        {tone === 'ready' ? '✓' : tone === 'running' ? '●' : tone === 'checking' ? '…' : '!'}
+      </span>
+      <div>
+        <strong>{title}</strong>
+        <span>{detail}</span>
+      </div>
     </div>
   )
 }
 
-function ConsolePage({
+function ModeChoice({ mode, onChange }: { mode: RunMode; onChange: (mode: RunMode) => void }) {
+  const { t } = useI18n()
+  return (
+    <div className="run-mode-picker" aria-label={t('run.mode.label')}>
+      <button className={mode === 'quick' ? 'active' : ''} onClick={() => onChange('quick')}>
+        <Icon name="icon-miles" size={25} />
+        <span>
+          <strong>{t('run.mode.quick')}</strong>
+          <small>{t('run.mode.quickDetail')}</small>
+        </span>
+        <em>{t('run.recommended')}</em>
+      </button>
+      <button className={mode === 'participant' ? 'active' : ''} onClick={() => onChange('participant')}>
+        <Icon name="icon-helicopter" size={25} />
+        <span>
+          <strong>{t('run.mode.participant')}</strong>
+          <small>{t('run.mode.participantDetail')}</small>
+        </span>
+      </button>
+    </div>
+  )
+}
+
+function RunPage({
   status,
+  loading,
   refresh,
 }: {
   status: ClusterStatus | null
+  loading: boolean
   refresh: () => void
 }) {
   const { t } = useI18n()
-  const runningParties = status?.parties.filter((p) => p.running).length ?? 0
-  const partyTotal = status?.num_parties ?? 0
-  const protocolCount = status?.protocols_available?.length ?? 0
-  const anyRunning = !!status && (status.dealer.running || status.parties.some((p) => p.running))
+  const [mode, setModeState] = useState<RunMode>(() => {
+    if (typeof window === 'undefined') return 'quick'
+    return window.localStorage.getItem(RUN_MODE_KEY) === 'participant' ? 'participant' : 'quick'
+  })
+  const anyRunning = !!status && (status.dealer.running || status.parties.some((party) => party.running))
+
+  const setMode = (next: RunMode) => {
+    setModeState(next)
+    window.localStorage.setItem(RUN_MODE_KEY, next)
+  }
 
   return (
     <ProtocolSelectionProvider
@@ -61,150 +135,153 @@ function ConsolePage({
       activeProtocol={anyRunning ? status?.protocol ?? null : null}
       locked={anyRunning}
     >
-    <main className="console-page">
-      <section className="console-overview" aria-labelledby="console-overview-title">
-        <div className="console-overview-copy">
-          <span className="info-kicker">{t('console.kicker')}</span>
-          <h2 id="console-overview-title">{t('console.title')}</h2>
-          <p>{t('console.lead')}</p>
-        </div>
-        <div className="console-stat-grid" aria-label={t('console.statusSummary')}>
-          <StatusDot
-            tone={status?.built ? 'ok' : 'bad'}
-            label={t('console.stat.build')}
-            value={status?.built ? t('cluster.builtOk') : t('cluster.notBuilt')}
-          />
-          <StatusDot
-            tone={anyRunning ? 'ok' : 'warn'}
-            label={t('console.stat.cluster')}
-            value={anyRunning ? t('cluster.running') : t('cluster.stopped')}
-          />
-          <StatusDot
-            tone={runningParties === partyTotal && partyTotal > 0 ? 'ok' : runningParties > 0 ? 'warn' : 'bad'}
-            label={t('console.stat.parties')}
-            value={String(runningParties) + '/' + String(partyTotal)}
-          />
-          <StatusDot
-            tone={protocolCount > 0 ? 'ok' : 'warn'}
-            label={t('console.stat.protocols')}
-            value={protocolCount > 0 ? String(protocolCount) : t('console.stat.pending')}
-          />
-        </div>
-      </section>
+      <main id="main-content" className="run-page">
+        <section className="page-heading">
+          <div>
+            <span className="eyebrow">{t('console.kicker')}</span>
+            <h1>{t('run.title')}</h1>
+            <p>{t('run.lead')}</p>
+          </div>
+          <ReadinessBanner status={status} loading={loading} />
+        </section>
 
-      <ClusterCard status={status} onChange={refresh} />
+        <section aria-labelledby="run-mode-title">
+          <div className="section-heading">
+            <div>
+              <h2 id="run-mode-title">{t('run.chooseTask')}</h2>
+              <p>{t('run.chooseTaskDetail')}</p>
+            </div>
+          </div>
+          <ModeChoice mode={mode} onChange={setMode} />
+        </section>
 
-      <section className="console-runner" aria-label={t('console.runner')}>
-        <Tabs
-          defaultActiveKey="demo"
-          leafAnimation
-          items={[
-            { key: 'demo',      label: t('tabs.demo'),      children: <DemoPanel onAfterRun={refresh} /> },
-            { key: 'practical', label: t('tabs.practical'), children: <PracticalPanel /> },
-          ]}
-        />
-      </section>
-    </main>
+        <section className="run-workspace" aria-label={mode === 'quick' ? t('run.mode.quick') : t('run.mode.participant')}>
+          {mode === 'quick' ? <DemoPanel onAfterRun={refresh} /> : <PracticalPanel />}
+        </section>
+
+        <details className="system-details">
+          <summary>
+            <span>
+              <strong>{t('run.clusterDetails')}</strong>
+              <small>{t('run.clusterDetailsHint')}</small>
+            </span>
+            <span aria-hidden="true">⌄</span>
+          </summary>
+          <div className="system-details-body">
+            <ClusterCard status={status} onChange={refresh} compact />
+          </div>
+        </details>
+      </main>
     </ProtocolSelectionProvider>
+  )
+}
+
+function LearnPage({ section, onChange }: { section: LearnSection; onChange: (section: LearnSection) => void }) {
+  const { t } = useI18n()
+  const content: Record<LearnSection, ReactNode> = {
+    why: <WhyPsiPage />,
+    guide: <GuidePage />,
+    project: <ProjectPage />,
+  }
+  return (
+    <div id="main-content" className="learn-shell">
+      <nav className="learn-nav" aria-label={t('learn.sections')}>
+        {(['why', 'guide', 'project'] as const).map((item) => (
+          <button key={item} className={section === item ? 'active' : ''} onClick={() => onChange(item)}>
+            {t(`nav.${item}`)}
+          </button>
+        ))}
+      </nav>
+      {content[section]}
+    </div>
+  )
+}
+
+function NavButton({ active, icon, children, onClick }: { active: boolean; icon: IconName; children: ReactNode; onClick: () => void }) {
+  return (
+    <button className={active ? 'active' : ''} aria-current={active ? 'page' : undefined} onClick={onClick}>
+      <Icon name={icon} size={20} />
+      <span>{children}</span>
+    </button>
   )
 }
 
 function Shell() {
   const { t } = useI18n()
+  const initialRoute = routeFromHash()
   const [status, setStatus] = useState<ClusterStatus | null>(null)
-  const [page, setPageState] = useState<Page>(pageFromHash)
+  const [statusLoading, setStatusLoading] = useState(true)
+  const [page, setPageState] = useState<Page>(initialRoute.page)
+  const [learnSection, setLearnSection] = useState<LearnSection>(initialRoute.learnSection)
 
   const refresh = useCallback(async () => {
     try {
       setStatus(await api.clusterStatus())
     } catch {
       setStatus(null)
+    } finally {
+      setStatusLoading(false)
     }
   }, [])
 
   const setPage = useCallback((next: Page) => {
     setPageState(next)
-    if (typeof window !== 'undefined') {
-      window.location.hash = next === 'console' ? '' : next
-    }
+    window.location.hash = next === 'run' ? '' : next
+  }, [])
+
+  const changeLearnSection = useCallback((next: LearnSection) => {
+    setLearnSection(next)
+    window.location.hash = next
   }, [])
 
   useEffect(() => {
-    if (page === 'protocols') {
-      refresh()
-      return
-    }
-    if (page !== 'console') return
-    refresh()
+    if (page === 'protocols' || page === 'run') refresh()
+    if (page !== 'run') return
     const id = setInterval(refresh, 3000)
     return () => clearInterval(id)
   }, [page, refresh])
 
   useEffect(() => {
-    const onHashChange = () => setPageState(pageFromHash())
+    const onHashChange = () => {
+      const route = routeFromHash()
+      setPageState(route.page)
+      setLearnSection(route.learnSection)
+    }
     window.addEventListener('hashchange', onHashChange)
     return () => window.removeEventListener('hashchange', onHashChange)
   }, [])
 
-  const pageLabel = (icon: IconName, label: string) => (
-    <span className="page-tab-label">
-      <Icon name={icon} size={22} bounce />
-      <span>{label}</span>
-    </span>
-  )
-
   return (
     <>
-      <div className="app-shell">
-        <header className="aii-hero">
-          <div className="aii-hero-row">
-            <div>
-              <h1 className="aii-hero-title">psinsieme console</h1>
-              <p className="aii-hero-sub">{t('app.subtitle')}</p>
-              <div className="aii-hero-time" style={{ display: 'inline-block', marginTop: 10 }}>
-                <Time />
-              </div>
-            </div>
-            <img
-              className="aii-hero-mascot"
-              src="/aii/animal_icon.png"
-              alt="animal island mascot"
-              decoding="async"
-            />
-          </div>
+      <a className="skip-link" href="#main-content">{t('a11y.skip')}</a>
+      <header className="product-header">
+        <div className="product-header-inner">
+          <button className="brand" onClick={() => setPage('run')} aria-label={t('nav.run')}>
+            <img src="/aii/animal_icon.png" alt="" />
+            <span>
+              <strong>psinsieme</strong>
+              <small>{t('app.productLabel')}</small>
+            </span>
+          </button>
+          <nav className="primary-nav" aria-label={t('nav.label')}>
+            <NavButton active={page === 'run'} icon="icon-miles" onClick={() => setPage('run')}>{t('nav.run')}</NavButton>
+            <NavButton active={page === 'protocols'} icon="icon-critterpedia" onClick={() => setPage('protocols')}>{t('nav.protocols')}</NavButton>
+            <NavButton active={page === 'learn'} icon="icon-map" onClick={() => setPage('learn')}>{t('nav.learn')}</NavButton>
+          </nav>
           <LocaleSwitch />
-        </header>
-        <div className="aii-guide-line" />
+        </div>
+      </header>
 
-        <Tabs
-          activeKey={page}
-          onChange={(key) => setPage(key as Page)}
-          leafAnimation
-          items={[
-            {
-              key: 'console',
-              label: pageLabel('icon-miles', t('nav.console')),
-              children: <ConsolePage status={status} refresh={refresh} />,
-            },
-            { key: 'why', label: pageLabel('icon-chat', t('nav.why')), children: <WhyPsiPage /> },
-            { key: 'guide', label: pageLabel('icon-map', t('nav.guide')), children: <GuidePage /> },
-            { key: 'project', label: pageLabel('icon-helicopter', t('nav.project')), children: <ProjectPage /> },
-            { key: 'protocols', label: pageLabel('icon-critterpedia', t('nav.protocols')), children: <ProtocolsPage available={status?.protocols_available ?? null} /> },
-          ]}
-        />
-
-        <footer className="app-footer-meta">
-          {t('app.footer.ui')}:{' '}
-          <a href="https://github.com/guokaigdg/animal-island-ui" target="_blank" rel="noreferrer">
-            animal-island-ui
-          </a>
-          {' · '}
-          {t('app.footer.backend')}: webapp/server.py
-          <br />
-          {t('app.disclaimer.short')}
-        </footer>
+      <div className="app-shell modern-shell">
+        {page === 'run' && <RunPage status={status} loading={statusLoading} refresh={refresh} />}
+        {page === 'protocols' && <div id="main-content"><ProtocolsPage available={status?.protocols_available ?? null} /></div>}
+        {page === 'learn' && <LearnPage section={learnSection} onChange={changeLearnSection} />}
       </div>
-      <Footer type="sea" />
+
+      <footer className="product-footer">
+        <span>psinsieme</span>
+        <span>{t('app.disclaimer.short')}</span>
+      </footer>
     </>
   )
 }
@@ -212,9 +289,7 @@ function Shell() {
 export default function App() {
   return (
     <I18nProvider>
-      <Cursor>
-        <Shell />
-      </Cursor>
+      <Shell />
     </I18nProvider>
   )
 }

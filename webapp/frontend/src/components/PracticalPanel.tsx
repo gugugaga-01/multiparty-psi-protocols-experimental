@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Card, Input, Select, Switch, Divider, Collapse, Loading, Icon } from 'animal-island-ui'
+import { Button, Card, Input, Select, Switch, Collapse, Icon } from 'animal-island-ui'
 import { api, formatApiError, type SubmitResult } from '../api'
 import { useProtocolSelection } from '../ProtocolSelectionContext'
 import { useI18n } from '../i18n'
@@ -79,10 +79,10 @@ export function PracticalPanel() {
   }
 
   return (
-    <Card type="default" className="runner-card practical-card">
+    <Card type="default" className="runner-card practical-card modern-card">
       <div className="panel-heading">
         <div>
-          <span className="info-kicker">{tr('pr.kicker')}</span>
+          <span className="eyebrow">{tr('pr.kicker')}</span>
           <h2 className="section-title">{tr('pr.title')}</h2>
           <p>{tr('pr.lead')}</p>
         </div>
@@ -92,8 +92,7 @@ export function PracticalPanel() {
           <span>{tr('pr.elementCount', { count: elementCount })}</span>
         </div>
       </div>
-      <Divider type="wave-yellow" />
-      <div className="form-section">
+      <div className="form-section numbered-section" data-step="1">
         <div className="form-section-head">
           <strong>{tr('pr.endpointSection')}</strong>
           <span>{tr('pr.oneOwner')}</span>
@@ -109,7 +108,7 @@ export function PracticalPanel() {
         </label>
       </div>
       </div>
-      <div className="form-section">
+      <div className="form-section numbered-section" data-step="2">
         <div className="form-section-head">
           <strong>{tr('pr.protocolSection')}</strong>
           <span>{setupBadge}</span>
@@ -149,7 +148,7 @@ export function PracticalPanel() {
         </label>
       </div>
       </div>
-      <label className="field element-editor">
+      <label className="field element-editor numbered-section" data-step="3">
         <span className="field-title-row">
           <span>{tr('pr.elements')}</span>
           <span className="pill">{tr('pr.elementCount', { count: elementCount })}</span>
@@ -163,6 +162,7 @@ export function PracticalPanel() {
       </label>
 
       <Collapse
+        className="security-details"
         question={tr('pr.mtls.title')}
         disabled={busy}
         answer={
@@ -209,32 +209,33 @@ export function PracticalPanel() {
         }
       />
 
-      <Divider />
       <div className="action-row">
-        <Button type="primary" size="large" loading={busy} disabled={!protocol} onClick={submit}>
+        <Button type="primary" size="large" block loading={busy} disabled={!protocol} onClick={submit}>
           {tr('pr.submit')}
         </Button>
       </div>
 
       {busy && (
-        <div className="aii-busy-inline">
-          <Loading active style={{ height: 280 }} />
-          <div className="aii-busy-msg">
-            {tr('pr.busy', { target, role: role === 'leader' ? tr('pr.role.leader') : tr('pr.role.member'), protocol: protocol?.id ?? '-' })}
+        <div className="progress-panel" role="status" aria-live="polite">
+          <span className="progress-spinner" aria-hidden="true" />
+          <div>
+            <strong>{tr('run.progress.title')}</strong>
+            <span>{tr('pr.busy', { target, role: role === 'leader' ? tr('pr.role.leader') : tr('pr.role.member'), protocol: protocol?.id ?? '-' })}</span>
+            <small>{tr('run.progress.detail')}</small>
           </div>
         </div>
       )}
 
       {err && (
-        <div className="banner bad" style={{ marginTop: 12, whiteSpace: 'pre-wrap' }}>
+        <div className="banner bad error-summary" role="alert" tabIndex={-1}>
+          <strong>{tr('demo.failed')}</strong>
           {err}
         </div>
       )}
 
       {result && (
         <>
-          <Divider type="line-teal" />
-          <div className="result-overview practical-result">
+          <div className="result-overview practical-result result-card" role="status">
             <div>
               <span>{tr('pr.status')}</span>
               <strong>
