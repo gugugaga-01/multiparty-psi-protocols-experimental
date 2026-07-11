@@ -14,7 +14,7 @@ make -j$(nproc)
 
 This produces two binaries under `build/service/`: `psi_party` and `psi_dealer`.
 
-To enable the experimental YYH26 over-threshold MPSI integration:
+To enable YYH26 TT-MPSI protocol support:
 
 ```bash
 cmake .. -DMPSI_BUILD_YYH26=ON
@@ -51,13 +51,11 @@ Prerequisites: gRPC, protobuf, NTL, GMP. DH PSI requires libsodium. XZH26 additi
 |----------|-----------|-------------------|--------|--------------------|
 | `ks05_t_mpsi` | Kissner & Song, CRYPTO 2005 | Paillier threshold encryption (3072-bit) | Required (trusted dealer) | gRPC (mTLS optional) |
 | `beh21_ot_mpsi` | Bay et al., IEEE TIFS 2021 | Paillier threshold encryption + Bloom filters + SCP | Required (trusted dealer) | gRPC (mTLS optional) |
-| `yyh26_tt_mpsi` | Experimental integration related to Yang et al., NDSS 2026 | OPPRF + KKRT OT + BFV BOLE + Shamir SS | Not needed | Unencrypted TCP (BtEndpoint)* |
-| `xzh26_ec_mpsi` | Experimental project integration; reference TBD | EC-ElGamal (Ristretto255) + Bloom filters + OPPRF | Not needed (runtime DKG) | gRPC (mTLS optional) |
+| `yyh26_tt_mpsi` | Yanai et al., NDSS 2026 | OPPRF + KKRT OT + BFV BOLE + Shamir SS | Not needed | Unencrypted TCP (BtEndpoint)* |
+| `xzh26_ec_mpsi` | TBD | EC-ElGamal (Ristretto255) + Bloom filters + OPPRF | Not needed (runtime DKG) | gRPC (mTLS optional) |
 | `dh_psi` | Diffie-Hellman-style PSI | DH-style commutative blinding | Not needed | gRPC (mTLS optional) |
 
 The listed protocols operate under the **semi-honest** (honest-but-curious) threat model. DH PSI is exactly two-party and dealerless; use `protocol="dh_psi"`, `num_parties=2`, and `threshold=2`.
-
-The internal service identifier `yyh26_tt_mpsi` is retained for compatibility. The current adapter returns over-threshold intersection elements to the leader but does **not** return holder identities, so the service does not claim the traceability functionality described by Yang et al., [“Practical Traceable Over-Threshold Multi-Party Private Set Intersection” (NDSS 2026)](https://www.ndss-symposium.org/wp-content/uploads/2026-s38-paper.pdf).
 
 \* YYH26 internal crypto phases use unencrypted TCP via cryptoTools' BtEndpoint. This is inherited from the upstream library — cryptoTools' networking predates gRPC integration and uses its own socket layer. Protocol-level crypto (OT, BFV homomorphic encryption) already protects data confidentiality, so the lack of transport encryption does not leak plaintext inputs. However, traffic metadata is visible. Migrating these channels to gRPC with mTLS is tracked as future work.
 

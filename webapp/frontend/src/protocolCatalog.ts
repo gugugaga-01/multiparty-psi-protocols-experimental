@@ -74,7 +74,7 @@ export const PROTOCOLS: readonly ProtocolDefinition[] = [
   },
   {
     id: 'ks05_t_mpsi',
-    name: 'KS05 threshold MPSI',
+    name: 'KS05 T-MPSI',
     category: 't_mpsi',
     thresholdMode: 'configurable',
     equalSize: false,
@@ -88,7 +88,7 @@ export const PROTOCOLS: readonly ProtocolDefinition[] = [
   },
   {
     id: 'beh21_ot_mpsi',
-    name: 'BEH21 over-threshold MPSI',
+    name: 'BEH21 T-MPSI',
     category: 't_mpsi',
     thresholdMode: 'configurable',
     equalSize: true,
@@ -102,7 +102,7 @@ export const PROTOCOLS: readonly ProtocolDefinition[] = [
   },
   {
     id: 'yyh26_tt_mpsi',
-    name: 'YYH26 over-threshold MPSI',
+    name: 'YYH26 TT-MPSI',
     category: 'tt_mpsi',
     thresholdMode: 'configurable',
     equalSize: false,
