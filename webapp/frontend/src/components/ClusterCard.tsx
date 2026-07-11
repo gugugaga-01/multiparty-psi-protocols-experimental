@@ -8,9 +8,11 @@ import { ProtocolPicker } from './ProtocolPicker'
 export function ClusterCard({
   status,
   onChange,
+  compact = false,
 }: {
   status: ClusterStatus | null
   onChange: () => void
+  compact?: boolean
 }) {
   const { t } = useI18n()
   const { protocol } = useProtocolSelection()
@@ -65,7 +67,7 @@ export function ClusterCard({
   }
 
   return (
-    <Card type="title" color="app-teal" className="cluster-card">
+    <Card type="default" className={`cluster-card${compact ? ' cluster-card-compact' : ''}`}>
       <div className="panel-heading">
         <div>
           <span className="info-kicker">{t('cluster.kicker')}</span>
@@ -107,7 +109,7 @@ export function ClusterCard({
       </div>
 
       <div className="form-grid cluster-form-grid">
-        <ProtocolPicker disabled={busy || anyRunning} />
+        {!compact && <ProtocolPicker disabled={busy || anyRunning} />}
         <label className="field compact">
           <span>{t('cluster.parties')}</span>
           <Input
