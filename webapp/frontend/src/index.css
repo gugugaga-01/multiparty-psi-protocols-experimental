@@ -4054,6 +4054,37 @@ footer.app-footer-meta {
   background: radial-gradient(circle at center, rgba(224, 247, 241, .94), rgba(255, 248, 230, .55));
   text-align: center;
 }
+
+.walkthrough-purpose {
+  min-height: 220px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 24px;
+  border: 2px dashed rgba(224, 160, 103, .58);
+  border-radius: 24px;
+  background: radial-gradient(circle at center, rgba(255, 227, 194, .92), rgba(255, 248, 230, .58));
+  text-align: center;
+}
+.walkthrough-purpose > span {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: #fff8e6;
+  box-shadow: 0 5px 0 rgba(224, 160, 103, .22);
+  font-size: 28px;
+}
+.walkthrough-purpose strong { color: #6b3a0d; font-size: 18px; }
+.walkthrough-purpose p {
+  max-width: 52ch;
+  margin: 0;
+  color: #6b3a0d;
+  line-height: 1.55;
+  font-weight: 800;
+}
 .walkthrough-ready > span {
   width: 58px;
   height: 58px;
@@ -4075,11 +4106,18 @@ footer.app-footer-meta {
 }
 
 .walkthrough-stage-0 .visual-heading strong,
-.walkthrough-stage-1 .visual-heading strong,
-.walkthrough-stage-2 .visual-heading strong {
+.walkthrough-stage-1 .visual-heading strong {
   opacity: .28;
   filter: blur(3px);
   user-select: none;
+}
+.walkthrough-leakage {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.privacy-card.output {
+  background: #dceeff;
+  border: 1px solid #82aee0;
+  color: #19446f;
 }
 .privacy-card,
 .scene-outcome-strip { transition: opacity 220ms ease, transform 220ms ease; }
@@ -4121,5 +4159,7 @@ footer.app-footer-meta {
     background: #e0f7f1;
   }
   .walkthrough-ready { min-height: 180px; }
+  .walkthrough-purpose { min-height: 180px; }
+  .walkthrough-leakage { grid-template-columns: 1fr; }
   .walkthrough-controls > button { flex: 1 1 0; }
 }

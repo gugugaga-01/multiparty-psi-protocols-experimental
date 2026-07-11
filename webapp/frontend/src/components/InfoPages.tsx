@@ -386,7 +386,7 @@ function ScenarioList({ title, tag, items, stage }: { title: string; tag: string
           <span
             key={item.label}
             className={'scenario-chip ' + (
-              stage === 0
+              stage < 2
                 ? 'is-neutral'
                 : item.match
                   ? 'is-match'
@@ -522,29 +522,43 @@ function ApplicationIllustration({ variant, scenario, stage }: { variant: Applic
   return (
     <div className={'application-illustration illustration-' + variant + ' walkthrough-stage-' + stage}>
       <span className="scene-stage-label">
-        {stage === 0 ? t('why.app.walkthrough.stage0.title') : stage === 1 ? t('why.app.stage.plain') : stage === 2 ? t('why.app.walkthrough.stage2.title') : t('why.app.walkthrough.stage3.title')}
+        {t(`why.app.walkthrough.stage${stage}.title`)}
       </span>
-      <div className="visual-heading">
-        <span>{t(scenario.visualTitleKey)}</span>
-        <strong>{t(scenario.outputValueKey)}</strong>
-      </div>
+      {stage >= 2 && (
+        <div className="visual-heading">
+          <span>{t(scenario.visualTitleKey)}</span>
+          <strong>{t(scenario.outputValueKey)}</strong>
+        </div>
+      )}
       {stage === 0 ? (
         <div className="walkthrough-ready">
           <span aria-hidden="true">🔒</span>
-          <strong>{t('why.app.walkthrough.stage0.prompt')}</strong>
+          <strong>{t(scenario.leftKey)} + {t(scenario.rightKey)}</strong>
           <p>{t('why.app.walkthrough.stage0.body')}</p>
         </div>
+      ) : stage === 1 ? (
+        <div className="walkthrough-purpose">
+          <span aria-hidden="true">🎯</span>
+          <strong>{t('why.app.walkthrough.stage1.prompt')}</strong>
+          <p>{t(scenario.purposeKey)}</p>
+        </div>
       ) : visual}
-      <div className="privacy-comparison">
-        <div className={'privacy-card risk ' + (stage >= 1 ? 'is-visible' : '')}>
-          <span>{t('why.app.stage.risk')}</span>
-          <p>{t(scenario.riskKey)}</p>
+      {stage === 3 && (
+        <div className="privacy-comparison walkthrough-leakage">
+          <div className="privacy-card output is-visible">
+            <span>{t('why.app.walkthrough.intendedLeak')}</span>
+            <p>{t('why.app.walkthrough.outputLeak', { output: t(scenario.outputValueKey) })}</p>
+          </div>
+          <div className="privacy-card risk is-visible">
+            <span>{t('why.app.walkthrough.rawLeak')}</span>
+            <p>{t(scenario.riskKey)}</p>
+          </div>
+          <div className="privacy-card psi is-visible">
+            <span>{t('why.app.walkthrough.keptPrivate')}</span>
+            <p>{t(scenario.psiKeepKey)}</p>
+          </div>
         </div>
-        <div className={'privacy-card psi ' + (stage >= 2 ? 'is-visible' : '')}>
-          <span>{t('why.app.stage.psiKeeps')}</span>
-          <p>{t(scenario.psiKeepKey)}</p>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
@@ -567,21 +581,7 @@ function ApplicationExplorer() {
       <div className="application-lab-copy">
         <span className="info-kicker">{t('why.apps.kicker')}</span>
         <h4>{t(`${activeItem.key}.title`)}</h4>
-        <p>{t(activeItem.key + '.body')}</p>
-        <div className="application-lab-metrics">
-          <div>
-            <span>{t('why.app.stage.input')}</span>
-            <strong>{t(scenario.leftKey)} {t('why.app.stage.with')} {t(scenario.rightKey)}</strong>
-          </div>
-          <div>
-            <span>{t('why.app.stage.output')}</span>
-            <strong>{t(scenario.outputValueKey)}</strong>
-          </div>
-          <div>
-            <span>{t('why.app.stage.psiKeeps')}</span>
-            <strong>{t('why.app.metric.nonmatches')}</strong>
-          </div>
-        </div>
+        <p>{t('why.app.walkthrough.intro')}</p>
       </div>
 
       <div className="application-lab-layout">
@@ -646,7 +646,7 @@ function ApplicationExplorer() {
             />
           </div>
 
-          <div className={'scene-outcome-strip ' + (stage >= 3 ? 'is-visible' : '')}>
+          {stage >= 2 && <div className="scene-outcome-strip is-visible">
             <div>
               <span>{t('why.app.stage.output')}</span>
               <strong>{t(scenario.outputValueKey)}</strong>
@@ -655,7 +655,7 @@ function ApplicationExplorer() {
               <span>{t('why.app.stage.use')}</span>
               <p>{t(scenario.purposeKey)}</p>
             </div>
-          </div>
+          </div>}
           </div>
 
           <div className="walkthrough-controls">
